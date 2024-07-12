@@ -1,10 +1,19 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable prettier/prettier */
 import { defer } from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
+// eslint-disable-next-line no-unused-vars
 import {Suspense, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import CubeScene from '~/components/CubeScene';
+import ProductGallery from '~/components/productGallery';
 
 /**
  * @type {MetaFunction}
@@ -26,25 +35,91 @@ export async function loader({context}) {
   return defer({featuredCollection, recommendedProducts});
 }
 
+
 export default function Homepage() {
   /** @type {LoaderReturnData} */
+  // eslint-disable-next-line no-unused-vars
   const data = useLoaderData();
-  const centerImageRef = useRef();
-  const leftImageRef = useRef();
-  const rightImageRef = useRef();
-  const topImageRef = useRef();
-  const bottomImageRef = useRef();
+  
 
-  const [leftImageSrc, setLeftImageSrc] = useState(
-    'https://plus.unsplash.com/premium_photo-1676637000058-96549206fe71?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  );
+  const images = [
+    'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  ];
+
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // changing light and dark mode func def
+  const ThemeMode = () => {
+    setIsDarkMode((prev) => !prev)
+  }
+
+  const [Images, setImages] = useState(images);
+  const [centerImageIdx, setCenterImageIdx] = useState(0);
+  const [LeftImageIdx, setLeftImageIdx] = useState(1);
+  const [RightImageIdx, setRightImageIdx] = useState(2);
+  const [TopImageIdx, setTopImageIdx] = useState(3);
+  const [BottomImageIdx, setBottomImageIdx] = useState(4);
+   
+  const [IsGallery, setGallery] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [IsShowProductDesc, setShowProductDesc] = useState(false);
+
+
+
+
+
+  const handleSwipe = (direction) => {
+    console.log("handleSwipe is called: ", direction)
+    let newIndex = centerImageIdx;
+
+    if (direction === 'left') {
+      const centerImg = images[centerImageIdx];
+      const leftImg = images[0];
+      const rightImg = images[2];
+
+      const newImages = [...Images];
+      newImages[0] = rightImg;
+      newImages[1] = centerImg;
+      newImages[2] = leftImg;
+
+      setImages(newImages);
+      setCenterImageIdx(0); // New center image index
+      
+      // setLeftImageIdx(centerImageIdx);
+      // setRightImageIdx(1)
+      // setCenterImageIdx(2);
+    } else if (direction === 'right') {
+      setRightImageIdx(centerImageIdx)
+      setLeftImageIdx(2);
+      setCenterImageIdx(1);
+      
+    } else if (direction === 'up') {
+      newIndex = 3;
+    } else if (direction === 'down') {
+      newIndex = 4;
+    }
+
+    setCenterImageIdx(newIndex);
+  };
+  
+ 
+  const handleGalleryScreen = () => {
+    setGallery((prev) => !prev)
+  }
+  
+  const showProductDescription = () => {
+    setShowProductDesc((prev) => !prev)
+  }
+
 
   return (
-    // <div className="home">
-    //   <FeaturedCollection collection={data.featuredCollection} />
-    //   <RecommendedProducts products={data.recommendedProducts} />
-    // </div>
-
+    <>
+    
     <div className="w-full h-full absolute ">
       <div className="w-full h-[30%] cursor-pointer ">
         <div className="w-full h-full flex flex-col items-center">
@@ -95,7 +170,7 @@ export default function Homepage() {
                   textAlign: 'left',
                 }}
               >
-                Kelly&aposs Kapsule
+                Kelly&apos;s Kapsule
               </h1>
               <div className="w-full h-[25%]  mt-[25px]  relative ">
                 <div className="relative w-[85%] h-full ">
@@ -148,7 +223,7 @@ export default function Homepage() {
                   Women
                 </button>
                 <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Kid&aposs
+                  Kid&apos;s
                 </button>
               </div>
             </div>
@@ -156,32 +231,49 @@ export default function Homepage() {
         </div>
       </div>
 
-      <div className="w-full h-[63%] bg-backgroundColortool ">
+      {/* --- below is the code that i need to implement the toggle functionality by chaning bg-dark and gray accordingly. */}
+      <div className={`w-full h-[63%]  ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
         <div className="w-full h-[10%] flex flex-row ">
-          <div className="w-[50%] h-full flex flex-row p-2 gap-3 ">
-            <img src="/splash/rect1.png" alt="rect1" className="ml-3" />
-            <img src="/splash/rect2.png" alt="rect1" />
+          <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
+            <img src="/splash/rect1.png" alt="rect1" className="ml-3" onClick={handleGalleryScreen} />
+              <img src="/splash/rect2.png" alt="rect1" onClick={showProductDescription} />
             <img src="/splash/rect3.png" alt="rect1" />
           </div>
-          <div className="w-[40%] h-full  flex flex-row justify-end items-center  ">
-            <input
+
+{/* ---------- dark/light mode container -------- */}
+          <div className="w-[20%] mt-2 h-[2.3rem] flex flex-row justify-between rounded-full items-center border border-gray-300 px-1 py-2">
+            {/* light mode button */}
+            <div className="wrapper w-full flex justify-start items-center">
+            <div className={`light-mode-btn justify-center items-center w-[2rem] h-[2rem] rounded-full bg-white ${isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
+              <img src="/splash/light-mode.png" alt="light-mode" className='w-[1.5rem] '/>
+              </div>
+            </div>
+
+            {/* dark mode mode button */}
+            <div className="wrapper w-full flex justify-end items-center">
+            <div className={`light-mode-btn  justify-center items-center w-[2rem] h-[2rem] rounded-full bg-gray-500 ${!isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
+              <img src="/splash/dark-mode.png" alt="light-mode" className='w-[1.5rem] ' />
+              </div>
+            </div>
+            
+            {/* <input
               type="checkbox"
               className="toggle toggle-md text-white border-white"
-              readOnly
-            />
+              checked={isDarkMode}
+              onChange={() => setIsDarkMode(!isDarkMode)}
+            /> */}
           </div>
+         
         </div>
-        <div className="w-full h-full flex flex-col justify-center items-center relative">
+        <div className="w-full h-full flex flex-col justify-center items-center relative ">
           <div className="w-full h-[90%]">
-            {/* <div className="w-full h-full absolute">
-          <CubeScene image={image} />
-        </div> */}
+         
             <div className="w-full h-full flex flex-col ">
               <div className="w-full h-[15%] flex flex-row justify-center ">
                 <div
-                  className="w-[70%] h-full flex flex-row justify-center items-center "
+                  className="w-[70%] h-full flex flex-row justify-center items-center  "
                   style={{
-                    backgroundImage: "url('/splash/top1.png')",
+                    backgroundImage: isDarkMode ? "url('/splash/top1-dark.png')" : "url('/splash/top1.png')" ,
                     backgroundSize: '100% 100%',
                   }}
                   id="top"
@@ -189,48 +281,91 @@ export default function Homepage() {
                   <img
                     // ref={topImageRef}
                     // src={image.url}
-                    src={leftImageSrc}
-                    alt={leftImageSrc}
+                    src={Images[TopImageIdx]}
+                    alt="topImg"
                     className="w-[40px] h-[40px]"
                   />
                 </div>
               </div>
+
+
               <div className="w-full h-[60%] flex flex-row">
                 <div
                   className="w-[15%] h-full flex flex-row justify-center items-center"
                   style={{
-                    backgroundImage: `url('/splash/left1.png')`,
+                    backgroundImage: isDarkMode ? "url('/splash/left-dark.png')" : "url('/splash/left1.png')",
+
                     backgroundSize: '100% 100%',
                   }}
                   id="left"
                 >
                   <img
-                    ref={leftImageRef}
-                    src={leftImageSrc}
-                    alt={leftImageSrc}
+                    src={Images[LeftImageIdx]}
+                    alt='leftImg'
                     className="w-[40px] h-[40px]"
                     // onClick={() => swapImages(leftImageRef)}
                   />
                 </div>
 
                 <div
-                  className="w-[70%] h-full flex flex-row justify-center items-center  "
+                  className="relative w-[70%] h-full flex flex-row justify-center items-center "
                   id="center"
                 >
-                  <CubeScene />
+                    <CubeScene isDarkMode={isDarkMode} onSwipe={handleSwipe} centerImage={Images[centerImageIdx]} Images={Images} />
+                    
+                    {/* ----------- product description ------- */}
+                    {IsShowProductDesc && (
+                      <div className="contianer w-full h-full absolute z-40 top-0 bg-black/60 backdrop-blur-sm flex justify-center items-center">
+
+                        <div className="wrapper overflow-hidden relative w-full h-full flex flex-col gap-[1rem]  rounded-[0.93rem] p-3  overflow-y-scroll">
+                          {/* heading and sub-heading */}
+                          <div className="heading-sub-heading  flex flex-col gap-2">
+                          <p className='font-bold text-[10px] text-[#D9D9D9] leading-[14px]'>Low stock - 10 items left</p>
+
+                          <p className='font-bold text-[16px] leading-[24px] text-white tracking-[0.5px]'>Digital Fitness Watch</p>
+
+                          <p className='font-bold text-[16px] leading-[24px] text-[#DAAF37]'>$150</p>
+                          </div>
+
+                          {/* --- description ------- */}
+                          <p className='text-[12px] leading-[18px] text-white'>From built-in GPS tracking to advanced heart rate monitoring, this fitness watch has everything you need to keep yourself motivated and in shape</p>
+                          {/* icons + names */}
+                          <div className="icons-names w-full flex justify-between">
+                            {/* icon1 */}
+                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
+                              <img src="/splash/icon1.png" alt="icon1" className=''/>
+                              <p className='text-[10px] leading-[14px] text-white'>Water Resistant</p>
+                            </div>
+                            {/* icon2 */}
+                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
+                              <img src="/splash/icon2.png" alt="icon1" className='' />
+                              <p className='text-[10px] leading-[14px] text-white'>Crystal Glass</p>
+                            </div>
+                            {/* icon3 */}
+                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
+                              <img src="/splash/icon3.png" alt="icon1" className='' />
+                              <p className='text-[10px] leading-[14px] text-white'>124 Gram</p>
+                            </div>
+                          </div>
+                        </div>                
+
+                      </div>
+                    )}
+                   
+
                 </div>
 
                 <div
                   className="w-[15%] h-full flex flex-row justify-center items-center"
                   style={{
-                    backgroundImage: `url('/splash/right1.png')`,
+                    backgroundImage: isDarkMode ? "url('/splash/right-dark.png')" : "url('/splash/right1.png')",
                     backgroundSize: '100% 100%',
                   }}
                   id="right"
                 >
                   <img
-                    src="https://plus.unsplash.com/premium_photo-1682513184135-b7b9b76fb4eb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="splash3"
+                    src={Images[RightImageIdx]}
+                    alt="rightImg"
                     className="w-[40px] h-[40px]"
                   />
                 </div>
@@ -240,14 +375,15 @@ export default function Homepage() {
                 <div
                   className="w-[70%] h-full flex flex-row justify-center items-center  "
                   style={{
-                    backgroundImage: "url('/splash/bottom1.png')",
+                    backgroundImage: isDarkMode ? "url('/splash/bottom-dark.png')" : "url('/splash/bottom1.png')",
+
                     backgroundSize: '100% 100%',
                   }}
                   id="bottom"
                 >
                   <img
-                    ref={bottomImageRef}
-                    src="https://images.unsplash.com/photo-1633621412960-6df85eff8c85?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    // ref={bottomImageRef}
+                    src={Images[BottomImageIdx]}
                     alt="splash1"
                     className="w-[40px] h-[40px]"
                     // onClick={() => swapImages(bottomImageRef)}
@@ -258,6 +394,9 @@ export default function Homepage() {
           </div>
         </div>
       </div>
+      {/* --- Ending the toggle functionality by chaning bg-dark and gray accordingly. */}
+
+
       {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
         {modalImage && (
           <img
@@ -267,7 +406,11 @@ export default function Homepage() {
           />
         )}
       </Modal> */}
-    </div>
+      </div>
+      
+      {/* showing product gallery */}
+      {IsGallery && <ProductGallery setgallery={setGallery} /> }
+    </>
   );
 }
 

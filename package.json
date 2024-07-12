@@ -12,6 +12,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
     "@react-three/drei": "^9.105.4",
     "@react-three/fiber": "^8.16.2",
     "@remix-run/react": "^2.6.0",

@@ -8,11 +8,17 @@ import gsap from 'gsap-trial';
 
 const Cube = ({rotation}) => {
   const images = [
-    'https://images.unsplash.com/photo-1707003839735-bb9935f3d340?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    // '/splash/watch1.png',
+    // '/splash/watch2.png',
+    // '/splash/watch3.png',
+    // '/splash/watch4.png',
+    // '/splash/watch5.png',
+
     'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ];
   const ref = useRef();
@@ -52,9 +58,7 @@ const Cube = ({rotation}) => {
   );
 };
 
-const CubeScene = (props) => {
-  const {image} = props;
-  console.log('Image Data is Props :', image);
+const CubeScene = ({isDarkMode}) => {
   const [rotation, setRotation] = useState(new THREE.Euler(0, 0, 0));
 
   const handleSwipe = (direction) => {
@@ -116,7 +120,16 @@ const CubeScene = (props) => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center   ">
-      <Canvas className="z-0 bg-pink-500">
+      <Canvas
+        className={`z-0  p-4`}
+        style={{
+          backgroundImage: isDarkMode
+            ? "url('/splash/dark-mode-screen.png')"
+            : "url('/splash/light-mode-screen.png')",
+
+          backgroundSize: '100% 100%',
+        }}
+      >
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <Cube rotation={rotation} />
