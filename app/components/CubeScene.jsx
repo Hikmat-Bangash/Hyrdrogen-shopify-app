@@ -84,12 +84,6 @@ const CubeScene = ({isDarkMode}) => {
     setRotation(newRotation);
   };
 
-  // const configureControls = (controls) => {
-  //   controls.enableZoom = false; // Disables zooming
-  //   controls.enableRotate = false; // Disables default rotation to handle manually
-  //   controls.enablePan = false; // Disables panning to handle manually
-  // };
-
   // Detecting swipe logic (simplified for illustration)
   const handleTouchStart = (event) => {
     const startX = event.touches[0].pageX;
