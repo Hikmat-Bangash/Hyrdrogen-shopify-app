@@ -14,7 +14,7 @@ import {Suspense, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import CubeScene from '~/components/CubeScene';
 import ProductGallery from '~/components/productGallery';
-
+import Features from '~/components/Features';
 /**
  * @type {MetaFunction}
  */
@@ -52,12 +52,7 @@ export default function Homepage() {
   ];
 
   const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // changing light and dark mode func def
-  const ThemeMode = () => {
-    setIsDarkMode((prev) => !prev)
-  }
-
+  const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
   const [Images, setImages] = useState(images);
   const [centerImageIdx, setCenterImageIdx] = useState(0);
   const [LeftImageIdx, setLeftImageIdx] = useState(1);
@@ -66,11 +61,19 @@ export default function Homepage() {
   const [BottomImageIdx, setBottomImageIdx] = useState(4);
    
   const [IsGallery, setGallery] = useState(false);
-  // eslint-disable-next-line no-unused-vars
+   
   const [IsShowProductDesc, setShowProductDesc] = useState(false);
 
+  // changing light and dark mode func def
+  const ThemeMode = () => {
+    setIsDarkMode((prev) => !prev)
+  }
 
+  // -------- handle features screen ----
+  const handleIsFeatures = () => {
 
+    setIsfeaturesMode((prev) => !prev);
+  }
 
 
   const handleSwipe = (direction) => {
@@ -204,8 +207,9 @@ export default function Homepage() {
                     />
                   </div>
                 </div>
-              </div>
-              <div className="w-full h-[20%]  flex flex-row justify-around absolute mt-[15px]">
+                </div>
+                
+              <div className="w-full h-[20%] flex flex-row justify-around absolute mt-[15px]">
                 <button
                   className="min-w-[20%] max-w-auto  h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center "
                   style={
@@ -225,8 +229,10 @@ export default function Homepage() {
                 <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
                   Kid&apos;s
                 </button>
+                </div>
+                
               </div>
-            </div>
+              
           </div>
         </div>
       </div>
@@ -237,7 +243,7 @@ export default function Homepage() {
           <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
             <img src="/splash/rect1.png" alt="rect1" className="ml-3" onClick={handleGalleryScreen} />
               <img src="/splash/rect2.png" alt="rect1" onClick={showProductDescription} />
-            <img src="/splash/rect3.png" alt="rect1" />
+            <img src="/splash/rect3.png" alt="rect1" onClick={handleIsFeatures}/>
           </div>
 
 {/* ---------- dark/light mode container -------- */}
@@ -279,11 +285,10 @@ export default function Homepage() {
                   id="top"
                 >
                   <img
-                    // ref={topImageRef}
-                    // src={image.url}
                     src={Images[TopImageIdx]}
                     alt="topImg"
-                    className="w-[40px] h-[40px]"
+                      className="w-[70px] h-[40px] transform skew-x-[10deg]"
+                      loading='lazy'
                   />
                 </div>
               </div>
@@ -302,9 +307,9 @@ export default function Homepage() {
                   <img
                     src={Images[LeftImageIdx]}
                     alt='leftImg'
-                    className="w-[40px] h-[40px]"
-                    // onClick={() => swapImages(leftImageRef)}
-                  />
+                      className="w-[100px] h-[65px] transform rotate-[-90deg] skew-x-[10deg]"
+                      loading='lazy'
+                   />
                 </div>
 
                 <div
@@ -315,36 +320,36 @@ export default function Homepage() {
                     
                     {/* ----------- product description ------- */}
                     {IsShowProductDesc && (
-                      <div className="contianer w-full h-full absolute z-40 top-0 bg-black/60 backdrop-blur-sm flex justify-center items-center">
+                      <div className={`contianer w-full h-full absolute z-40 top-0  backdrop-blur-sm   justify-center items-center ${isDarkMode ? "bg-black/60" : "bg-[#FFFFFFBF]"} rounded-md `}>
 
                         <div className="wrapper overflow-hidden relative w-full h-full flex flex-col gap-[1rem]  rounded-[0.93rem] p-3  overflow-y-scroll">
                           {/* heading and sub-heading */}
                           <div className="heading-sub-heading  flex flex-col gap-2">
-                          <p className='font-bold text-[10px] text-[#D9D9D9] leading-[14px]'>Low stock - 10 items left</p>
+                            <p className={`font-bold text-[10px] leading-[14px] ${isDarkMode ? "text-[#D9D9D9]" : "text-black"} `}>Low stock - 10 items left</p>
 
-                          <p className='font-bold text-[16px] leading-[24px] text-white tracking-[0.5px]'>Digital Fitness Watch</p>
+                            <p className={`font-bold text-[16px] leading-[24px] tracking-[0.5px] ${isDarkMode ? "text-[#D9D9D9]" : "text-black"}`}>Digital Fitness Watch</p>
 
                           <p className='font-bold text-[16px] leading-[24px] text-[#DAAF37]'>$150</p>
                           </div>
 
                           {/* --- description ------- */}
-                          <p className='text-[12px] leading-[18px] text-white'>From built-in GPS tracking to advanced heart rate monitoring, this fitness watch has everything you need to keep yourself motivated and in shape</p>
+                          <p className={`text-[12px] leading-[18px] ${isDarkMode ? "text-white" : "text-black"} `}>From built-in GPS tracking to advanced heart rate monitoring, this fitness watch has everything you need to keep yourself motivated and in shape</p>
                           {/* icons + names */}
                           <div className="icons-names w-full flex justify-between">
                             {/* icon1 */}
                             <div className="icon1 flex flex-col gap-2 justify-center items-center">
                               <img src="/splash/icon1.png" alt="icon1" className=''/>
-                              <p className='text-[10px] leading-[14px] text-white'>Water Resistant</p>
+                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>Water Resistant</p>
                             </div>
                             {/* icon2 */}
                             <div className="icon1 flex flex-col gap-2 justify-center items-center">
                               <img src="/splash/icon2.png" alt="icon1" className='' />
-                              <p className='text-[10px] leading-[14px] text-white'>Crystal Glass</p>
+                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>Crystal Glass</p>
                             </div>
                             {/* icon3 */}
                             <div className="icon1 flex flex-col gap-2 justify-center items-center">
                               <img src="/splash/icon3.png" alt="icon1" className='' />
-                              <p className='text-[10px] leading-[14px] text-white'>124 Gram</p>
+                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>124 Gram</p>
                             </div>
                           </div>
                         </div>                
@@ -352,7 +357,6 @@ export default function Homepage() {
                       </div>
                     )}
                    
-
                 </div>
 
                 <div
@@ -366,7 +370,8 @@ export default function Homepage() {
                   <img
                     src={Images[RightImageIdx]}
                     alt="rightImg"
-                    className="w-[40px] h-[40px]"
+                      className="w-[70px] h-[40px] transform rotate-[90deg] skew-x-[10deg]"
+                      loading='lazy'
                   />
                 </div>
               </div>
@@ -385,11 +390,13 @@ export default function Homepage() {
                     // ref={bottomImageRef}
                     src={Images[BottomImageIdx]}
                     alt="splash1"
-                    className="w-[40px] h-[40px]"
+                      className="w-[70px] h-[40px] transform skew-x-[10deg]"
+                      loading='lazy'
                     // onClick={() => swapImages(bottomImageRef)}
                   />
                 </div>
-              </div>
+                </div>
+                
             </div>
           </div>
         </div>
@@ -409,7 +416,10 @@ export default function Homepage() {
       </div>
       
       {/* showing product gallery */}
-      {IsGallery && <ProductGallery setgallery={setGallery} /> }
+      {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} />}
+      {/* showing features actions */}
+      {IsfeaturesMode && <Features isDarkMode={isDarkMode}/>}
+
     </>
   );
 }

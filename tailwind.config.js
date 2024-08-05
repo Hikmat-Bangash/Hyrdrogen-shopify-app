@@ -21,6 +21,8 @@ export default {
 
         'black-100': 'rgba(0, 0, 0, 1)',
         'black-50': 'rgba(0, 0, 0, 0.5)',
+        'white-100': 'rgba(255, 255, 255, 1)',
+        'white-50': 'rgba(255, 255, 255, 0.5)',
 
         // customBackground: '#f0f0f0', // Replace with your desired color
       },
