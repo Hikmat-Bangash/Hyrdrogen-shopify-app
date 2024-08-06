@@ -1,16 +1,6 @@
 import React from 'react';
 
-const Features = ({isDarkMode}) => {
-  // eslint-disable-next-line no-unused-vars
-  const images = [
-    'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  ];
-
+const Features = ({isDarkMode, productImg}) => {
   return (
     <>
       <div
@@ -34,8 +24,6 @@ const Features = ({isDarkMode}) => {
                   id="top"
                 >
                   <img
-                    // ref={topImageRef}
-                    // src={image.url}
                     src="/splash/favourite-icon.png"
                     alt="topImg"
                     className="w-[30px] h-[34px] cursor-pointer"
@@ -61,7 +49,6 @@ const Features = ({isDarkMode}) => {
                     alt="leftImg"
                     className="w-[30px] h-[34px] cursor-pointer"
                     loading="lazy"
-                    // onClick={() => swapImages(leftImageRef)}
                   />
                 </div>
 
@@ -70,11 +57,7 @@ const Features = ({isDarkMode}) => {
                   id="center"
                 >
                   <div className="wrapper w-full h-full flex justify-center items-center">
-                    <img
-                      src="/splash/watch2.png"
-                      alt="centerImg"
-                      className=""
-                    />
+                    <img src={productImg} alt="centerImg" className="" />
                   </div>
                 </div>
 
@@ -110,12 +93,10 @@ const Features = ({isDarkMode}) => {
                   id="bottom"
                 >
                   <img
-                    // ref={bottomImageRef}
                     src="/splash/share_icon.png"
                     alt="splash1"
                     className="w-[40px] h-[40px] cursor-pointer"
                     loading="lazy"
-                    // onClick={() => swapImages(bottomImageRef)}
                   />
                 </div>
               </div>

@@ -12,9 +12,10 @@ import {Await, useLoaderData, Link} from '@remix-run/react';
 // eslint-disable-next-line no-unused-vars
 import {Suspense, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-import CubeScene from '~/components/CubeScene';
+// import CubeScene from '~/components/CubeScene';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
+import ProductDetail from '~/components/productDetail';
 /**
  * @type {MetaFunction}
  */
@@ -43,12 +44,18 @@ export default function Homepage() {
   
 
   const images = [
-    'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    "/splash/watch1.png",
+    "/splash/watch2.png",
+    "/splash/watch3.png",
+    "/splash/watch4.png",
+    "/splash/watch5.png",
+
+    // 'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    // 'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    // 'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    // 'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    // 'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+
   ];
 
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -74,43 +81,7 @@ export default function Homepage() {
 
     setIsfeaturesMode((prev) => !prev);
   }
-
-
-  const handleSwipe = (direction) => {
-    console.log("handleSwipe is called: ", direction)
-    let newIndex = centerImageIdx;
-
-    if (direction === 'left') {
-      const centerImg = images[centerImageIdx];
-      const leftImg = images[0];
-      const rightImg = images[2];
-
-      const newImages = [...Images];
-      newImages[0] = rightImg;
-      newImages[1] = centerImg;
-      newImages[2] = leftImg;
-
-      setImages(newImages);
-      setCenterImageIdx(0); // New center image index
-      
-      // setLeftImageIdx(centerImageIdx);
-      // setRightImageIdx(1)
-      // setCenterImageIdx(2);
-    } else if (direction === 'right') {
-      setRightImageIdx(centerImageIdx)
-      setLeftImageIdx(2);
-      setCenterImageIdx(1);
-      
-    } else if (direction === 'up') {
-      newIndex = 3;
-    } else if (direction === 'down') {
-      newIndex = 4;
-    }
-
-    setCenterImageIdx(newIndex);
-  };
   
- 
   const handleGalleryScreen = () => {
     setGallery((prev) => !prev)
   }
@@ -118,6 +89,112 @@ export default function Homepage() {
   const showProductDescription = () => {
     setShowProductDesc((prev) => !prev)
   }
+  // ----------- below is the logic for spinning tools to shuffle X & Y axis images
+  const swipeThreshold = 50; // Threshold for swipe distance
+
+ 
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+    const isSwipingRef = useRef(false);
+
+  //   const handleSwipe = (direction) => {
+  //     if (direction === 'left' || direction === 'up') {
+  //       setCurrentIndex((prevIndex) =>
+  //         prevIndex === images.length - 1 ? 0 : prevIndex + 1,
+  //       );
+  //     } else if (direction === 'right' || direction === 'down') {
+  //       setCurrentIndex((prevIndex) =>
+  //         prevIndex === 0 ? images.length - 1 : prevIndex - 1,
+  //       );
+  //     }
+  //     isSwipingRef.current = true;
+  // };
+  
+
+  const handleSwipe = (direction) => {
+    if (direction === 'left') {
+      const newLeftImageIdx = centerImageIdx;
+      const newCenterImageIdx = RightImageIdx;
+      const newRightImageIdx = LeftImageIdx;
+      const newTopImageIdx = BottomImageIdx;
+      const newBottomImageIdx = TopImageIdx;
+      setLeftImageIdx(newLeftImageIdx);
+      setCenterImageIdx(newCenterImageIdx);
+      setRightImageIdx(newRightImageIdx);
+      setTopImageIdx(newTopImageIdx);
+      setBottomImageIdx(newBottomImageIdx);
+    } else if (direction === 'right') {
+      const newLeftImageIdx = RightImageIdx;
+      const newCenterImageIdx = LeftImageIdx;
+      const newRightImageIdx = centerImageIdx;
+      const newTopImageIdx = BottomImageIdx;
+      const newBottomImageIdx = TopImageIdx;
+      setLeftImageIdx(newLeftImageIdx);
+      setCenterImageIdx(newCenterImageIdx);
+      setRightImageIdx(newRightImageIdx);
+      setTopImageIdx(newTopImageIdx);
+      setBottomImageIdx(newBottomImageIdx);
+    } else if (direction === 'up') {
+      const newTopImageIdx = centerImageIdx;
+      const newCenterImageIdx = BottomImageIdx;
+      const newBottomImageIdx = TopImageIdx;
+      const newLeftImageIdx = RightImageIdx;
+      const newRightImageIdx = LeftImageIdx;
+      setTopImageIdx(newTopImageIdx);
+      setCenterImageIdx(newCenterImageIdx);
+      setBottomImageIdx(newBottomImageIdx);
+      setLeftImageIdx(newLeftImageIdx);
+      setRightImageIdx(newRightImageIdx);
+    } else if (direction === 'down') {
+      const newTopImageIdx = BottomImageIdx;
+      const newCenterImageIdx = TopImageIdx;
+      const newBottomImageIdx = centerImageIdx;
+      const newLeftImageIdx = RightImageIdx;
+      const newRightImageIdx = LeftImageIdx;
+      setTopImageIdx(newTopImageIdx);
+      setCenterImageIdx(newCenterImageIdx);
+      setBottomImageIdx(newBottomImageIdx);
+      setLeftImageIdx(newLeftImageIdx);
+      setRightImageIdx(newRightImageIdx);
+    }
+    isSwipingRef.current = true;
+  };
+
+
+
+    const handleTouchStart = (event) => {
+      startXRef.current = event.touches[0].pageX;
+      startYRef.current = event.touches[0].pageY;
+      isSwipingRef.current = false;
+    };
+
+    const handleTouchMove = (event) => {
+      if (isSwipingRef.current) return;
+
+      const diffX = event.touches[0].pageX - startXRef.current;
+      const diffY = event.touches[0].pageY - startYRef.current;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (Math.abs(diffX) > swipeThreshold) {
+          if (diffX > 0) handleSwipe('right');
+          else handleSwipe('left');
+        }
+      } else {
+        if (Math.abs(diffY) > swipeThreshold) {
+          if (diffY > 0) handleSwipe('down');
+          else handleSwipe('up');
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isSwipingRef.current = false;
+    };
+
+
+
+
+
 
 
   return (
@@ -126,11 +203,6 @@ export default function Homepage() {
     <div className="w-full h-full absolute ">
       <div className="w-full h-[30%] cursor-pointer ">
         <div className="w-full h-full flex flex-col items-center">
-          {/* <Link
-        // key={product.id}
-        // className="recommended-product"
-        to={`/`}
-      > */}
           <div className="w-[90%] h-[25%] flex flex-row ">
             {/* <div className="w-[50%] h-full flex flex-row justify-start items-center ">
               <img
@@ -159,7 +231,8 @@ export default function Homepage() {
                 className="w-[19px] h-[20px] right-0 "
               />
             </div> */}
-          </div>
+            </div>
+            
           {/* </Link> */}
           <div className="w-[90%] h-[75%] cursor-pointer ">
             <div className="w-full h-full relative ">
@@ -307,7 +380,7 @@ export default function Homepage() {
                   <img
                     src={Images[LeftImageIdx]}
                     alt='leftImg'
-                      className="w-[100px] h-[65px] transform rotate-[-90deg] skew-x-[10deg]"
+                      className="w-[70px] h-[40px] transform rotate-[-90deg] skew-x-[10deg]"
                       loading='lazy'
                    />
                 </div>
@@ -316,46 +389,26 @@ export default function Homepage() {
                   className="relative w-[70%] h-full flex flex-row justify-center items-center "
                   id="center"
                 >
-                    <CubeScene isDarkMode={isDarkMode} onSwipe={handleSwipe} centerImage={Images[centerImageIdx]} Images={Images} />
+                   {/* ----------- handle product spinning tools to shuffle images ---------- */}
+                    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
+                      <div className="w-full h-full flex items-center justify-center p-1">
+                        <img
+                          src={Images[centerImageIdx]}
+                          alt="carousel"
+                          className="w-full h-full object-cover transition-transform duration-500 rounded-md"
+                          onTouchStart={handleTouchStart}
+                          onTouchMove={handleTouchMove}
+                          onTouchEnd={handleTouchEnd}
+                        />
+                      </div>
+                    </div>
+                    
+
+
+                    {/* ------- spinning tools section END -------- */}
                     
                     {/* ----------- product description ------- */}
-                    {IsShowProductDesc && (
-                      <div className={`contianer w-full h-full absolute z-40 top-0  backdrop-blur-sm   justify-center items-center ${isDarkMode ? "bg-black/60" : "bg-[#FFFFFFBF]"} rounded-md `}>
-
-                        <div className="wrapper overflow-hidden relative w-full h-full flex flex-col gap-[1rem]  rounded-[0.93rem] p-3  overflow-y-scroll">
-                          {/* heading and sub-heading */}
-                          <div className="heading-sub-heading  flex flex-col gap-2">
-                            <p className={`font-bold text-[10px] leading-[14px] ${isDarkMode ? "text-[#D9D9D9]" : "text-black"} `}>Low stock - 10 items left</p>
-
-                            <p className={`font-bold text-[16px] leading-[24px] tracking-[0.5px] ${isDarkMode ? "text-[#D9D9D9]" : "text-black"}`}>Digital Fitness Watch</p>
-
-                          <p className='font-bold text-[16px] leading-[24px] text-[#DAAF37]'>$150</p>
-                          </div>
-
-                          {/* --- description ------- */}
-                          <p className={`text-[12px] leading-[18px] ${isDarkMode ? "text-white" : "text-black"} `}>From built-in GPS tracking to advanced heart rate monitoring, this fitness watch has everything you need to keep yourself motivated and in shape</p>
-                          {/* icons + names */}
-                          <div className="icons-names w-full flex justify-between">
-                            {/* icon1 */}
-                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
-                              <img src="/splash/icon1.png" alt="icon1" className=''/>
-                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>Water Resistant</p>
-                            </div>
-                            {/* icon2 */}
-                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
-                              <img src="/splash/icon2.png" alt="icon1" className='' />
-                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>Crystal Glass</p>
-                            </div>
-                            {/* icon3 */}
-                            <div className="icon1 flex flex-col gap-2 justify-center items-center">
-                              <img src="/splash/icon3.png" alt="icon1" className='' />
-                              <p className={`text-[10px] leading-[14px]  ${isDarkMode ? "text-white" : "text-black"} `}>124 Gram</p>
-                            </div>
-                          </div>
-                        </div>                
-
-                      </div>
-                    )}
+                    {IsShowProductDesc && <ProductDetail isDarkMode={isDarkMode} /> }
                    
                 </div>
 
@@ -403,22 +456,11 @@ export default function Homepage() {
       </div>
       {/* --- Ending the toggle functionality by chaning bg-dark and gray accordingly. */}
 
-
-      {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
-        {modalImage && (
-          <img
-            alt={modalImage.altText || 'Modal Image'}
-            src={modalImage.url}
-            className="h-[200px] w-[200px]"
-          />
-        )}
-      </Modal> */}
-      </div>
-      
-      {/* showing product gallery */}
-      {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} />}
-      {/* showing features actions */}
-      {IsfeaturesMode && <Features isDarkMode={isDarkMode}/>}
+        {/* showing product gallery */}
+        {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} />}
+        {/* showing features actions */}
+        {IsfeaturesMode && <Features isDarkMode={isDarkMode} productImg={Images[centerImageIdx]} />}
+      </div>     
 
     </>
   );
