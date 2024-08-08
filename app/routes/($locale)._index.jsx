@@ -360,7 +360,7 @@ export default function Homepage() {
                   <img
                     src={Images[TopImageIdx]}
                     alt="topImg"
-                      className="w-[70px] h-[40px] transform skew-x-[10deg]"
+                      className="w-[50px]  transform skew-x-[10deg]"
                       loading='lazy'
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function Homepage() {
                   <img
                     src={Images[LeftImageIdx]}
                     alt='leftImg'
-                      className="w-[70px] h-[40px] transform rotate-[-90deg] skew-x-[10deg]"
+                      className="w-[50px]  transform rotate-[-90deg] skew-x-[10deg]"
                       loading='lazy'
                    />
                 </div>
@@ -423,7 +423,7 @@ export default function Homepage() {
                   <img
                     src={Images[RightImageIdx]}
                     alt="rightImg"
-                      className="w-[70px] h-[40px] transform rotate-[90deg] skew-x-[10deg]"
+                      className="w-[45px] transform rotate-[90deg] skew-x-[10deg]"
                       loading='lazy'
                   />
                 </div>
@@ -443,7 +443,7 @@ export default function Homepage() {
                     // ref={bottomImageRef}
                     src={Images[BottomImageIdx]}
                     alt="splash1"
-                      className="w-[70px] h-[40px] transform skew-x-[10deg]"
+                      className="w-[60px]  transform skew-x-[10deg]"
                       loading='lazy'
                     // onClick={() => swapImages(bottomImageRef)}
                   />
