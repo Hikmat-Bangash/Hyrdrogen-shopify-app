@@ -8,14 +8,16 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable prettier/prettier */
 import { defer } from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link} from '@remix-run/react';
-// eslint-disable-next-line no-unused-vars
+import {Await, Link} from '@remix-run/react';
 import {Suspense, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 // import CubeScene from '~/components/CubeScene';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
+// import { useSelector } from 'react-redux';
 /**
  * @type {MetaFunction}
  */
@@ -39,8 +41,8 @@ export async function loader({context}) {
 
 export default function Homepage() {
   /** @type {LoaderReturnData} */
-  // eslint-disable-next-line no-unused-vars
-  const data = useLoaderData();
+  const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
+  const dispatch = useDispatch();
   
 
   const images = [
@@ -58,7 +60,8 @@ export default function Homepage() {
 
   ];
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const categories = ["all", "men", "women", "kids"]
+  // const [isDarkMode, setIsDarkMode] = useState(false);
   const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
   const [Images, setImages] = useState(images);
   const [centerImageIdx, setCenterImageIdx] = useState(0);
@@ -68,12 +71,13 @@ export default function Homepage() {
   const [BottomImageIdx, setBottomImageIdx] = useState(4);
    
   const [IsGallery, setGallery] = useState(false);
+  const [category, setCategory] = useState("all");
    
   const [IsShowProductDesc, setShowProductDesc] = useState(false);
 
   // changing light and dark mode func def
   const ThemeMode = () => {
-    setIsDarkMode((prev) => !prev)
+    dispatch(toggleThemeMode())
   }
 
   // -------- handle features screen ----
@@ -91,25 +95,9 @@ export default function Homepage() {
   }
   // ----------- below is the logic for spinning tools to shuffle X & Y axis images
   const swipeThreshold = 50; // Threshold for swipe distance
-
- 
     const startXRef = useRef(0);
     const startYRef = useRef(0);
     const isSwipingRef = useRef(false);
-
-  //   const handleSwipe = (direction) => {
-  //     if (direction === 'left' || direction === 'up') {
-  //       setCurrentIndex((prevIndex) =>
-  //         prevIndex === images.length - 1 ? 0 : prevIndex + 1,
-  //       );
-  //     } else if (direction === 'right' || direction === 'down') {
-  //       setCurrentIndex((prevIndex) =>
-  //         prevIndex === 0 ? images.length - 1 : prevIndex - 1,
-  //       );
-  //     }
-  //     isSwipingRef.current = true;
-  // };
-  
 
   const handleSwipe = (direction) => {
     if (direction === 'left') {
@@ -191,7 +179,9 @@ export default function Homepage() {
       isSwipingRef.current = false;
     };
 
-
+  const handleCategory = (cateogryName) => {
+    setCategory(cateogryName);
+}
 
 
 
@@ -283,25 +273,19 @@ export default function Homepage() {
                 </div>
                 
               <div className="w-full h-[20%] flex flex-row justify-around absolute mt-[15px]">
-                <button
-                  className="min-w-[20%] max-w-auto  h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center "
-                  style={
-                    {
-                      // borderRadius: "5px"
-                    }
-                  }
-                >
-                  All
-                </button>
-                <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center  rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Men
-                </button>
-                <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Women
-                </button>
-                <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Kid&apos;s
-                </button>
+                  {categories.map((cate) => (
+                    <button
+                      key={cate}
+                      className={`min-w-[20%] max-w-auto h-full p-2 flex flex-row justify-center items-center rounded-lg ${category === cate
+                          ? 'bg-black text-white'
+                          : 'bg-[#ECECEC] text-black'
+                        }`}
+                      onClick={() => handleCategory(cate)}
+                    >
+                      {cate.charAt(0).toUpperCase() + cate.slice(1)}
+                    </button>
+                  ))}
+                  
                 </div>
                 
               </div>
@@ -386,7 +370,7 @@ export default function Homepage() {
                 </div>
 
                 <div
-                  className="relative w-[70%] h-full flex flex-row justify-center items-center "
+                  className="relative w-[70%] h-full flex flex-row justify-center items-center border border-white-50 "
                   id="center"
                 >
                    {/* ----------- handle product spinning tools to shuffle images ---------- */}
