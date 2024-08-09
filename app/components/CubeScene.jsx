@@ -1,131 +1,84 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable react/no-unknown-property */
-import React, {useRef, useState, useEffect} from 'react';
-import {Canvas} from '@react-three/fiber';
-import {OrbitControls} from '@react-three/drei';
-import * as THREE from 'three';
-import gsap from 'gsap-trial';
+import React, {useState, useRef} from 'react';
 
-const Cube = ({rotation}) => {
-  const images = [
-    'https://images.unsplash.com/photo-1707003839735-bb9935f3d340?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-  ];
-  const ref = useRef();
-  const loader = new THREE.TextureLoader();
-  const textures = [
-    loader.load(images[0]),
-    loader.load(images[1]),
-    loader.load(images[2]),
-    loader.load(images[3]),
-    loader.load(images[4]),
-    loader.load(images[5]),
-  ];
+const images = [
+  'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+];
 
-  // Array of materials using the textures
-  const materials = textures.map(
-    (texture) => new THREE.MeshBasicMaterial({map: texture}),
-  );
+const swipeThreshold = 50; // Threshold for swipe distance
 
-  // Apply the rotation from the swipe
-  useEffect(() => {
-    gsap.to(ref.current.rotation, {
-      x: rotation.x,
-      y: rotation.y,
-      z: rotation.z,
-      duration: 1,
-      ease: 'power3.inOut',
-    });
-  }, [rotation]);
-
-  return (
-    <mesh
-      className="w-4 h-4"
-      ref={ref}
-      geometry={new THREE.BoxGeometry(4.5, 4.5, 4.5)}
-      material={materials}
-    />
-  );
-};
-
-const CubeScene = (props) => {
-  const {image} = props;
-  console.log('Image Data is Props :', image);
-  const [rotation, setRotation] = useState(new THREE.Euler(0, 0, 0));
+const CubeScene = ({isDarkMode}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const isSwipingRef = useRef(false);
 
   const handleSwipe = (direction) => {
-    const newRotation = rotation.clone();
-
-    switch (direction) {
-      case 'left':
-        newRotation.y -= Math.PI / 2;
-        break;
-      case 'right':
-        newRotation.y += Math.PI / 2;
-        break;
-      case 'up':
-        newRotation.x += Math.PI / 2;
-        break;
-      case 'down':
-        newRotation.x -= Math.PI / 2;
-        break;
-      default:
-        break;
+    if (direction === 'left' || direction === 'up') {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1,
+      );
+    } else if (direction === 'right' || direction === 'down') {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? images.length - 1 : prevIndex - 1,
+      );
     }
-
-    setRotation(newRotation);
+    isSwipingRef.current = true;
   };
 
-  // const configureControls = (controls) => {
-  //   controls.enableZoom = false; // Disables zooming
-  //   controls.enableRotate = false; // Disables default rotation to handle manually
-  //   controls.enablePan = false; // Disables panning to handle manually
-  // };
-
-  // Detecting swipe logic (simplified for illustration)
   const handleTouchStart = (event) => {
-    const startX = event.touches[0].pageX;
-    const startY = event.touches[0].pageY;
+    startXRef.current = event.touches[0].pageX;
+    startYRef.current = event.touches[0].pageY;
+    isSwipingRef.current = false;
+  };
 
-    const handleTouchMove = (e) => {
-      const moveX = e.touches[0].pageX;
-      const moveY = e.touches[0].pageY;
+  const handleTouchMove = (event) => {
+    if (isSwipingRef.current) return;
 
-      const diffX = moveX - startX;
-      const diffY = moveY - startY;
+    const diffX = event.touches[0].pageX - startXRef.current;
+    const diffY = event.touches[0].pageY - startYRef.current;
 
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        // Horizontal movement
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      if (Math.abs(diffX) > swipeThreshold) {
         if (diffX > 0) handleSwipe('right');
         else handleSwipe('left');
-      } else {
-        // Vertical movement
+      }
+    } else {
+      if (Math.abs(diffY) > swipeThreshold) {
         if (diffY > 0) handleSwipe('down');
         else handleSwipe('up');
       }
+    }
+  };
 
-      document.removeEventListener('touchmove', handleTouchMove);
-    };
-
-    document.addEventListener('touchmove', handleTouchMove);
+  const handleTouchEnd = () => {
+    isSwipingRef.current = false;
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center   ">
-      <Canvas className="z-0 bg-pink-500">
-        <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-        <Cube rotation={rotation} />
-        <OrbitControls enableZoom={false} />
-      </Canvas>
-      <div
-        onTouchStart={handleTouchStart}
-        className="absolute top-0 left-0 right-0 bottom-0"
-      />
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
+      <div className="w-full h-full flex items-center justify-center p-1">
+        <img
+          src={images[currentIndex]}
+          alt="carousel"
+          className="w-full h-full object-cover transition-transform duration-500 rounded-sm"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        />
+      </div>
+      <div className="absolute bottom-0 w-full flex justify-center pb-4">
+        {images.map((_, index) => (
+          <div
+            key={index}
+            className={`h-2 w-2 rounded-full mx-1 ${
+              index === currentIndex ? 'bg-white' : 'bg-gray-400'
+            }`}
+          ></div>
+        ))}
+      </div>
     </div>
   );
 };

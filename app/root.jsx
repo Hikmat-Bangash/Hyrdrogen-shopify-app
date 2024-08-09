@@ -16,6 +16,10 @@ import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import {Layout} from '~/components/Layout';
+// import {Provider} from 'react-redux';
+// import {PersistGate} from 'redux-persist/es/integration/react';
+// import store, {persistor} from './store/store';
+import {Providers} from './redux-toolkit/provider';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -117,9 +121,11 @@ export default function App() {
       </head>
       <body className="sm:hidden">
         {/* <div className="sm:hidden"> */}
-        <Layout {...data}>
-          <Outlet />
-        </Layout>
+        <Providers>
+          <Layout {...data}>
+            <Outlet />
+          </Layout>
+        </Providers>
         {/* </div> */}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />

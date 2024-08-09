@@ -1,0 +1,43 @@
+.bg-top-light {
+  background-image: url('/splash/top1.png');
+  background-size: 100% 100%;
+}
+
+.testing {
+    border: 3px solid red;
+}
+
+.bg-top-dark {
+  background-image: url('/splash/top1-dark.png');
+  background-size: 100% 100%;
+}
+
+.bg-left-light {
+  background-image: url('/splash/left1.png');
+  background-size: 100% 100%;
+}
+
+.bg-left-dark {
+  background-image: url('/splash/left-dark.png');
+  background-size: 100% 100%;
+}
+
+.bg-right-light {
+  background-image: url('/splash/right1.png');
+  background-size: 100% 100%;
+}
+
+.bg-right-dark {
+  background-image: url('/splash/right-dark.png');
+  background-size: 100% 100%;
+}
+
+.bg-bottom-light {
+  background-image: url('/splash/bottom1.png');
+  background-size: 100% 100%;
+}
+
+.bg-bottom-dark {
+  background-image: url('/splash/bottom-dark.png');
+  background-size: 100% 100%;
+}
