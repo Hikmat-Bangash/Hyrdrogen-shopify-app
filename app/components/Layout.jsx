@@ -1,10 +1,12 @@
-import {Await} from '@remix-run/react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import {Await, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Aside} from '~/components/Aside';
+// eslint-disable-next-line no-unused-vars
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/Cart';
-import {Link} from '@remix-run/react';
 
 import {
   PredictiveSearchForm,
@@ -15,6 +17,12 @@ import {
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
+  const handleBackButtonClick = () => {
+    // eslint-disable-next-line prettier/prettier
+    console.log("handleback button clicked")
+    window.history.back();
+  };
+
   return (
     <>
       {/* <CartAside cart={cart} />
@@ -24,24 +32,18 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
         <div className="w-full h-full   absolute   ">
           <div className="w-full h-[6%] bg-yellow-100 flex flex-row items-start justify-center z-20 ">
             <div className="w-[90%] h-[6%] flex flex-row fixed top-0   ">
-              <div className="w-[50%] h-full flex flex-row justify-start items-center ">
+              <div
+                className="w-[50%] h-full flex flex-row justify-start items-center "
+                onClick={handleBackButtonClick}
+              >
                 <img
                   src="/splash/back.png"
                   alt="backimage"
                   className="w-[14px] h-[11px]"
                 />
-                <Link
-                  // key={product.id}
-                  // className="recommended-product"
-                  to={`/`}
-                >
-                  <h3
-                    className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5"
-                    // onClick={goBack}
-                  >
-                    Back
-                  </h3>
-                </Link>
+                <h3 className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5">
+                  Back
+                </h3>
               </div>
 
               <div className="w-[50%] h-full  flex flex-row justify-end items-center ">
@@ -77,6 +79,7 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
 /**
  * @param {{cart: LayoutProps['cart']}}
  */
+// eslint-disable-next-line no-unused-vars
 function CartAside({cart}) {
   return (
     <Aside id="cart-aside" heading="CART">
@@ -91,6 +94,7 @@ function CartAside({cart}) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function SearchAside() {
   return (
     <Aside id="search-aside" heading="SEARCH">
@@ -132,6 +136,7 @@ function SearchAside() {
  *   shop: HeaderQuery['shop'];
  * }}
  */
+// eslint-disable-next-line no-unused-vars
 function MobileMenuAside({menu, shop}) {
   return (
     menu &&
