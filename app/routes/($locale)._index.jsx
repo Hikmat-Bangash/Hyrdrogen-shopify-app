@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
@@ -17,6 +18,9 @@ import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
+import "../styles/homepage.css"
+
+
 // import { useSelector } from 'react-redux';
 /**
  * @type {MetaFunction}
@@ -46,29 +50,36 @@ export default function Homepage() {
   
 
   const images = [
-    "/splash/watch1.png",
+    ["/splash/watch1.png",
     "/splash/watch2.png",
     "/splash/watch3.png",
     "/splash/watch4.png",
-    "/splash/watch5.png",
-
-    // 'https://images.unsplash.com/photo-1706965048366-75bb371fa357?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    // 'https://images.unsplash.com/photo-1706493684415-375cedfb7454?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    // 'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    // 'https://images.unsplash.com/photo-1706425278305-b9440b5fcd1f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    // 'https://images.unsplash.com/photo-1706554597534-52032971bb55?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    "/splash/watch5.png"],
+    [
+      "/splash/bracelet1.png",
+      "/splash/bracelet2.png",
+      "/splash/bracelet3.png",
+    ],
+    [
+      "/splash/shart1.png",
+      "/splash/shart2.png",
+      "/splash/shart3.png",
+    ],
+    [
+      "/splash/digital-watch1.png",
+      "/splash/digital-watch2.png",
+      "/splash/digital-watch3.png",
+      "/splash/digital-watch4.png",
+    ],
 
   ];
 
   const categories = ["all", "men", "women", "kids"]
-  // const [isDarkMode, setIsDarkMode] = useState(false);
   const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
   const [Images, setImages] = useState(images);
-  const [centerImageIdx, setCenterImageIdx] = useState(0);
-  const [LeftImageIdx, setLeftImageIdx] = useState(1);
-  const [RightImageIdx, setRightImageIdx] = useState(2);
-  const [TopImageIdx, setTopImageIdx] = useState(3);
-  const [BottomImageIdx, setBottomImageIdx] = useState(4);
+
+  const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
+  const [currentVariantIdx, setCurrentVariantIdx] = useState(0); // Track the current variant index
    
   const [IsGallery, setGallery] = useState(false);
   const [category, setCategory] = useState("all");
@@ -99,55 +110,38 @@ export default function Homepage() {
     const startYRef = useRef(0);
     const isSwipingRef = useRef(false);
 
-  const handleSwipe = (direction) => {
+  // Handle X-axis swipe (left/right)
+  const handleSwipeX = (direction) => {
     if (direction === 'left') {
-      const newLeftImageIdx = centerImageIdx;
-      const newCenterImageIdx = RightImageIdx;
-      const newRightImageIdx = LeftImageIdx;
-      const newTopImageIdx = BottomImageIdx;
-      const newBottomImageIdx = TopImageIdx;
-      setLeftImageIdx(newLeftImageIdx);
-      setCenterImageIdx(newCenterImageIdx);
-      setRightImageIdx(newRightImageIdx);
-      setTopImageIdx(newTopImageIdx);
-      setBottomImageIdx(newBottomImageIdx);
+      setCurrentProductIdx((prev) => (prev + 1) % images.length);
     } else if (direction === 'right') {
-      const newLeftImageIdx = RightImageIdx;
-      const newCenterImageIdx = LeftImageIdx;
-      const newRightImageIdx = centerImageIdx;
-      const newTopImageIdx = BottomImageIdx;
-      const newBottomImageIdx = TopImageIdx;
-      setLeftImageIdx(newLeftImageIdx);
-      setCenterImageIdx(newCenterImageIdx);
-      setRightImageIdx(newRightImageIdx);
-      setTopImageIdx(newTopImageIdx);
-      setBottomImageIdx(newBottomImageIdx);
-    } else if (direction === 'up') {
-      const newTopImageIdx = centerImageIdx;
-      const newCenterImageIdx = BottomImageIdx;
-      const newBottomImageIdx = TopImageIdx;
-      const newLeftImageIdx = RightImageIdx;
-      const newRightImageIdx = LeftImageIdx;
-      setTopImageIdx(newTopImageIdx);
-      setCenterImageIdx(newCenterImageIdx);
-      setBottomImageIdx(newBottomImageIdx);
-      setLeftImageIdx(newLeftImageIdx);
-      setRightImageIdx(newRightImageIdx);
-    } else if (direction === 'down') {
-      const newTopImageIdx = BottomImageIdx;
-      const newCenterImageIdx = TopImageIdx;
-      const newBottomImageIdx = centerImageIdx;
-      const newLeftImageIdx = RightImageIdx;
-      const newRightImageIdx = LeftImageIdx;
-      setTopImageIdx(newTopImageIdx);
-      setCenterImageIdx(newCenterImageIdx);
-      setBottomImageIdx(newBottomImageIdx);
-      setLeftImageIdx(newLeftImageIdx);
-      setRightImageIdx(newRightImageIdx);
+      setCurrentProductIdx((prev) => (prev - 1 + images.length) % images.length);
     }
-    isSwipingRef.current = true;
+    // Reset variant index to the first variant when the product changes
+    setCurrentVariantIdx(0);
   };
 
+
+  // Handle Y-axis swipe (up/down)
+  const handleSwipeY = (direction) => {
+    const variants = images[currentProductIdx];
+    if (direction === 'up') {
+      setCurrentVariantIdx((prev) => (prev + 1) % variants.length);
+    } else if (direction === 'down') {
+      setCurrentVariantIdx((prev) => (prev - 1 + variants.length) % variants.length);
+    }
+  };
+
+  // Unified swipe handler based on direction
+  const handleSwipe = (direction) => {
+    if (direction === 'left' || direction === 'right') {
+      handleSwipeX(direction);
+    } else if (direction === 'up' || direction === 'down') {
+      handleSwipeY(direction);
+    }
+
+    isSwipingRef.current = true;
+  };
 
 
     const handleTouchStart = (event) => {
@@ -342,7 +336,7 @@ export default function Homepage() {
                   id="top"
                 >
                   <img
-                    src={Images[TopImageIdx]}
+                      src={images[currentProductIdx][(currentVariantIdx + 1) % images[currentProductIdx].length]}
                     alt="topImg"
                       className="w-[50px]  transform skew-x-[10deg]"
                       loading='lazy'
@@ -362,7 +356,7 @@ export default function Homepage() {
                   id="left"
                 >
                   <img
-                    src={Images[LeftImageIdx]}
+                      src={images[(currentProductIdx - 1 + images.length) % images.length][0]}
                     alt='leftImg'
                       className="w-[50px]  transform rotate-[-90deg] skew-x-[10deg]"
                       loading='lazy'
@@ -377,7 +371,7 @@ export default function Homepage() {
                     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
                       <div className="w-full h-full flex items-center justify-center p-1">
                         <img
-                          src={Images[centerImageIdx]}
+                          src={images[currentProductIdx][currentVariantIdx]}
                           alt="carousel"
                           className="w-full h-full object-cover transition-transform duration-500 rounded-md"
                           onTouchStart={handleTouchStart}
@@ -405,7 +399,7 @@ export default function Homepage() {
                   id="right"
                 >
                   <img
-                    src={Images[RightImageIdx]}
+                      src={images[(currentProductIdx + 1) % images.length][0]}
                     alt="rightImg"
                       className="w-[45px] transform rotate-[90deg] skew-x-[10deg]"
                       loading='lazy'
@@ -425,7 +419,7 @@ export default function Homepage() {
                 >
                   <img
                     // ref={bottomImageRef}
-                    src={Images[BottomImageIdx]}
+                      src={images[currentProductIdx][(currentVariantIdx + 2) % images[currentProductIdx].length]}
                     alt="splash1"
                       className="w-[60px]  transform skew-x-[10deg]"
                       loading='lazy'
