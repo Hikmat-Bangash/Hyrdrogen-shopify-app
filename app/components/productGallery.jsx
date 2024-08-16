@@ -5,14 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {useState} from 'react';
 // import {MdOutlineArrowBack} from 'react-icons/md';
-const ProductGallery = ({isDarkMode, setgallery}) => {
-  const images = [
-    // '/splash/watch1.png',
-    '/splash/watch2.png',
-    '/splash/watch3.png',
-    '/splash/watch4.png',
-    '/splash/watch5.png',
-  ];
+const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
 
   const [activeImg, setactiveImg] = useState(0);
 
@@ -46,14 +39,14 @@ const ProductGallery = ({isDarkMode, setgallery}) => {
           </div>
           {/* product showing section */}
           <div className="product-showing-section flex justify-center items-center w-full h-[20rem]  p-3">
-            <img src={images[activeImg]} alt="mainImg" />
+            <img src={galleryImages[activeImg]} alt="mainImg" />
           </div>
         </div>
 
         {/* product images */}
         <div className="product-imgs w-full flex gap-2 ">
           {/* product1 */}
-          {images.map((img, index) => (
+          {galleryImages.map((img, index) => (
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={index}
@@ -62,7 +55,7 @@ const ProductGallery = ({isDarkMode, setgallery}) => {
               }`}
               onClick={() => handleActiveImg(index)}
             >
-              <img src={images[index]} alt="productImg" />
+              <img src={galleryImages[index]} alt="productImg" />
             </div>
           ))}
           {/* <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md border-2 border-[#DAAF37]"></div>

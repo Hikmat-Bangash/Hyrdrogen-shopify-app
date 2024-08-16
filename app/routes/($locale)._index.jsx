@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -12,7 +13,6 @@ import { defer } from '@shopify/remix-oxygen';
 import {Await, Link} from '@remix-run/react';
 import {Suspense, useRef, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-// import CubeScene from '~/components/CubeScene';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
@@ -21,7 +21,6 @@ import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
 import "../styles/homepage.css"
 
 
-// import { useSelector } from 'react-redux';
 /**
  * @type {MetaFunction}
  */
@@ -50,28 +49,22 @@ export default function Homepage() {
   
 
   const images = [
-    ["/splash/watch1.png",
-    "/splash/watch2.png",
-    "/splash/watch3.png",
-    "/splash/watch4.png",
-    "/splash/watch5.png"],
-    [
-      "/splash/bracelet1.png",
-      "/splash/bracelet2.png",
-      "/splash/bracelet3.png",
-    ],
-    [
-      "/splash/shart1.png",
-      "/splash/shart2.png",
-      "/splash/shart3.png",
-    ],
-    [
-      "/splash/digital-watch1.png",
-      "/splash/digital-watch2.png",
-      "/splash/digital-watch3.png",
-      "/splash/digital-watch4.png",
-    ],
-
+    {
+      category: 'men',
+      variants: ["/splash/watch1.png", "/splash/watch2.png", "/splash/watch3.png", "/splash/watch4.png", "/splash/watch5.png"]
+    },
+    {
+      category: 'women',
+      variants: ["/splash/bracelet1.png", "/splash/bracelet2.png", "/splash/bracelet3.png"]
+    },
+    {
+      category: 'men',
+      variants: ["/splash/shart1.png", "/splash/shart2.png", "/splash/shart3.png"]
+    },
+    {
+      category: 'men',
+      variants: ["/splash/digital-watch1.png", "/splash/digital-watch2.png", "/splash/digital-watch3.png", "/splash/digital-watch4.png"]
+    },
   ];
 
   const categories = ["all", "men", "women", "kids"]
@@ -113,9 +106,9 @@ export default function Homepage() {
   // Handle X-axis swipe (left/right)
   const handleSwipeX = (direction) => {
     if (direction === 'left') {
-      setCurrentProductIdx((prev) => (prev + 1) % images.length);
+      setCurrentProductIdx((prev) => (prev + 1) % Images.length);
     } else if (direction === 'right') {
-      setCurrentProductIdx((prev) => (prev - 1 + images.length) % images.length);
+      setCurrentProductIdx((prev) => (prev - 1 + Images.length) % Images.length);
     }
     // Reset variant index to the first variant when the product changes
     setCurrentVariantIdx(0);
@@ -124,7 +117,9 @@ export default function Homepage() {
 
   // Handle Y-axis swipe (up/down)
   const handleSwipeY = (direction) => {
-    const variants = images[currentProductIdx];
+    const variants = Images[currentProductIdx]?.variants || [];
+    if (variants.length === 0) return;  // Check to avoid errors if variants array is empty
+
     if (direction === 'up') {
       setCurrentVariantIdx((prev) => (prev + 1) % variants.length);
     } else if (direction === 'down') {
@@ -173,13 +168,20 @@ export default function Homepage() {
       isSwipingRef.current = false;
     };
 
-  const handleCategory = (cateogryName) => {
-    setCategory(cateogryName);
-}
+  const handleCategory = (categoryName) => {
+    setCategory(categoryName);
 
+    if (categoryName === 'all') {
+      setImages(images);
+    } else {
+      const filteredImages = images.filter((product) => product.category === categoryName);
+      setImages(filteredImages);
+      console.log("filteredImages Length: " + filteredImages.length)
+    }
 
-
-
+    setCurrentProductIdx(0);
+    setCurrentVariantIdx(0);
+  }
 
   return (
     <>
@@ -188,33 +190,7 @@ export default function Homepage() {
       <div className="w-full h-[30%] cursor-pointer ">
         <div className="w-full h-full flex flex-col items-center">
           <div className="w-[90%] h-[25%] flex flex-row ">
-            {/* <div className="w-[50%] h-full flex flex-row justify-start items-center ">
-              <img
-                src="/splash/back.png"
-                alt="backimage"
-                className="w-[14px] h-[11px]"
-              />
-              <Link
-                // key={product.id}
-                // className="recommended-product"
-                to={`/`}
-              >
-                <h3
-                  className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5"
-                  // onClick={goBack}
-                >
-                  Back
-                </h3>
-              </Link>
-            </div>
-
-            <div className="w-[50%] h-full  flex flex-row justify-end items-center ">
-              <img
-                src="/splash/notification.png"
-                alt="noti"
-                className="w-[19px] h-[20px] right-0 "
-              />
-            </div> */}
+  
             </div>
             
           {/* </Link> */}
@@ -319,6 +295,7 @@ export default function Homepage() {
               checked={isDarkMode}
               onChange={() => setIsDarkMode(!isDarkMode)}
             /> */}
+              
           </div>
          
         </div>
@@ -336,7 +313,7 @@ export default function Homepage() {
                   id="top"
                 >
                   <img
-                      src={images[currentProductIdx][(currentVariantIdx + 1) % images[currentProductIdx].length]}
+                      src={Images[currentProductIdx]?.variants[(currentVariantIdx + 1) % Images[currentProductIdx].variants.length]}
                     alt="topImg"
                       className="w-[50px]  transform skew-x-[10deg]"
                       loading='lazy'
@@ -356,7 +333,7 @@ export default function Homepage() {
                   id="left"
                 >
                   <img
-                      src={images[(currentProductIdx - 1 + images.length) % images.length][0]}
+                      src={Images[(currentProductIdx - 1 + Images.length) % Images.length]?.variants[0]}
                     alt='leftImg'
                       className="w-[50px]  transform rotate-[-90deg] skew-x-[10deg]"
                       loading='lazy'
@@ -371,7 +348,7 @@ export default function Homepage() {
                     <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
                       <div className="w-full h-full flex items-center justify-center p-1">
                         <img
-                          src={images[currentProductIdx][currentVariantIdx]}
+                          src={Images[currentProductIdx]?.variants[currentVariantIdx]}
                           alt="carousel"
                           className="w-full h-full object-cover transition-transform duration-500 rounded-md"
                           onTouchStart={handleTouchStart}
@@ -399,7 +376,7 @@ export default function Homepage() {
                   id="right"
                 >
                   <img
-                      src={images[(currentProductIdx + 1) % images.length][0]}
+                      src={Images[(currentProductIdx + 1) % Images.length]?.variants[0]}
                     alt="rightImg"
                       className="w-[45px] transform rotate-[90deg] skew-x-[10deg]"
                       loading='lazy'
@@ -419,7 +396,7 @@ export default function Homepage() {
                 >
                   <img
                     // ref={bottomImageRef}
-                      src={images[currentProductIdx][(currentVariantIdx + 2) % images[currentProductIdx].length]}
+                      src={Images[currentProductIdx]?.variants[(currentVariantIdx + 2) % Images[currentProductIdx].variants.length]}
                     alt="splash1"
                       className="w-[60px]  transform skew-x-[10deg]"
                       loading='lazy'
@@ -435,9 +412,9 @@ export default function Homepage() {
       {/* --- Ending the toggle functionality by chaning bg-dark and gray accordingly. */}
 
         {/* showing product gallery */}
-        {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} />}
+        {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={images[currentProductIdx]} />}
         {/* showing features actions */}
-        {IsfeaturesMode && <Features isDarkMode={isDarkMode} productImg={Images[centerImageIdx]} />}
+        {IsfeaturesMode && <Features isDarkMode={isDarkMode} productImg={images[currentProductIdx][currentVariantIdx]} />}
       </div>     
 
     </>
