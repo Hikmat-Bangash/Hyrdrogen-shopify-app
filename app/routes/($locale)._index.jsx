@@ -176,7 +176,6 @@ export default function Homepage() {
     } else {
       const filteredImages = images.filter((product) => product.category === categoryName);
       setImages(filteredImages);
-      console.log("filteredImages Length: " + filteredImages.length)
     }
 
     setCurrentProductIdx(0);
