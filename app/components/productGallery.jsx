@@ -6,6 +6,7 @@
 import React, {useState} from 'react';
 // import {MdOutlineArrowBack} from 'react-icons/md';
 const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
+  console.log("galerryImages: ", galleryImages)
 
   const [activeImg, setactiveImg] = useState(0);
 

@@ -411,9 +411,9 @@ export default function Homepage() {
       {/* --- Ending the toggle functionality by chaning bg-dark and gray accordingly. */}
 
         {/* showing product gallery */}
-        {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={images[currentProductIdx]} />}
+        {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={Images[currentProductIdx]?.variants} />}
         {/* showing features actions */}
-        {IsfeaturesMode && <Features isDarkMode={isDarkMode} productImg={images[currentProductIdx][currentVariantIdx]} />}
+        {IsfeaturesMode && <Features isDarkMode={isDarkMode} productImg={Images[currentProductIdx]?.variants[currentVariantIdx]} />}
       </div>     
 
     </>
