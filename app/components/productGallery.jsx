@@ -6,7 +6,6 @@
 import React, {useState} from 'react';
 // import {MdOutlineArrowBack} from 'react-icons/md';
 const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
-  console.log("galerryImages: ", galleryImages)
 
   const [activeImg, setactiveImg] = useState(0);
 
@@ -19,8 +18,8 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
   };
 
   return (
-    <div className="contianer w-full h-screen absolute z-40 top-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
-      <div className="wrapper overflow-hidden relative w-full h-[32rem] flex flex-col gap-[1rem]  rounded-[0.93rem] px-1">
+    <div className="contianer w-full h-screen fixed z-40 top-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
+      <div className=" overflow-hidden relative w-full h-[32rem] flex flex-col gap-[1rem]  rounded-[0.93rem] px-1">
         {/* product screen */}
         <div
           className={`screen w-full h-[420px] bg-gradient-to-b ${isDarkMode ? "from-gray-800 to-black-50" : " from-white-100 to-white-50"}  bg-opacity-30 rounded-[0.93rem] flex flex-col gap-2 `}
@@ -45,7 +44,7 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
         </div>
 
         {/* product images */}
-        <div className="product-imgs w-full flex gap-2 ">
+        <div className="product-imgs w-full overflow-x-auto flex gap-2 ">
           {/* product1 */}
           {galleryImages.map((img, index) => (
             <div

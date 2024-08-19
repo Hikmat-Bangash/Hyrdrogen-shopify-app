@@ -18,8 +18,7 @@ import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
-import "../styles/homepage.css"
-
+import Carousal from '~/components/Carousal'
 
 /**
  * @type {MetaFunction}
@@ -182,20 +181,24 @@ export default function Homepage() {
     setCurrentVariantIdx(0);
   }
 
+  // --- select one of the carousel product -----
+  const handleCarouselProduct = (product) => {
+    setCurrentProductIdx(product);
+    setGallery((prev) => !prev)
+  }
+
   return (
     <>
     
     <div className="w-full h-full absolute ">
-      <div className="w-full h-[30%] cursor-pointer ">
+        <div className="w-full h-[30%] cursor-pointer mt-[3rem] bg-[#FEFCEB]">
         <div className="w-full h-full flex flex-col items-center">
-          <div className="w-[90%] h-[25%] flex flex-row ">
-  
-            </div>
             
           {/* </Link> */}
           <div className="w-[90%] h-[75%] cursor-pointer ">
             <div className="w-full h-full relative ">
-              <h1
+                <h1
+                  className='text-[#DAAF37]'
                 style={{
                   fontFamily: 'Avenir LT Std',
                   fontSize: '28px',
@@ -206,9 +209,15 @@ export default function Homepage() {
                 }}
               >
                 Kelly&apos;s Kapsule
-              </h1>
-              <div className="w-full h-[25%]  mt-[25px]  relative ">
-                <div className="relative w-[85%] h-full ">
+                </h1>
+                {/* ------------- Carousal section ----------- */}
+                <Carousal handleCarouselProduct={handleCarouselProduct} />
+
+                {/* ------------- Carousal section END ----------- */}
+
+
+                <div className="w-full h-[25%] mt-[12px]  relative ">
+                <div className="relative w-[85%] h-full border border-gray-500 rounded-md">
                   <input
                     type="text"
                     className=" w-full h-full grow pl-10 pr-3 py-2 border rounded-lg outline-0  "
@@ -241,7 +250,7 @@ export default function Homepage() {
                 </div>
                 </div>
                 
-              <div className="w-full h-[20%] flex flex-row justify-around absolute mt-[15px]">
+              <div className="w-full h-[20%]  flex flex-row justify-around absolute mt-[15px]">
                   {categories.map((cate) => (
                     <button
                       key={cate}
@@ -275,7 +284,7 @@ export default function Homepage() {
 {/* ---------- dark/light mode container -------- */}
           <div className="w-[20%] mt-2 h-[2.3rem] flex flex-row justify-between rounded-full items-center border border-gray-300 px-1 py-2">
             {/* light mode button */}
-            <div className="wrapper w-full flex justify-start items-center">
+            <div className=" w-full flex justify-start items-center">
             <div className={`light-mode-btn justify-center items-center w-[2rem] h-[2rem] rounded-full bg-white ${isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
               <img src="/splash/light-mode.png" alt="light-mode" className='w-[1.5rem] '/>
               </div>
