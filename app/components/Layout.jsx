@@ -15,15 +15,18 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
+import {useDispatch} from 'react-redux';
+import {hanldeFeaturePage} from '~/redux-toolkit/slices/index.slice';
 
 /**
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
+  const dispatch = useDispatch();
+
   const handleBackButtonClick = () => {
-    // eslint-disable-next-line prettier/prettier
-    console.log("handleback button clicked")
-    window.history.back();
+    dispatch(hanldeFeaturePage());
+    // window.history.back();
   };
 
   return (
