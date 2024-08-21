@@ -1,8 +1,5 @@
 import React, {useState} from 'react';
 
-export const initialFirstPic = '/splash/InitialScreen/firstScreenPng.png';
-export const initialSecondtPic = '/splash/InitialScreen/auth-img.png';
-
 const StartedScreen = ({setIsStartedPage}) => {
   const [IsFirstPage, setIsFirstPage] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -21,7 +18,7 @@ const StartedScreen = ({setIsStartedPage}) => {
       {IsFirstPage ? (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
         <img
-          src={initialFirstPic}
+          src="/splash/firstScreenPng.png"
           alt="firstScreen"
           className="w-full h-full"
           onClick={handlePageChange}
@@ -36,7 +33,7 @@ const StartedScreen = ({setIsStartedPage}) => {
               </div> // Placeholder or spinner while the image loads
             )}
             <img
-              src={initialSecondtPic}
+              src="/splash/auth-img.png"
               alt="firstScreen"
               className={`transition-opacity duration-500 ease-in-out ${
                 isImageLoaded ? 'opacity-100' : 'opacity-0'
