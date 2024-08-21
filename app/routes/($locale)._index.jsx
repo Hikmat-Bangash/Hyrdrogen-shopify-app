@@ -7,9 +7,11 @@ const Index = () => {
 
   return (
     <>
-      {IsStartedPage ? <StartedScreen setIsStartedPage={setIsStartedPage} /> : <Homepage />}
-      {/* <StartedScreen />
-      <Homepage /> */}
+      {IsStartedPage ? (
+        <StartedScreen setIsStartedPage={setIsStartedPage} />
+      ) : (
+        <Homepage />
+      )}
     </>
   );
 };

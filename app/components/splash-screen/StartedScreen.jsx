@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 const StartedScreen = ({setIsStartedPage}) => {
   const [IsFirstPage, setIsFirstPage] = useState(true);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const handlePageChange = () => {
     setIsFirstPage((prev) => !prev);
@@ -26,10 +27,18 @@ const StartedScreen = ({setIsStartedPage}) => {
         <div className="auth-section w-full h-full flex flex-col justify-between">
           <div className="topSection flex flex-col gap-20 relative">
             {/* picture */}
+            {!isImageLoaded && (
+              <div className="spinner h-[180px] flex justify-center items-center">
+                <div className="w-14 h-14 border-4 border-[#DAAF37] border-dotted rounded-full animate-spin"></div>
+              </div> // Placeholder or spinner while the image loads
+            )}
             <img
               src="/splash/initialScreen/auth-img.png"
               alt="firstScreen"
-              className=""
+              className={`transition-opacity duration-500 ease-in-out ${
+                isImageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={() => setIsImageLoaded(true)}
             />
             {/* description */}
             <p className="leading-[20px] text-[1rem] text-[#282828] p-3">

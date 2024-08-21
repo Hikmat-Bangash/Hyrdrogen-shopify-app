@@ -50,18 +50,22 @@ export default function Homepage() {
 
     const images = [
         {
+            name: "watcht",
             category: 'men',
             variants: ["/splash/watch1.png", "/splash/watch2.png", "/splash/watch3.png", "/splash/watch4.png", "/splash/watch5.png"]
         },
         {
+            name: "bracelet",
             category: 'women',
             variants: ["/splash/bracelet1.png", "/splash/bracelet2.png", "/splash/bracelet3.png"]
         },
         {
+            name: "shart",
             category: 'men',
             variants: ["/splash/shart1.png", "/splash/shart2.png", "/splash/shart3.png"]
         },
         {
+            name: "digital watch",
             category: 'men',
             variants: ["/splash/digital-watch1.png", "/splash/digital-watch2.png", "/splash/digital-watch3.png", "/splash/digital-watch4.png"]
         },
@@ -76,8 +80,8 @@ export default function Homepage() {
 
     const [IsGallery, setGallery] = useState(false);
     const [category, setCategory] = useState("all");
-
     const [IsShowProductDesc, setShowProductDesc] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // changing light and dark mode func def
     const ThemeMode = () => {
@@ -183,6 +187,21 @@ export default function Homepage() {
         setCurrentVariantIdx(0);
     }
 
+
+    //-------------- handle search query for product filtering --------
+    const handleSearchChange = (event) => {
+        const query = event.target.value.toLowerCase();
+        setSearchQuery(query);
+
+        const filteredImages = images.filter((product) =>
+            product.name.toLowerCase().includes(query)
+        );
+
+        setImages(filteredImages);
+        setCurrentProductIdx(0);
+        setCurrentVariantIdx(0);
+    }
+
     // --- select one of the carousel product -----
     const handleCarouselProduct = (product) => {
         setCurrentProductIdx(product);
@@ -222,10 +241,13 @@ export default function Homepage() {
                                     <div className="relative w-[85%] h-full border border-gray-500 rounded-md">
                                         <input
                                             type="text"
-                                            className=" w-full h-full grow pl-10 pr-3 py-2 border rounded-lg outline-0  "
+                                            className="w-full h-full grow pl-10 pr-3 py-2 border rounded-lg outline-0"
                                             style={{ border: '0px' }}
                                             placeholder="Search"
+                                            value={searchQuery} // Bind the input value to the searchQuery state
+                                            onChange={handleSearchChange} // Call the handler on change
                                         />
+
                                         <svg
                                             className="absolute inset-y-0 left-0 ml-3 mt-3 w-6 h-6 text-gray-400"
                                             fill="none"
@@ -298,13 +320,6 @@ export default function Homepage() {
                                     <img src="/splash/dark-mode.png" alt="light-mode" className='w-[1.5rem] ' />
                                 </div>
                             </div>
-
-                            {/* <input
-              type="checkbox"
-              className="toggle toggle-md text-white border-white"
-              checked={isDarkMode}
-              onChange={() => setIsDarkMode(!isDarkMode)}
-            /> */}
 
                         </div>
 
