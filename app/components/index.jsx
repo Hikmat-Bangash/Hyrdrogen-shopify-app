@@ -77,6 +77,9 @@ export default function Homepage() {
 
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
     const [currentVariantIdx, setCurrentVariantIdx] = useState(0); // Track the current variant index
+    const [transitionDirection, setTransitionDirection] = useState(''); // For X-axis transitions
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [transitionDirectionY, setTransitionDirectionY] = useState(null);
 
     const [IsGallery, setGallery] = useState(false);
     const [category, setCategory] = useState("all");
@@ -110,34 +113,49 @@ export default function Homepage() {
 
     // Handle X-axis swipe (left/right)
     const handleSwipeX = (direction) => {
-        if (direction === 'left') {
-            setCurrentProductIdx((prev) => (prev + 1) % Images.length);
-        } else if (direction === 'right') {
-            setCurrentProductIdx((prev) => (prev - 1 + Images.length) % Images.length);
-        }
-        // Reset variant index to the first variant when the product changes
-        setCurrentVariantIdx(0);
+        setIsTransitioning(true);
+        setTransitionDirection(direction);
+
+        setTimeout(() => {
+            if (direction === 'left') {
+                setCurrentProductIdx((prev) => (prev + 1) % Images.length);
+            } else if (direction === 'right') {
+                setCurrentProductIdx((prev) => (prev - 1 + Images.length) % Images.length);
+            }
+            // Reset variant index to the first variant when the product changes
+            setCurrentVariantIdx(0);
+
+            setIsTransitioning(false);
+        }, 300); // Duration of the animation (should match the transition duration in Tailwind)
     };
 
 
     // Handle Y-axis swipe (up/down)
     const handleSwipeY = (direction) => {
-        const variants = Images[currentProductIdx]?.variants || [];
-        if (variants.length === 0) return;  // Check to avoid errors if variants array is empty
+        setIsTransitioning(true);
+        setTransitionDirectionY(direction);
 
-        if (direction === 'up') {
-            setCurrentVariantIdx((prev) => (prev + 1) % variants.length);
-        } else if (direction === 'down') {
-            setCurrentVariantIdx((prev) => (prev - 1 + variants.length) % variants.length);
-        }
+        setTimeout(() => {
+            const variants = Images[currentProductIdx]?.variants || [];
+            if (variants.length === 0) return;
+
+            if (direction === 'up') {
+                setCurrentVariantIdx((prev) => (prev + 1) % variants.length);
+            } else if (direction === 'down') {
+                setCurrentVariantIdx((prev) => (prev - 1 + variants.length) % variants.length);
+            }
+            setIsTransitioning(false);
+        }, 300); // Ensure the duration matches the CSS transition duration
     };
 
     // Unified swipe handler based on direction
     const handleSwipe = (direction) => {
         if (direction === 'left' || direction === 'right') {
             handleSwipeX(direction);
+            setTransitionDirectionY(null);
         } else if (direction === 'up' || direction === 'down') {
             handleSwipeY(direction);
+            setTransitionDirection(null);
         }
 
         isSwipingRef.current = true;
@@ -343,8 +361,8 @@ export default function Homepage() {
                                                 className="w-[50px]  transform skew-x-[10deg]"
                                                 loading='lazy'
                                             />
-                                        ) }
-                                        
+                                        )}
+
                                     </div>
                                 </div>
 
@@ -367,31 +385,43 @@ export default function Homepage() {
                                                 loading='lazy'
                                             />
                                         )}
-                                       
+
                                     </div>
 
                                     <div
                                         className="relative w-[70%] h-full flex flex-row justify-center items-center border border-white-50 "
                                         id="center"
                                     >
-                                        {/* ----------- handle product spinning tools to shuffle images ---------- */}
-                                        <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
-                                            <div className="w-full h-full flex items-center justify-center p-1">
-                                                {Images[currentProductIdx]?.variants[currentVariantIdx] ? (
-                                                    <img
-                                                        src={Images[currentProductIdx]?.variants[currentVariantIdx]}
-                                                        alt="carousel"
-                                                        className="w-full h-full object-cover transition-transform duration-500 rounded-md"
-                                                        onTouchStart={handleTouchStart}
-                                                        onTouchMove={handleTouchMove}
-                                                        onTouchEnd={handleTouchEnd}
-                                                    />
-                                                ): (
-                                                        <div className="no-product w-full h-full flex justify-center items-center word-break-all font-bold text-[1.2rem] text-red-600">Oops!, No Product Found</div>    
-                                                )}
-                                               
-                                            </div>
+                                        {/* ----- handle product spinning tools to slide images images ----- */}
+                                        <div className={`w-full h-full flex items-center justify-center p-1 relative overflow-hidden`}>
+                                            {Images[currentProductIdx]?.variants[currentVariantIdx] && (
+                                                <img
+                                                    src={Images[currentProductIdx]?.variants[currentVariantIdx]}
+                                                    alt="carousel"
+                                                    className={`absolute w-full h-full object-cover transition-transform duration-500 rounded-md 
+                ${isTransitioning
+                                                            ? transitionDirection
+                                                                ? (transitionDirection === 'left' ? 'transform -translate-x-full' : 'transform translate-x-full')
+                                                                : (transitionDirectionY === 'up' ? 'transform -translate-y-full' : 'transform translate-y-full')
+                                                            : 'transform translate-x-0 translate-y-0'}`}
+                                                    onTouchStart={handleTouchStart}
+                                                    onTouchMove={handleTouchMove}
+                                                    onTouchEnd={handleTouchEnd}
+                                                />
+                                            )}
+                                            {isTransitioning && (
+                                                <img
+                                                    src={Images[currentProductIdx]?.variants[currentVariantIdx]}
+                                                    alt="carousel"
+                                                    className={`absolute w-full h-full object-cover transition-transform duration-500 rounded-md 
+                ${transitionDirection
+                                                            ? (transitionDirection === 'left' ? 'transform translate-x-full' : 'transform -translate-x-full')
+                                                            : (transitionDirectionY === 'up' ? 'transform translate-y-full' : 'transform -translate-y-full')}`}
+                                                />
+                                            )}
                                         </div>
+
+
 
 
 
@@ -418,7 +448,7 @@ export default function Homepage() {
                                                 loading='lazy'
                                             />
                                         )}
-                                      
+
                                     </div>
                                 </div>
 
@@ -442,7 +472,7 @@ export default function Homepage() {
                                             // onClick={() => swapImages(bottomImageRef)}
                                             />
                                         )}
-                                       
+
                                     </div>
                                 </div>
 
