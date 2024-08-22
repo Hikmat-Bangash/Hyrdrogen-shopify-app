@@ -35,11 +35,7 @@ export function Footer({menu, shop}) {
                 alt="backimage"
                 className="w-[14px] h-[11px]"
               />
-              <Link
-                // key={product.id}
-                // className="recommended-product"
-                to={`/`}
-              >
+              <Link to={`/`}>
                 <h3
                   className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5"
                   // onClick={goBack}
@@ -123,7 +119,7 @@ export function Footer({menu, shop}) {
                   Women
                 </button>
                 <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Kid's
+                  Kid&apos
                 </button>
               </div>
             </div>

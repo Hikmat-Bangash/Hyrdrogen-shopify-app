@@ -219,9 +219,8 @@ export default function Homepage() {
                         <div className="w-[90%] h-[75%] cursor-pointer ">
                             <div className="w-full h-full relative ">
                                 <h1
-                                    className='text-[#DAAF37]'
+                                    className='text-[#DAAF37] font-avenir'
                                     style={{
-                                        fontFamily: 'Avenir LT Std',
                                         fontSize: '28px',
                                         fontWeight: '700',
                                         lineHeight: '34px',
@@ -337,12 +336,15 @@ export default function Homepage() {
                                         }}
                                         id="top"
                                     >
-                                        <img
-                                            src={Images[currentProductIdx]?.variants[(currentVariantIdx + 1) % Images[currentProductIdx].variants.length]}
-                                            alt="topImg"
-                                            className="w-[50px]  transform skew-x-[10deg]"
-                                            loading='lazy'
-                                        />
+                                        {Images[currentProductIdx]?.variants[(currentVariantIdx + 1) % Images[currentProductIdx].variants.length] && (
+                                            <img
+                                                src={Images[currentProductIdx]?.variants[(currentVariantIdx + 1) % Images[currentProductIdx].variants.length]}
+                                                alt="topImg"
+                                                className="w-[50px]  transform skew-x-[10deg]"
+                                                loading='lazy'
+                                            />
+                                        ) }
+                                        
                                     </div>
                                 </div>
 
@@ -357,12 +359,15 @@ export default function Homepage() {
                                         }}
                                         id="left"
                                     >
-                                        <img
-                                            src={Images[(currentProductIdx - 1 + Images.length) % Images.length]?.variants[0]}
-                                            alt='leftImg'
-                                            className="w-[50px]  transform rotate-[-90deg] skew-x-[10deg]"
-                                            loading='lazy'
-                                        />
+                                        {Images[(currentProductIdx - 1 + Images.length) % Images.length]?.variants[0] && (
+                                            <img
+                                                src={Images[(currentProductIdx - 1 + Images.length) % Images.length]?.variants[0]}
+                                                alt='leftImg'
+                                                className="w-[50px]  transform rotate-[-90deg] skew-x-[10deg]"
+                                                loading='lazy'
+                                            />
+                                        )}
+                                       
                                     </div>
 
                                     <div
@@ -372,14 +377,19 @@ export default function Homepage() {
                                         {/* ----------- handle product spinning tools to shuffle images ---------- */}
                                         <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden ">
                                             <div className="w-full h-full flex items-center justify-center p-1">
-                                                <img
-                                                    src={Images[currentProductIdx]?.variants[currentVariantIdx]}
-                                                    alt="carousel"
-                                                    className="w-full h-full object-cover transition-transform duration-500 rounded-md"
-                                                    onTouchStart={handleTouchStart}
-                                                    onTouchMove={handleTouchMove}
-                                                    onTouchEnd={handleTouchEnd}
-                                                />
+                                                {Images[currentProductIdx]?.variants[currentVariantIdx] ? (
+                                                    <img
+                                                        src={Images[currentProductIdx]?.variants[currentVariantIdx]}
+                                                        alt="carousel"
+                                                        className="w-full h-full object-cover transition-transform duration-500 rounded-md"
+                                                        onTouchStart={handleTouchStart}
+                                                        onTouchMove={handleTouchMove}
+                                                        onTouchEnd={handleTouchEnd}
+                                                    />
+                                                ): (
+                                                        <div className="no-product w-full h-full flex justify-center items-center word-break-all font-bold text-[1.2rem] text-red-600">Oops!, No Product Found</div>    
+                                                )}
+                                               
                                             </div>
                                         </div>
 
@@ -400,12 +410,15 @@ export default function Homepage() {
                                         }}
                                         id="right"
                                     >
-                                        <img
-                                            src={Images[(currentProductIdx + 1) % Images.length]?.variants[0]}
-                                            alt="rightImg"
-                                            className="w-[45px] transform rotate-[90deg] skew-x-[10deg]"
-                                            loading='lazy'
-                                        />
+                                        {Images[(currentProductIdx + 1) % Images.length]?.variants[0] && (
+                                            <img
+                                                src={Images[(currentProductIdx + 1) % Images.length]?.variants[0]}
+                                                alt="rightImg"
+                                                className="w-[45px] transform rotate-[90deg] skew-x-[10deg]"
+                                                loading='lazy'
+                                            />
+                                        )}
+                                      
                                     </div>
                                 </div>
 
@@ -419,14 +432,17 @@ export default function Homepage() {
                                         }}
                                         id="bottom"
                                     >
-                                        <img
-                                            // ref={bottomImageRef}
-                                            src={Images[currentProductIdx]?.variants[(currentVariantIdx + 2) % Images[currentProductIdx].variants.length]}
-                                            alt="splash1"
-                                            className="w-[60px]  transform skew-x-[10deg]"
-                                            loading='lazy'
-                                        // onClick={() => swapImages(bottomImageRef)}
-                                        />
+                                        {Images[currentProductIdx]?.variants[(currentVariantIdx + 2) % Images[currentProductIdx].variants.length] && (
+                                            <img
+                                                // ref={bottomImageRef}
+                                                src={Images[currentProductIdx]?.variants[(currentVariantIdx + 2) % Images[currentProductIdx].variants.length]}
+                                                alt="splash1"
+                                                className="w-[60px]  transform skew-x-[10deg]"
+                                                loading='lazy'
+                                            // onClick={() => swapImages(bottomImageRef)}
+                                            />
+                                        )}
+                                       
                                     </div>
                                 </div>
 

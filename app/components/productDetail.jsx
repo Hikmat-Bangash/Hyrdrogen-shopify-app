@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ProductDetail = ({isDarkMode}) => {
-  console.log('product detail component rendered');
   return (
     <div
       className={`contianer w-full h-full absolute z-40 top-0  backdrop-blur-sm   justify-center items-center ${
@@ -20,7 +19,7 @@ const ProductDetail = ({isDarkMode}) => {
           </p>
 
           <p
-            className={`font-bold text-[16px] leading-[24px] tracking-[0.5px] ${
+            className={`font-bold font-avenir text-[16px] leading-[24px] tracking-[0.5px] ${
               isDarkMode ? 'text-[#D9D9D9]' : 'text-black'
             }`}
           >

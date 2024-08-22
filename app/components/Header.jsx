@@ -33,7 +33,8 @@ export function Header({header, isLoggedIn, cart}) {
 
           <div className="w-[13%] h-[80%] ">
             <NavLink
-              to="/spinswp"
+              // to="/spinswp"
+              to="/"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/cart.png" alt="home" className="w-4 h-4 " />
@@ -45,7 +46,7 @@ export function Header({header, isLoggedIn, cart}) {
           </div>
           <div className="w-[13%] h-[80%]  ">
             <NavLink
-              to="/account"
+              to=""
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/thirdone.png" alt="home" className="w-4 h-4 " />

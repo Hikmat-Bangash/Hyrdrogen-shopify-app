@@ -88,7 +88,7 @@ const Carousal = ({handleCarouselProduct}) => {
                   <h4 className="text-[#DAAF37] text-[12px] ">
                     {prdct.QUANTITY} left
                   </h4>
-                  <h2 className="text-[#ECECEC] text-[14px] font-bold">
+                  <h2 className="text-[#ECECEC] text-[14px] leading-[18px] font-bold font-avenir">
                     {prdct.NAME}
                   </h2>
                 </div>
