@@ -24,7 +24,7 @@ const Features = ({isDarkMode, productImg}) => {
                   id="top"
                 >
                   <img
-                    src="/splash/favourite-icon.png"
+                    src="/splash/favouriteIcon.png"
                     alt="topImg"
                     className="w-[30px] h-[34px] cursor-pointer"
                     loading="lazy"
@@ -45,7 +45,7 @@ const Features = ({isDarkMode, productImg}) => {
                   id="left"
                 >
                   <img
-                    src="/splash/store-icon.png"
+                    src="/splash/storeIcon.png"
                     alt="leftImg"
                     className="w-[30px] h-[34px] cursor-pointer"
                     loading="lazy"
@@ -72,7 +72,7 @@ const Features = ({isDarkMode, productImg}) => {
                   id="right"
                 >
                   <img
-                    src="/splash/cart-icon.png"
+                    src="/splash/cartIcon.png"
                     alt="rightImg"
                     className="w-[40px] h-[40px] cursor-pointer"
                     loading="lazy"
@@ -93,7 +93,7 @@ const Features = ({isDarkMode, productImg}) => {
                   id="bottom"
                 >
                   <img
-                    src="/splash/share_icon.png"
+                    src="/splash/shareIcon.png"
                     alt="splash1"
                     className="w-[40px] h-[40px] cursor-pointer"
                     loading="lazy"
