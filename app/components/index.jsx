@@ -394,12 +394,12 @@ export default function Homepage() {
                                     >
                                         {/* ----- handle product spinning tools to slide images images ----- */}
                                         <div className={`w-full h-full flex items-center justify-center p-1 relative overflow-hidden`}>
-                                            {Images[currentProductIdx]?.variants[currentVariantIdx] && (
+                                            {Images[currentProductIdx]?.variants[currentVariantIdx] ? (
                                                 <img
                                                     src={Images[currentProductIdx]?.variants[currentVariantIdx]}
                                                     alt="carousel"
                                                     className={`absolute w-full h-full object-cover transition-transform duration-500 rounded-md 
-                ${isTransitioning
+                                                    ${isTransitioning
                                                             ? transitionDirection
                                                                 ? (transitionDirection === 'left' ? 'transform -translate-x-full' : 'transform translate-x-full')
                                                                 : (transitionDirectionY === 'up' ? 'transform -translate-y-full' : 'transform translate-y-full')
@@ -408,13 +408,15 @@ export default function Homepage() {
                                                     onTouchMove={handleTouchMove}
                                                     onTouchEnd={handleTouchEnd}
                                                 />
+                                            ) : (
+                                                <div className="no-product w-full h-full flex justify-center items-center word-break-all font-bold text-[1.2rem] text-red-600">Oops!, No Product Found</div>
                                             )}
                                             {isTransitioning && (
                                                 <img
                                                     src={Images[currentProductIdx]?.variants[currentVariantIdx]}
                                                     alt="carousel"
                                                     className={`absolute w-full h-full object-cover transition-transform duration-500 rounded-md 
-                ${transitionDirection
+                                                          ${transitionDirection
                                                             ? (transitionDirection === 'left' ? 'transform translate-x-full' : 'transform -translate-x-full')
                                                             : (transitionDirectionY === 'up' ? 'transform translate-y-full' : 'transform -translate-y-full')}`}
                                                 />
