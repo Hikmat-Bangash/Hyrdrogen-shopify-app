@@ -1,0 +1,43 @@
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .cube {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+
+  .cube-face {
+    width: 500px; /* Adjust as per your requirements */
+    height: 500px;
+    position: absolute;
+    backface-visibility: hidden;
+  }
+
+  .front {
+    transform: rotateY(0deg) translateZ(250px);
+  }
+
+  .right {
+    transform: rotateY(90deg) translateZ(250px);
+  }
+
+  .back {
+    transform: rotateY(180deg) translateZ(250px);
+  }
+
+  .left {
+    transform: rotateY(-90deg) translateZ(250px);
+  }
+
+  .top {
+    transform: rotateX(90deg) translateZ(250px);
+  }
+
+  .bottom {
+    transform: rotateX(-90deg) translateZ(250px);
+  }
+
