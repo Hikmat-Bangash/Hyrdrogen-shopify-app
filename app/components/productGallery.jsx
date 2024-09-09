@@ -19,7 +19,7 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
 
   return (
     <div className="contianer w-full h-screen fixed z-40 top-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
-      <div className=" overflow-hidden relative w-full h-[32rem] flex flex-col gap-[1rem]  rounded-[0.93rem] px-1">
+      <div className=" overflow-hidden relative w-full h-[34rem] flex flex-col gap-[1rem]   rounded-[0.93rem] px-1">
         {/* product screen */}
         <div
           className={`screen w-full h-[420px] bg-gradient-to-b ${isDarkMode ? "from-gray-800 to-black-50" : " from-white-100 to-white-50"}  bg-opacity-30 rounded-[0.93rem] flex flex-col gap-2 `}
@@ -33,13 +33,13 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
             <img
               src="/splash/gallery-back-btn.png"
               alt="back-btn"
-              className="mr-2"
+              className="mr-2 "
             />
             Back
           </div>
           {/* product showing section */}
-          <div className="product-showing-section flex justify-center items-center w-full h-[20rem]  p-3">
-            <img src={galleryImages[activeImg]} alt="mainImg" />
+          <div className="product-showing-section flex justify-center items-center w-full h-[22rem]  p-2">
+            <img src={galleryImages[activeImg]} alt="mainImg" className='object-cover w-full h-full' />
           </div>
         </div>
 
@@ -55,13 +55,10 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
               }`}
               onClick={() => handleActiveImg(index)}
             >
-              <img src={galleryImages[index]} alt="productImg" />
+              <img src={galleryImages[index]} alt="productImg" className='object-cover w-[85px] h-[80px]' />
             </div>
           ))}
-          {/* <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md border-2 border-[#DAAF37]"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div> */}
+         
         </div>
       </div>
     </div>

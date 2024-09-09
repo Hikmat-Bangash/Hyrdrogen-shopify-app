@@ -3,7 +3,7 @@ import React from 'react';
 const ProductDetail = ({isDarkMode}) => {
   return (
     <div
-      className={`contianer w-full h-full absolute z-40 top-0  backdrop-blur-sm   justify-center items-center ${
+      className={`contianer w-[250px] h-[269px] absolute z-40 top-[4.5rem] left-[4.1rem]  backdrop-blur-sm   justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'
       } rounded-md `}
     >

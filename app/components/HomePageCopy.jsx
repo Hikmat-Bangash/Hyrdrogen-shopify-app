@@ -41,7 +41,7 @@ export async function loader({ context }) {
 }
 
 // =============== BELOW IS THE SPINSWIPE FUNCTIONALITY ============
-export const products = [
+export const productsList = [
     {
         name: "Watch",
         images: [
@@ -151,6 +151,7 @@ export default function HomepageCopy() {
     const categories = ["all", "men", "women", "kids"]
     const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
     const [Images, setImages] = useState(images);
+    const [products, setproducts] = useState(productsList);
 
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
     const [currentVariantIdx, setCurrentVariantIdx] = useState(0); // Track the current variant index
@@ -414,13 +415,13 @@ export default function HomepageCopy() {
                            
 
                                     <div
-                                        className="  w-[98%] h-full flex flex-row justify-center items-center overflow-hidden "
+                                        className=" relative  w-[98%] h-full flex flex-row justify-center items-center overflow-hidden "
                                         id="center"
                                     >
                    {/* =============== Below is the product spinning tools =============== */}
                                        
                                     <div
-                                        className="carousel-container flex justify-center items-center "
+                                        className="carousel-container flex justify-center items-center"
                                         style={{
                                             position: "relative",
                                             width: "400px",
@@ -463,19 +464,19 @@ export default function HomepageCopy() {
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
 
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(159px)`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(153px)`,
                                                         }}
                                                     >
                                                         <div className="panel-content" style={{
                                                             width: "215px",
-                                                            height: "235px",
-                                                            border: "1px solid #ddd",
+                                                            height: "225px",
+                                                            // border: "1px solid #ddd",
                                                             background: "#979494",
                                                             boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
                                                             objectFit: "cover",
                                                             overflow: "hidden"
                                                         }}>
-                                                            <img style={{ objectFit: "cover", width: "215px", height: "235px" }} src={image} alt="vertical-carousel-img" />
+                                                            <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={image} alt="vertical-carousel-img" />
                                                         </div>
                                                     </div>
                                                 );
@@ -518,14 +519,14 @@ export default function HomepageCopy() {
                                                     >
                                                         <div className="panel-content" style={{
                                                             width: "215px",
-                                                            height: "235px",
-                                                            border: "1px solid #ddd",
+                                                            height: "225px",
+                                                            // border: "1px solid #ddd",
                                                             background: "#979494",
                                                             boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
                                                             objectFit: "cover",
                                                             overflow: "hidden"
                                                         }}>
-                                                            <img style={{objectFit: "cover", width: "215px", height: "235px"}} src={product.images[0]} alt={product.name} />
+                                                            <img style={{objectFit: "cover", width: "215px", height: "225px"}} src={product.images[0]} alt={product.name} />
                                                         </div>
                                                     </div>
                                                 );
@@ -547,9 +548,9 @@ export default function HomepageCopy() {
                 {/* --- Ending the toggle functionality by chaning bg-dark and gray accordingly. */}
 
                 {/* showing product gallery */}
-                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={Images[currentProductIdx]?.variants} />}
+                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsFeaturePageOpened && <Features isDarkMode={isDarkMode} productImg={Images[currentProductIdx]?.variants[currentVariantIdx]} />}
+                {IsFeaturePageOpened && <Features isDarkMode={isDarkMode} productImg={products[horizontalIndex].images[verticalIndex]} />}
             </div>
 
         </>
