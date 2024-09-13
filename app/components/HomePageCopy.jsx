@@ -11,7 +11,7 @@
 /* eslint-disable prettier/prettier */
 import { defer } from '@shopify/remix-oxygen';
 import { Await, Link } from '@remix-run/react';
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Image, Money } from '@shopify/hydrogen';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
@@ -44,6 +44,7 @@ export async function loader({ context }) {
 export const productsList = [
     {
         name: "Watch",
+        category: "women",
         images: [
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrvRWDpRts3ffsdJKXCCqzfSaLNGc2Bxc5g&s",
             "https://www.carlington.in/cdn/shop/files/Carlington_elite_analog_ladies_watch_CT_2007_roseblack.jpg?v=1696689556&width=2400",
@@ -53,6 +54,7 @@ export const productsList = [
     },
     {
         name: "Bracelet",
+        category: "women",
         images: [
             "https://diamondemitations.pk/cdn/shop/files/IMG-20240605-WA0093_1000x1000.jpg?v=1717672714",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8xSgWNrF32EeAqOPtf6BUn9wYZWMi1FOe7cYyPQIh0MnDThKX4J5fy7osgnZQpCqNE_Q&usqp=CAU",
@@ -62,6 +64,7 @@ export const productsList = [
     },
     {
         name: "Digital Watch",
+        category: "men",
         images: [
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
@@ -71,6 +74,7 @@ export const productsList = [
     },
     {
         name: "T-Shirt",
+        category: "men",
         images: [
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3JySzx0pdzRnn6rV0dkwapAJIsSeNFYouLQ&s",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU2XTWD-p2c6QeaaF7tqSxHfpgiOfYtBp4xw&s",
@@ -80,6 +84,7 @@ export const productsList = [
     },
     {
         name: "Digital Watch 2",
+        category: "men",
         images: [
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
@@ -94,23 +99,35 @@ const PANEL_COUNT = 5; // Fixed number of panels for the prism layout
 // Function to create a non-random duplication of products, ensuring no duplicates appear consecutively
 const createNonDuplicateOrder = (items) => {
     const result = [...items];
-    while (result.length < PANEL_COUNT) {
-        let lastItem = result[result.length - 1];
-        let nextItem = items[Math.floor(Math.random() * items.length)];
-        while (nextItem === lastItem) {
-            nextItem = items[Math.floor(Math.random() * items.length)];
+    const totalItems = items.length;
+
+    // If there are fewer than 5 products, duplicate them but maintain the same sequence
+    if (totalItems < PANEL_COUNT) {
+        let i = 0;
+        while (result.length < PANEL_COUNT) {
+            result.push(items[i % totalItems]);
+            i++;
         }
-        result.push(nextItem);
     }
+
+    // Return a fixed array with at least 5 items
     return result;
 };
 
 // Function to duplicate images for vertical carousel if less than 5 images in a product
 const duplicateVerticalPanels = (images) => {
     const duplicatedImages = [...images];
-    while (duplicatedImages.length < PANEL_COUNT) {
-        duplicatedImages.push(images[Math.floor(Math.random() * images.length)]);
+    const totalImages = images.length;
+
+    // If fewer than 5 images, duplicate them in a fixed sequence
+    if (totalImages < PANEL_COUNT) {
+        let i = 0;
+        while (duplicatedImages.length < PANEL_COUNT) {
+            duplicatedImages.push(images[i % totalImages]);
+            i++;
+        }
     }
+
     return duplicatedImages;
 };
 
@@ -154,10 +171,6 @@ export default function HomepageCopy() {
     const [products, setproducts] = useState(productsList);
 
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
-    const [currentVariantIdx, setCurrentVariantIdx] = useState(0); // Track the current variant index
-    const [transitionDirection, setTransitionDirection] = useState(''); // For X-axis transitions
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [transitionDirectionY, setTransitionDirectionY] = useState(null);
 
     const [IsGallery, setGallery] = useState(false);
     const [category, setCategory] = useState("all");
@@ -189,11 +202,6 @@ export default function HomepageCopy() {
     const showProductDescription = () => {
         setShowProductDesc((prev) => !prev)
     }
-    // ----------- below is the logic for spinning tools to shuffle X & Y axis images
-    const swipeThreshold = 50; // Threshold for swipe distance
-    const startXRef = useRef(0);
-    const startYRef = useRef(0);
-    const isSwipingRef = useRef(false);
 
     const rotationPerPanel = 360 / PANEL_COUNT; // Rotation angle for each panel
 
@@ -223,19 +231,19 @@ export default function HomepageCopy() {
             setActiveCarousel("horizontal"); // Set horizontal carousel as active
             if (touchStartX - touchEndX > 50) {
                 // Swipe left (next panel)
-                setHorizontalIndex((prevIndex) => (prevIndex + 1) % products.length);
+                setHorizontalIndex((prevIndex) => (prevIndex + 1));
+                // setVerticalIndex(0); // Reset vertical index
             } else if (touchEndX - touchStartX > 50) {
                 // Swipe right (previous panel)
-                setHorizontalIndex((prevIndex) =>
-                    prevIndex === 0 ? products.length - 1 : prevIndex - 1
-                );
+                setHorizontalIndex((prevIndex) => (prevIndex - 1));
+                // setVerticalIndex(0); // Reset vertical index
             }
         }
 
         // Handle vertical swipes (up and down) for vertical carousel
         if (verticalSwipe && !horizontalSwipe) {
             setActiveCarousel("vertical"); // Set vertical carousel as active
-            const productImages = products[horizontalIndex % products.length].images;
+            const productImages = products[horizontalIndex % products.length]?.images || [];
             const duplicatedImages = duplicateVerticalPanels(productImages);
             if (touchStartY - touchEndY > 50) {
                 // Swipe up (next panel)
@@ -250,26 +258,43 @@ export default function HomepageCopy() {
     };
 
     // Get the duplicated panels for both carousels
-    const currentProductImages = duplicateVerticalPanels(products[horizontalIndex % products.length].images);
+    const currentProduct = products[horizontalIndex % products.length] || {};
+    const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
     const duplicatedProducts = createNonDuplicateOrder(products);
+
 
   
   // ============ end of the spinning tool ---------------
 
+    const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
 
     const handleCategory = (categoryName) => {
+        // Set the selected category
         setCategory(categoryName);
 
+        // Filter products based on the selected category
+        let filteredProducts;
         if (categoryName === 'all') {
-            setImages(images);
+            filteredProducts = productsList; // Reset to all products
+
         } else {
-            const filteredImages = images.filter((product) => product.category === categoryName);
-            setImages(filteredImages);
+            filteredProducts = productsList.filter((product) => product.category === categoryName);
         }
 
-        setCurrentProductIdx(0);
-        setCurrentVariantIdx(0);
-    }
+        // Check if the filtered product list is empty
+        if (filteredProducts.length === 0) {
+            setNoProductsFound(true); // Set noProductsFound to true if no products are found
+            setproducts([]); // Clear the product list so no images are shown
+        } else {
+            setNoProductsFound(false); // Reset noProductsFound if products exist
+            setproducts(filteredProducts); // Update the filtered products
+        }
+
+        // Reset carousel index to show the first product and image
+        setHorizontalIndex(0);
+        setVerticalIndex(0);
+    };
+
 
 
     //-------------- handle search query for product filtering --------
@@ -277,20 +302,36 @@ export default function HomepageCopy() {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
 
-        const filteredImages = images.filter((product) =>
+        const filteredImages = productsList.filter((product) =>
             product.name.toLowerCase().includes(query)
         );
 
-        setImages(filteredImages);
-        setCurrentProductIdx(0);
-        setCurrentVariantIdx(0);
+        if (filteredImages.length === 0) {
+            setNoProductsFound(true); // Set noProductsFound to true if no products are found
+            setproducts([]); // Clear the product list so no images are shown
+        } else {
+            setNoProductsFound(false); // Reset noProductsFound if products exist
+            setproducts(filteredImages); // Update the filtered products
+        }
+        setHorizontalIndex(0);
+        setVerticalIndex(0);
     }
 
     // --- select one of the carousel product -----
     const handleCarouselProduct = (product) => {
-        setCurrentProductIdx(product);
+        setCurrentProductIdx(products);
         setGallery((prev) => !prev)
     }
+
+
+    useEffect(() => {
+        // Handle positive and negative indices for infinite carousel effect
+        if (horizontalIndex >= products.length) {
+            setHorizontalIndex(0); // Reset to first product
+        } else if (horizontalIndex < 0) {
+            setHorizontalIndex(products.length - 1); // Go to last product
+        }
+    }, [horizontalIndex]);
 
     return (
         <>
@@ -420,124 +461,129 @@ export default function HomepageCopy() {
                                     >
                    {/* =============== Below is the product spinning tools =============== */}
                                        
-                                    <div
-                                        className="carousel-container flex justify-center items-center"
-                                        style={{
-                                            position: "relative",
-                                            width: "400px",
-                                            height: "600px",
-                                            perspective: "1000px",
-                                        }}
-                                        onTouchStart={handleTouchStart}
-                                        onTouchMove={handleTouchMove}
-                                        onTouchEnd={handleTouchEnd}
-
-                                    >
-                                        {/* Vertical carousel (rotate around X-axis) */}
-                                        <div
-                                            className="carousel"
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                position: 'absolute',
-                                                transformStyle: "preserve-3d",
-                                                transition: "transform 1s ease-in-out",
-
-                                                zIndex: activeCarousel === "vertical" ? 2 : 1,
-                                                transform: `rotateX(${verticalIndex * -rotationPerPanel}deg)`,
-
-                                            }}
-                                        >
-                                            {currentProductImages.map((image, index) => {
-                                                const rotateAngle = index * rotationPerPanel;
-
-                                                return (
-                                                    <div
-                                                        className="carousel-panel"
-                                                        key={index}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            backfaceVisibility: 'hidden',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
-
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(153px)`,
-                                                        }}
-                                                    >
-                                                        <div className="panel-content" style={{
-                                                            width: "215px",
-                                                            height: "225px",
-                                                            // border: "1px solid #ddd",
-                                                            background: "#979494",
-                                                            boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-                                                            objectFit: "cover",
-                                                            overflow: "hidden"
-                                                        }}>
-                                                            <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={image} alt="vertical-carousel-img" />
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                <div className="carousel-container relative flex justify-center items-center"
+                                    style={{
+                                        position: "relative",
+                                        width: "400px",
+                                        height: "600px",
+                                        perspective: "1000px",
+                                    }}
+                                    onTouchStart={handleTouchStart}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={handleTouchEnd}
+                                >
+                                    {noProductsFound ? (
+                                        <div className="no-products-message text-[1.8rem] font-semibold bg-gray-400 text-red-600" style={{ textAlign: 'center', padding: '20px' }}>
+                                            <h2>Oops! No products found.</h2>
                                         </div>
+                                    ) : (
+                                        <>
+                                            {/* Vertical carousel (rotate around X-axis) */}
+                                            <div
+                                                className="carousel"
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    position: 'absolute',
+                                                    transformStyle: "preserve-3d",
+                                                    transition: "transform 1s ease-in-out",
+                                                    zIndex: activeCarousel === "vertical" ? 2 : 1,
+                                                    transform: `rotateX(${verticalIndex * -rotationPerPanel}deg)`,
+                                                }}
+                                            >
+                                                {currentProductImages.map((image, index) => {
+                                                    const rotateAngle = index * rotationPerPanel;
 
-                                        {/* Horizontal carousel (rotate around Y-axis) */}
-                                        <div
-                                            className="carousel-horizontal"
-                                            style={{
-                                                position: 'absolute',
-                                                width: '100%',
-                                                height: '100%',
-                                                transformStyle: "preserve-3d",
-                                                backfaceVisibility: 'hidden',
-                                                transition: "transform 1s ease-in-out",
-
-                                                zIndex: activeCarousel === "horizontal" ? 2 : 1,
-                                                transform: `rotateY(${(horizontalIndex % duplicatedProducts.length) * -rotationPerPanel}deg)`,
-
-                                            }}
-                                        >
-                                            {duplicatedProducts.map((product, index) => {
-                                                const rotateAngle = index * rotationPerPanel;
-
-                                                return (
-                                                    <div
-                                                        className="carousel-panel"
-                                                        key={index}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            backfaceVisibility: 'hidden',
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
-                                                            transform: `rotateY(${rotateAngle}deg) translateZ(148px)`,
-                                                        }}
-                                                    >
-                                                        <div className="panel-content" style={{
-                                                            width: "215px",
-                                                            height: "225px",
-                                                            // border: "1px solid #ddd",
-                                                            background: "#979494",
-                                                            boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-                                                            objectFit: "cover",
-                                                            overflow: "hidden"
-                                                        }}>
-                                                            <img style={{objectFit: "cover", width: "215px", height: "225px"}} src={product.images[0]} alt={product.name} />
+                                                    return (
+                                                        <div
+                                                            className="carousel-panel"
+                                                            key={index}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: '100%',
+                                                                height: '100%',
+                                                                backfaceVisibility: 'hidden',
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                transform: `rotateX(${rotateAngle}deg) translateZ(153px)`,
+                                                            }}
+                                                        >
+                                                            <div className="panel-content"
+                                                                style={{
+                                                                    width: "215px",
+                                                                    height: "225px",
+                                                                    background: "#979494",
+                                                                    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+                                                                    objectFit: "cover",
+                                                                    overflow: "hidden"
+                                                                }}
+                                                            >
+                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={image} alt="vertical-carousel-img" />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {/* Horizontal carousel (rotate around Y-axis) */}
+                                            <div
+                                                className="carousel-horizontal"
+                                                style={{
+                                                    position: 'absolute',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    transformStyle: "preserve-3d",
+                                                    backfaceVisibility: 'hidden',
+                                                    transition: "transform 1s ease-in-out",
+                                                    zIndex: activeCarousel === "horizontal" ? 2 : 1,
+                                                    transform: `rotateY(${(horizontalIndex % duplicatedProducts.length) * -rotationPerPanel}deg)`,
+                                                }}
+                                            >
+                                                {duplicatedProducts.map((product, index) => {
+                                                    const rotateAngle = index * rotationPerPanel;
+
+                                                    return (
+                                                        <div
+                                                            className="carousel-panel"
+                                                            key={index}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                width: '100%',
+                                                                height: '100%',
+                                                                backfaceVisibility: 'hidden',
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                transform: `rotateY(${rotateAngle}deg) translateZ(148px)`,
+                                                            }}
+                                                        >
+                                                            <div className="panel-content"
+                                                                style={{
+                                                                    width: "215px",
+                                                                    height: "225px",
+                                                                    background: "#979494",
+                                                                    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+                                                                    objectFit: "cover",
+                                                                    overflow: "hidden"
+                                                                }}
+                                                            >
+                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={product.images[0]} alt={product.name} />
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </>
+                                    )}
+                                    {/* ----------- product description ------- */}
+                                    {IsShowProductDesc && <ProductDetail isDarkMode={isDarkMode} />}
+                                </div>
+
 
                                         {/* ------- spinning tools section END -------- */}
 
-                                        {/* ----------- product description ------- */}
-                                        {IsShowProductDesc && <ProductDetail isDarkMode={isDarkMode} />}
+                                       
 
                                     </div>
 
