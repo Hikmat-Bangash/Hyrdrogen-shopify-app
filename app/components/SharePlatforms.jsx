@@ -15,14 +15,11 @@ import {
   TelegramIcon,
 } from 'react-share';
 
-export const shareUrl = 'https://twitter.com/';
-
 const SharePlatforms = ({setisShare}) => {
   const location = useLocation();
   const [Copied, setCopied] = useState(false);
   const fullUrl = `${window.location.protocol}//${window.location.host}${location.pathname}${location.search}${location.hash}`;
 
-  console.log('fullUrl: ' + fullUrl);
   const closeShareModal = () => {
     setisShare((prev) => !prev);
   };
@@ -64,20 +61,20 @@ const SharePlatforms = ({setisShare}) => {
               <p className="text-sm">Share this link via</p>
 
               <div className="flex justify-around my-4">
-                <WhatsappShareButton url={shareUrl}>
+                <WhatsappShareButton url={fullUrl}>
                   <WhatsappIcon size={38} round />
                 </WhatsappShareButton>
-                <FacebookShareButton url={shareUrl}>
+                <FacebookShareButton url={fullUrl}>
                   <FacebookIcon size={38} round />
                 </FacebookShareButton>
-                <TwitterShareButton url={shareUrl}>
+                <TwitterShareButton url={fullUrl}>
                   <TwitterIcon size={38} round />
                 </TwitterShareButton>
-                <LinkedinShareButton url={shareUrl}>
+                <LinkedinShareButton url={fullUrl}>
                   <LinkedinIcon size={38} round />
                 </LinkedinShareButton>
 
-                <TelegramShareButton url={shareUrl}>
+                <TelegramShareButton url={fullUrl}>
                   <TelegramIcon size={38} round />
                 </TelegramShareButton>
               </div>
