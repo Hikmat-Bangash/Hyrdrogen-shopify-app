@@ -336,7 +336,7 @@ export default function HomepageCopy() {
     return (
         <>
 
-            <div className="w-full h-full absolute ">
+            <div className="w-full h-full absolute z-20 ">
                 <div className="w-full h-[30%] cursor-pointer mt-[3rem] bg-[#FEFCEB]">
                     <div className="w-full h-full flex flex-col items-center">
 

@@ -1,6 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
+import SharePlatforms from './SharePlatforms';
 
 const Features = ({isDarkMode, productImg}) => {
+  const [isShare, setisShare] = useState(false);
+
+  const handleShareProduct = () => {
+    setisShare((prev) => !prev);
+  };
   return (
     <>
       <div
@@ -12,7 +18,7 @@ const Features = ({isDarkMode, productImg}) => {
         <div className="w-full h-full flex flex-col justify-center items-center relative ">
           <div className="w-full h-full">
             <div className="w-full h-full relative flex flex-col ">
-              <div className="w-full h-[12%] absolute top-0 flex flex-row justify-center ">
+              <div className="w-full h-[15%] absolute top-0 flex flex-row justify-center ">
                 <div
                   className="w-full h-full flex flex-row justify-center items-center  "
                   style={{
@@ -32,7 +38,7 @@ const Features = ({isDarkMode, productImg}) => {
                 </div>
               </div>
 
-              <div className="w-full h-[60%] flex flex-row">
+              <div className="w-full h-[70%]  flex flex-row">
                 <div
                   className="w-[15%] h-full absolute top-0 left-0  flex flex-row justify-center items-center"
                   style={{
@@ -47,17 +53,21 @@ const Features = ({isDarkMode, productImg}) => {
                   <img
                     src="/splash/storeIcon.png"
                     alt="leftImg"
-                    className="w-[30px] h-[34px] cursor-pointer"
+                    className="w-[30px] h-[34px] cursor-pointer border-2"
                     loading="lazy"
                   />
                 </div>
 
                 <div
-                  className=" ml-[15%] w-[70%] p-1 h-[23.3rem] mt-[4rem] flex justify-center items-center  "
+                  className=" ml-[15%] w-[70%] p-1 object-cover h-[100%] mt-[5.5rem] flex justify-center items-center  "
                   id="center"
                 >
-                  <div className=" w-full h-full flex justify-center items-center">
-                    <img src={productImg} alt="centerImg" className="" />
+                  <div className=" w-full h-full object-cover flex justify-center items-center">
+                    <img
+                      src={productImg}
+                      alt="centerImg"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </div>
 
@@ -80,9 +90,12 @@ const Features = ({isDarkMode, productImg}) => {
                 </div>
               </div>
 
-              <div className="w-full h-[14%] absolute bottom-0  flex flex-row justify-center ">
+              <div
+                className="w-full h-[14%] absolute bottom-0  flex flex-row justify-center"
+                onClick={handleShareProduct}
+              >
                 <div
-                  className="w-full h-full flex flex-row justify-center items-center  "
+                  className="w-full h-full flex flex-row justify-center items-center "
                   style={{
                     backgroundImage: isDarkMode
                       ? "url('/splash/dark-bottom-frame.png')"
@@ -104,6 +117,8 @@ const Features = ({isDarkMode, productImg}) => {
           </div>
         </div>
       </div>
+
+      {isShare && <SharePlatforms setisShare={setisShare} />}
     </>
   );
 };
