@@ -319,7 +319,7 @@ export default function HomepageCopy() {
 
     // --- select one of the carousel product -----
     const handleCarouselProduct = (product) => {
-        setCurrentProductIdx(products);
+        setHorizontalIndex(product);
         setGallery((prev) => !prev)
     }
 
@@ -421,7 +421,7 @@ export default function HomepageCopy() {
                 </div>
 
                 {/* --- below is the code that i need to implement the toggle functionality by chaning bg-dark and gray accordingly. */}
-                <div className={`w-full h-[56%]   ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
+                <div className={`w-full z-10 h-[56.5%]    ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
                     <div className="w-full h-[10%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3" onClick={handleGalleryScreen} />
@@ -430,17 +430,17 @@ export default function HomepageCopy() {
                         </div>
 
                         {/* ---------- dark/light mode container -------- */}
-                        <div className="w-[20%] mt-2 h-[2.3rem] flex flex-row justify-between rounded-full items-center border border-gray-300 px-1 py-2">
+                        <div className="w-[20%] mt-2 h-[2.3rem] flex flex-row justify-between rounded-full items-center border border-gray-300 px-1 py-2 " onClick={ThemeMode}>
                             {/* light mode button */}
                             <div className=" w-full flex justify-start items-center">
-                                <div className={`light-mode-btn justify-center items-center w-[2rem] h-[2rem] rounded-full bg-white ${isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
+                                <div className={`light-mode-btn justify-center items-center w-[2rem] h-[2rem] rounded-full bg-white ${isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} >
                                     <img src="/splash/light-mode.png" alt="light-mode" className='w-[1.5rem] ' />
                                 </div>
                             </div>
 
                             {/* dark mode mode button */}
                             <div className="wrapper w-full flex justify-end items-center">
-                                <div className={`light-mode-btn  justify-center items-center w-[2rem] h-[2rem] rounded-full bg-gray-500 ${!isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
+                                <div className={`light-mode-btn   justify-center items-center w-[2rem] h-[2rem] rounded-full bg-gray-500 ${!isDarkMode ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }} onClick={ThemeMode}>
                                     <img src="/splash/dark-mode.png" alt="light-mode" className='w-[1.5rem] ' />
                                 </div>
                             </div>
@@ -456,7 +456,7 @@ export default function HomepageCopy() {
                            
 
                                     <div
-                                        className=" relative  w-[98%] h-full flex flex-row justify-center items-center overflow-hidden "
+                                        className=" relative  w-[98%] h-full flex flex-row justify-center items-center overflow-hidden"
                                         id="center"
                                     >
                    {/* =============== Below is the product spinning tools =============== */}
@@ -486,7 +486,7 @@ export default function HomepageCopy() {
                                                     height: '100%',
                                                     position: 'absolute',
                                                     transformStyle: "preserve-3d",
-                                                    transition: "transform 1s ease-in-out",
+                                                    transition: "transform 1.3s ease-in-out",
                                                     zIndex: activeCarousel === "vertical" ? 2 : 1,
                                                     transform: `rotateX(${verticalIndex * -rotationPerPanel}deg)`,
                                                 }}
@@ -500,6 +500,7 @@ export default function HomepageCopy() {
                                                             key={index}
                                                             style={{
                                                                 position: 'absolute',
+                                                                transition: "transform 4s ease-in-out",
                                                                 width: '100%',
                                                                 height: '100%',
                                                                 backfaceVisibility: 'hidden',
@@ -513,13 +514,14 @@ export default function HomepageCopy() {
                                                                 style={{
                                                                     width: "215px",
                                                                     height: "225px",
+                                                                    transition: "transform 4s ease-in-out",
                                                                     background: "#979494",
                                                                     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
                                                                     objectFit: "cover",
                                                                     overflow: "hidden"
                                                                 }}
                                                             >
-                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={image} alt="vertical-carousel-img" />
+                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px", transition: "transform 4s ease-in-out", }} src={image} alt="vertical-carousel-img" />
                                                             </div>
                                                         </div>
                                                     );
@@ -535,7 +537,7 @@ export default function HomepageCopy() {
                                                     height: '100%',
                                                     transformStyle: "preserve-3d",
                                                     backfaceVisibility: 'hidden',
-                                                    transition: "transform 1s ease-in-out",
+                                                    transition: "transform 1.3s ease-in-out",
                                                     zIndex: activeCarousel === "horizontal" ? 2 : 1,
                                                     transform: `rotateY(${(horizontalIndex % duplicatedProducts.length) * -rotationPerPanel}deg)`,
                                                 }}

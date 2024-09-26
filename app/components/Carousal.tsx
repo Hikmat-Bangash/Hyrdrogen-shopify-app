@@ -82,7 +82,7 @@ const Carousal = ({handleCarouselProduct}) => {
             >
               <div className="prdct-detail flex justify-around items-center h-[51px] mt-[7px] bg-[#000000] rounded-[6px] shadow-xl">
                 {/* prdct image */}
-                <img src={prdct.IMAGE} alt="watch" className="z-40" />
+                <img src={prdct.IMAGE} alt="watch" className="z-20" />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
                   <h4 className="text-[#DAAF37] text-[12px] ">

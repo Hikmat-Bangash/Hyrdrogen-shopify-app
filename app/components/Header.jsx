@@ -8,7 +8,7 @@ import {useRootLoaderData} from '~/root';
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
   return (
-    <header className="w-screen h-[70px] fixed bottom-0 right-0 z-10 ">
+    <header className="w-screen h-[70px] fixed bottom-0 right-0 z-20 ">
       {/* <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
