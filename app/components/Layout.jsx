@@ -25,8 +25,8 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   const dispatch = useDispatch();
 
   const handleBackButtonClick = () => {
-    dispatch(hanldeFeaturePage());
-    // window.history.back();
+    // dispatch(hanldeFeaturePage());
+    window.history.back();
   };
 
   return (

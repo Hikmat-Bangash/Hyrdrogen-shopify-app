@@ -41,58 +41,58 @@ export async function loader({ context }) {
 }
 
 // =============== BELOW IS THE SPINSWIPE FUNCTIONALITY ============
-export const productsList = [
-    {
-        name: "Watch",
-        category: "women",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrvRWDpRts3ffsdJKXCCqzfSaLNGc2Bxc5g&s",
-            "https://www.carlington.in/cdn/shop/files/Carlington_elite_analog_ladies_watch_CT_2007_roseblack.jpg?v=1696689556&width=2400",
-            "https://currenwatches.com.pk/cdn/shop/files/S16a1d22aca9244a19944aad7e16f364fh_1445x.jpg?v=1708428048",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXLu03PFPFQhLEfU4QZualjO6dRe72PwhXOFk1lYQQxtCRS5zlxvXStz-zk2WzDCG0-2M&usqp=CAU",
-        ],
-    },
-    {
-        name: "Bracelet",
-        category: "women",
-        images: [
-            "https://diamondemitations.pk/cdn/shop/files/IMG-20240605-WA0093_1000x1000.jpg?v=1717672714",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8xSgWNrF32EeAqOPtf6BUn9wYZWMi1FOe7cYyPQIh0MnDThKX4J5fy7osgnZQpCqNE_Q&usqp=CAU",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR04UuoqlpCZKubmbVCvIyCtj8ktnHay-RS2Js3jszT-_XldfOJMKGnetrRCzQcClSzTtg&usqp=CAU",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAm1gnL5cNDxWPOZ9YkPDHbyhOvrbseQuXsw&s",
-        ],
-    },
-    {
-        name: "Digital Watch",
-        category: "men",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
-        ],
-    },
-    {
-        name: "T-Shirt",
-        category: "men",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3JySzx0pdzRnn6rV0dkwapAJIsSeNFYouLQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU2XTWD-p2c6QeaaF7tqSxHfpgiOfYtBp4xw&s",
-            "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/white-transparent-background-t-shirt-design-template-b57a5ce5ec3ad2f32ea38e8c5fd32827_screen.jpg?ts=1698350978",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP10zvEXDk0A7V5eSf1aVm9N9UskGrBrWB1w&s",
-        ],
-    },
-    {
-        name: "Digital Watch 2",
-        category: "men",
-        images: [
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
-        ],
-    },
-];
+// export const productsList = [
+//     {
+//         name: "Watch",
+//         category: "women",
+//         images: [
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrvRWDpRts3ffsdJKXCCqzfSaLNGc2Bxc5g&s",
+//             "https://www.carlington.in/cdn/shop/files/Carlington_elite_analog_ladies_watch_CT_2007_roseblack.jpg?v=1696689556&width=2400",
+//             "https://currenwatches.com.pk/cdn/shop/files/S16a1d22aca9244a19944aad7e16f364fh_1445x.jpg?v=1708428048",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXLu03PFPFQhLEfU4QZualjO6dRe72PwhXOFk1lYQQxtCRS5zlxvXStz-zk2WzDCG0-2M&usqp=CAU",
+//         ],
+//     },
+//     {
+//         name: "Bracelet",
+//         category: "women",
+//         images: [
+//             "https://diamondemitations.pk/cdn/shop/files/IMG-20240605-WA0093_1000x1000.jpg?v=1717672714",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8xSgWNrF32EeAqOPtf6BUn9wYZWMi1FOe7cYyPQIh0MnDThKX4J5fy7osgnZQpCqNE_Q&usqp=CAU",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR04UuoqlpCZKubmbVCvIyCtj8ktnHay-RS2Js3jszT-_XldfOJMKGnetrRCzQcClSzTtg&usqp=CAU",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAm1gnL5cNDxWPOZ9YkPDHbyhOvrbseQuXsw&s",
+//         ],
+//     },
+//     {
+//         name: "Digital Watch",
+//         category: "men",
+//         images: [
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
+//         ],
+//     },
+//     {
+//         name: "T-Shirt",
+//         category: "men",
+//         images: [
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3JySzx0pdzRnn6rV0dkwapAJIsSeNFYouLQ&s",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU2XTWD-p2c6QeaaF7tqSxHfpgiOfYtBp4xw&s",
+//             "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/white-transparent-background-t-shirt-design-template-b57a5ce5ec3ad2f32ea38e8c5fd32827_screen.jpg?ts=1698350978",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP10zvEXDk0A7V5eSf1aVm9N9UskGrBrWB1w&s",
+//         ],
+//     },
+//     {
+//         name: "Digital Watch 2",
+//         category: "men",
+//         images: [
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
+//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
+//         ],
+//     },
+// ];
 
 const PANEL_COUNT = 5; // Fixed number of panels for the prism layout
 
@@ -135,39 +135,15 @@ const duplicateVerticalPanels = (images) => {
 
 
 
-export default function HomepageCopy() {
-    /** @type {LoaderReturnData} */
+export default function HomepageCopy({ productsList }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const IsFeaturePageOpened = useSelector((state) => state?.themeMode?.IsFeaturePageOpened);
     const dispatch = useDispatch();
 
 
-    const images = [
-        {
-            name: "watcht",
-            category: 'men',
-            variants: ["/splash/watch1.png", "/splash/watch2.png", "/splash/watch3.png", "/splash/watch4.png", "/splash/watch5.png"]
-        },
-        {
-            name: "bracelet",
-            category: 'women',
-            variants: ["/splash/bracelet1.png", "/splash/bracelet2.png", "/splash/bracelet3.png"]
-        },
-        {
-            name: "shart",
-            category: 'men',
-            variants: ["/splash/shart1.png", "/splash/shart2.png", "/splash/shart3.png"]
-        },
-        {
-            name: "digital watch",
-            category: 'men',
-            variants: ["/splash/digital-watch1.png", "/splash/digital-watch2.png", "/splash/digital-watch3.png", "/splash/digital-watch4.png"]
-        },
-    ];
-
     const categories = ["all", "men", "women", "kids"]
     const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
-    const [Images, setImages] = useState(images);
+    // const [Images, setImages] = useState(images);
     const [products, setproducts] = useState(productsList);
 
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
@@ -176,7 +152,6 @@ export default function HomepageCopy() {
     const [category, setCategory] = useState("all");
     const [IsShowProductDesc, setShowProductDesc] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
 
     const [horizontalIndex, setHorizontalIndex] = useState(0); // For X-axis carousel
     const [verticalIndex, setVerticalIndex] = useState(0); // For Y-axis carousel
@@ -192,7 +167,7 @@ export default function HomepageCopy() {
     const handleIsFeatures = () => {
 
         // setIsfeaturesMode((prev) => !prev);
-        dispatch(hanldeFeaturePage())
+        // dispatch(hanldeFeaturePage())
     }
 
     const handleGalleryScreen = () => {
@@ -303,7 +278,7 @@ export default function HomepageCopy() {
         setSearchQuery(query);
 
         const filteredImages = productsList.filter((product) =>
-            product.name.toLowerCase().includes(query)
+            product.title.toLowerCase().includes(query)
         );
 
         if (filteredImages.length === 0) {
@@ -426,7 +401,9 @@ export default function HomepageCopy() {
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3" onClick={handleGalleryScreen} />
                             <img src="/splash/rect2.png" alt="rect1" onClick={showProductDescription} />
-                            <img src="/splash/rect3.png" alt="rect1" onClick={handleIsFeatures} />
+                            <Link to={`/products/${products[horizontalIndex]?.handle}`}> 
+                                <img src="/splash/rect3.png" alt="rect1"  />
+                            </Link>
                         </div>
 
                         {/* ---------- dark/light mode container -------- */}
@@ -605,121 +582,126 @@ export default function HomepageCopy() {
     );
 }
 
+// href = {`/products/${products[horizontalIndex].handle}`}
+
+
+
+
 /**
  * @param {{
  *   collection: FeaturedCollectionFragment;
  * }}
  */
-function FeaturedCollection({ collection }) {
-    if (!collection) return null;
-    const image = collection?.image;
-    return (
-        <Link
-            className="featured-collection"
-            to={`/collections/${collection.handle}`}
-        >
-            {image && (
-                <div className="featured-collection-image">
-                    <Image data={image} sizes="100vw" />
-                </div>
-            )}
-            <h1>{collection.title}</h1>
-        </Link>
-    );
-}
+// function FeaturedCollection({ collection }) {
+//     if (!collection) return null;
+//     const image = collection?.image;
+//     return (
+//         <Link
+//             className="featured-collection"
+//             to={`/collections/${collection.handle}`}
+//         >
+//             {image && (
+//                 <div className="featured-collection-image">
+//                     <Image data={image} sizes="100vw" />
+//                 </div>
+//             )}
+//             <h1>{collection.title}</h1>
+//         </Link>
+//     );
+// }
 
 /**
  * @param {{
  *   products: Promise<RecommendedProductsQuery>;
  * }}
  */
-function RecommendedProducts({ products }) {
-    return (
-        <div className="recommended-products">
-            <h2>Recommended Products</h2>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Await resolve={products}>
-                    {({ products }) => (
-                        <div className="recommended-products-grid">
-                            {products.nodes.map((product) => (
-                                <Link
-                                    key={product.id}
-                                    className="recommended-product"
-                                    to={`/products/${product.handle}`}
-                                >
-                                    <Image
-                                        data={product.images.nodes[0]}
-                                        aspectRatio="1/1"
-                                        sizes="(min-width: 45em) 20vw, 50vw"
-                                    />
-                                    <h4>{product.title}</h4>
-                                    <small>
-                                        <Money data={product.priceRange.minVariantPrice} />
-                                    </small>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </Await>
-            </Suspense>
-            <br />
-        </div>
-    );
-}
+// function RecommendedProducts({ products }) {
+//     return (
+//         <div className="recommended-products">
+//             <h2>Recommended Products</h2>
+//             <Suspense fallback={<div>Loading...</div>}>
+//                 <Await resolve={products}>
+//                     {({ products }) => (
+//                         <div className="recommended-products-grid">
+//                             {products.nodes.map((product) => (
+//                                 <Link
+//                                     key={product.id}
+//                                     className="recommended-product"
+//                                     to={`/products/${product.handle}`}
+//                                 >
+//                                     <Image
+//                                         data={product.images.nodes[0]}
+//                                         aspectRatio="1/1"
+//                                         sizes="(min-width: 45em) 20vw, 50vw"
+//                                     />
+//                                     <h4>{product.title}</h4>
+//                                     <small>
+//                                         <Money data={product.priceRange.minVariantPrice} />
+//                                     </small>
+//                                 </Link>
+//                             ))}
+//                         </div>
+//                     )}
+//                 </Await>
+//             </Suspense>
+//             <br />
+//         </div>
+//     );
+// }
 
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-`;
+// const FEATURED_COLLECTION_QUERY = `#graphql
+//   fragment FeaturedCollection on Collection {
+//     id
+//     title
+//     image {
+//       id
+//       url
+//       altText
+//       width
+//       height
+//     }
+//     handle
+//   }
+//   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
+//     @inContext(country: $country, language: $language) {
+//     collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
+//       nodes {
+//         ...FeaturedCollection
+//       }
+//     }
+//   }
+// `;
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-`;
+// const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+//   fragment RecommendedProduct on Product {
+//     id
+//     title
+//     handle
+//     priceRange {
+//       minVariantPrice {
+//         amount
+//         currencyCode
+//       }
+//     }
+//     images(first: 1) {
+//       nodes {
+//         id
+//         url
+//         altText
+//         width
+//         height
+//       }
+//     }
+//   }
+//   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+//     @inContext(country: $country, language: $language) {
+//     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+//       nodes {
+//         ...RecommendedProduct
+//       }
+//     }
+//   }
+// `;
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */

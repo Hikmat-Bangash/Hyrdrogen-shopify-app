@@ -1,4 +1,6 @@
-import {Suspense} from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import {Suspense, useState} from 'react';
 import {defer, redirect} from '@shopify/remix-oxygen';
 import {Await, Link, useLoaderData} from '@remix-run/react';
 
@@ -10,6 +12,8 @@ import {
   CartForm,
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/lib/variants';
+import SharePlatforms from '~/components/SharePlatforms';
+import {useSelector} from 'react-redux';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -107,18 +111,136 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product, variants} = useLoaderData();
+  console.log('single product get: ', product);
   const {selectedVariant} = product;
+  const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
+
+  const [isShare, setisShare] = useState(false);
+
+  const handleShareProduct = () => {
+    setisShare((prev) => !prev);
+  };
 
   return (
     // <div className="product">
-    <div className="w-screen h-auto mt-[270px] ">
-      <ProductImage
-        image={selectedVariant?.image}
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
-      />
-    </div>
+    <>
+      <div
+        className={`featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-lg  ${
+          isDarkMode ? 'bg-[#000000]' : 'bg-gray-200'
+        }`}
+      >
+        <div
+          className={`w-full  h-[68%]  ${
+            isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+          }
+        } `}
+        >
+          <div className="w-full h-full flex flex-col justify-center items-center relative ">
+            <div className="w-full h-full">
+              <div className="w-full h-full relative flex flex-col ">
+                <div className="w-full h-[15%] absolute top-0 flex flex-row justify-center ">
+                  <div
+                    className="w-full h-full flex flex-row justify-center items-center  "
+                    style={{
+                      backgroundImage: isDarkMode
+                        ? "url('/splash/dark-top-frame.png')"
+                        : "url('/splash/bottom1.png')",
+                      backgroundSize: '100% 100%',
+                    }}
+                    id="top"
+                  >
+                    <img
+                      src="/splash/favouriteIcon.png"
+                      alt="topImg"
+                      className="w-[30px] h-[34px] cursor-pointer"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full h-[70%]  flex flex-row">
+                  <div
+                    className="w-[15%] h-full absolute top-0 left-0  flex flex-row justify-center items-center"
+                    style={{
+                      backgroundImage: isDarkMode
+                        ? "url('/splash/dark-right-frame.png')"
+                        : "url('/splash/right1.png')",
+
+                      backgroundSize: '100% 100%',
+                    }}
+                    id="left"
+                  >
+                    <img
+                      src="/splash/storeIcon.png"
+                      alt="leftImg"
+                      className="w-[30px] h-[34px] cursor-pointer border-2"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div
+                    className=" ml-[15%] w-[70%] p-1 object-cover h-[100%] mt-[5.5rem] flex justify-center items-center  "
+                    id="center"
+                  >
+                    <div className=" w-full h-full object-cover flex justify-center items-center ">
+                      <ProductImage
+                        image={selectedVariant?.image}
+                        selectedVariant={selectedVariant}
+                        product={product}
+                        variants={variants}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    className="w-[15%] h-full absolute top-0  right-0 flex flex-row justify-center items-center"
+                    style={{
+                      backgroundImage: isDarkMode
+                        ? "url('/splash/left-dark-frame.png')"
+                        : "url('/splash/left1.png')",
+                      backgroundSize: '100% 100%',
+                    }}
+                    id="right"
+                  >
+                    <img
+                      src="/splash/cartIcon.png"
+                      alt="rightImg"
+                      className="w-[40px] h-[40px] cursor-pointer"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  className="w-full h-[14%] absolute bottom-0  flex flex-row justify-center"
+                  onClick={handleShareProduct}
+                >
+                  <div
+                    className="w-full h-full flex flex-row justify-center items-center "
+                    style={{
+                      backgroundImage: isDarkMode
+                        ? "url('/splash/dark-bottom-frame.png')"
+                        : "url('/splash/top1.png')",
+
+                      backgroundSize: '100% 100%',
+                    }}
+                    id="bottom"
+                  >
+                    <img
+                      src="/splash/shareIcon.png"
+                      alt="splash1"
+                      className="w-[40px] h-[40px] cursor-pointer"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {isShare && <SharePlatforms setisShare={setisShare} />}
+    </>
   );
 }
 
@@ -131,13 +253,14 @@ function ProductImage({image, selectedVariant, product, variants}) {
   }
   console.log(image);
   return (
-    <div className="product-image">
+    <div className="w-full h-full object-cover ">
       <Image
         alt={image.altText || 'Product Image'}
         aspectRatio="1/1"
         data={image}
         key={image.id}
-        sizes="(min-width: 15em) 10vw, 50vw"
+        className="w-full h-full object-cover"
+        // sizes="(min-width: 15em) 10vw, 50vw"
       />
     </div>
   );
