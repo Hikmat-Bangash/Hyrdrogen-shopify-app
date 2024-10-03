@@ -13,19 +13,7 @@ export function CartMain({layout, cart}) {
   const className = `cart-main ${withDiscount ? 'with-discount' : ''}`;
 
   return (
-    <div
-      className={className}
-      style={{
-        // zIndex: '-12000px',
-        backgroundColor: 'pink',
-        bottom: '100px',
-        // zIndex: '10000px',
-        // minHeight: '500px',
-        // height: '500px',
-        // maxHeight: 'auto',
-        // backgroundColor: 'blue',
-      }}
-    >
+    <div className={className + `h-screen bg-gray-100`}>
       <CartEmpty hidden={linesCount} layout={layout} />
       <CartDetails cart={cart} layout={layout} />
     </div>
@@ -83,7 +71,7 @@ function CartLineItem({layout, line}) {
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
 
   return (
-    <li key={id} className="cart-line">
+    <li key={id} className="cart-line py-2 border-b border-gray-400">
       {image && (
         <Image
           alt={title}
@@ -156,7 +144,7 @@ export function CartSummary({cost, layout, children = null}) {
   return (
     <div
       aria-labelledby="cart-summary"
-      className={className}
+      className={className + ``}
       style={
         {
           // zIndex: '20000',

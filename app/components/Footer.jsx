@@ -13,7 +13,6 @@ export function Footer({menu, shop}) {
 
   const goBack = (event) => {
     event.preventDefault(); // Prevents the default form submission behavior
-    console.log('goback button');
     window.history.back(); // Navigates back one step in the browser's history
   };
   return (
@@ -65,7 +64,7 @@ export function Footer({menu, shop}) {
                   textAlign: 'left',
                 }}
               >
-                Kelly's Kapsule
+                Kelly&aposs Kapsule
               </h1>
               <div className="w-full h-[25%]  mt-[25px]  relative ">
                 <div className="relative w-[85%] h-full ">

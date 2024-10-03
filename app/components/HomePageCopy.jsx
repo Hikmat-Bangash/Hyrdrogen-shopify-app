@@ -237,7 +237,6 @@ export default function HomepageCopy({ productsList }) {
     const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
     const duplicatedProducts = createNonDuplicateOrder(products);
 
-
   
   // ============ end of the spinning tool ---------------
 
@@ -307,6 +306,7 @@ export default function HomepageCopy({ productsList }) {
             setHorizontalIndex(products.length - 1); // Go to last product
         }
     }, [horizontalIndex]);
+
 
     return (
         <>
@@ -547,7 +547,8 @@ export default function HomepageCopy({ productsList }) {
                                                                     overflow: "hidden"
                                                                 }}
                                                             >
-                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={product.images[0]} alt={product.name} />
+                                                                <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={product.featuredImage
+} alt={product.name} />
                                                             </div>
                                                         </div>
                                                     );

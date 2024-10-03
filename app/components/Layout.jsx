@@ -22,7 +22,7 @@ import {hanldeFeaturePage} from '~/redux-toolkit/slices/index.slice';
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleBackButtonClick = () => {
     // dispatch(hanldeFeaturePage());

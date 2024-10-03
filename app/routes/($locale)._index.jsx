@@ -9,11 +9,12 @@ import { useLoaderData } from '@remix-run/react/dist/components';
 
 export async function loader({ context }) {
   const { products } = await context.storefront.query(ALL_PRODUCT_QUERY);
-  // console.log('fetched products: ', products.edges);
   return json({
     allproducts: products.edges
   });
 }
+
+// Fetching all products from shopify store
 
 const Index = () => {
   const { allproducts } = useLoaderData();
@@ -132,14 +133,14 @@ export default Index;
 
 const ALL_PRODUCT_QUERY = `#graphql
  query getProducts {
-  products(first: 20) {
+  products(first: 50) {
     edges {
       node {
         id
         title
         handle
         descriptionHtml
-        media(first: 10) {
+        media(first: 50) {
           edges {
             node {
               ... on MediaImage {
@@ -152,7 +153,7 @@ const ALL_PRODUCT_QUERY = `#graphql
           }
         }
         productType
-        collections(first: 10) {
+        collections(first: 50) {
           edges {
             node {
               id
@@ -161,7 +162,7 @@ const ALL_PRODUCT_QUERY = `#graphql
           }
         }
         tags
-        variants(first: 10) {
+        variants(first: 50) {
           edges {
             node {
               id

@@ -1,4 +1,4 @@
-import {Await, NavLink} from '@remix-run/react';
+import {Await, Link, NavLink} from '@remix-run/react';
 import {Suspense} from 'react';
 import {useRootLoaderData} from '~/root';
 
@@ -33,8 +33,7 @@ export function Header({header, isLoggedIn, cart}) {
 
           <div className="w-[13%] h-[80%] ">
             <NavLink
-              // to="/spinswp"
-              to="/"
+              to="/cart"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/cart.png" alt="home" className="w-4 h-4 " />

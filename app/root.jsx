@@ -73,7 +73,6 @@ export async function loader({context}) {
 
   const isLoggedInPromise = customerAccount.isLoggedIn();
   const cartPromise = cart.get();
-
   // defer the footer query (below the fold)
   const footerPromise = storefront.query(FOOTER_QUERY, {
     cache: storefront.CacheLong(),
@@ -92,7 +91,7 @@ export async function loader({context}) {
 
   return defer(
     {
-      cart: cartPromise,
+      cart: await cartPromise,
       footer: footerPromise,
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
