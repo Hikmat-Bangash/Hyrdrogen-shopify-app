@@ -14,6 +14,7 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from 'react-share';
+import {IoMdClose} from 'react-icons/io';
 
 const SharePlatforms = ({setisShare}) => {
   const location = useLocation();
@@ -50,10 +51,10 @@ const SharePlatforms = ({setisShare}) => {
               </div>
 
               <div
-                className="absolute top-1 right-5  cursor-pointer  font-sans text-gray-500 font-bold text-[2.3rem]  flex items-center justify-center rounded-full"
+                className="absolute top-5 right-3  cursor-pointer  font-sans text-gray-500 font-bold text-[2.3rem]  flex items-center justify-center rounded-full"
                 onClick={closeShareModal}
               >
-                x
+                <IoMdClose />
               </div>
             </div>
 

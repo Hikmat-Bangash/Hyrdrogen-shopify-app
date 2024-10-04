@@ -2,18 +2,25 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {useState} from 'react';
 import SharePlatforms from './SharePlatforms';
+import {FaWindowClose} from 'react-icons/fa';
+import {Link} from '@remix-run/react';
 
-const Features = ({isDarkMode, productImg}) => {
+const Features = ({isDarkMode, setIsfeaturesMode, productImg, product}) => {
   const [isShare, setisShare] = useState(false);
 
   const handleShareProduct = () => {
     setisShare((prev) => !prev);
   };
+
+  const handleClosing = () => {
+    setIsfeaturesMode((prev) => !prev);
+  };
+
   return (
     <>
-      <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-lg z-20">
+      <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20">
         <div
-          className={`w-full  h-[68%]  ${
+          className={`w-full  h-[68%] relative   ${
             isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
           }
         } `}
@@ -62,35 +69,37 @@ const Features = ({isDarkMode, productImg}) => {
                   </div>
 
                   <div
-                    className=" ml-[15%] w-[70%] p-1 object-cover h-[100%] mt-[5.5rem] flex justify-center items-center  "
+                    className=" ml-[15%] w-[70%] p-1 object-cover h-full mt-[22%] flex justify-center items-center  "
                     id="center"
                   >
                     <div className=" w-full h-full object-cover flex justify-center items-center">
                       <img
-                        src={productImg}
+                        src={product?.featuredImage}
                         alt="centerImg"
                         className="w-full h-full object-cover"
                       />
                     </div>
                   </div>
 
-                  <div
-                    className="w-[15%] h-full absolute top-0  right-0 flex flex-row justify-center items-center"
-                    style={{
-                      backgroundImage: isDarkMode
-                        ? "url('/splash/left-dark-frame.png')"
-                        : "url('/splash/left1.png')",
-                      backgroundSize: '100% 100%',
-                    }}
-                    id="right"
-                  >
-                    <img
-                      src="/splash/cartIcon.png"
-                      alt="rightImg"
-                      className="w-[40px] h-[40px] cursor-pointer"
-                      loading="lazy"
-                    />
-                  </div>
+                  <Link to={`/products/${product?.handle}`}>
+                    <div
+                      className="w-[15%] h-full absolute top-0  right-0 flex flex-row justify-center items-center"
+                      style={{
+                        backgroundImage: isDarkMode
+                          ? "url('/splash/left-dark-frame.png')"
+                          : "url('/splash/left1.png')",
+                        backgroundSize: '100% 100%',
+                      }}
+                      id="right"
+                    >
+                      <img
+                        src="/splash/cartIcon.png"
+                        alt="rightImg"
+                        className="w-[40px] h-[40px] cursor-pointer"
+                        loading="lazy"
+                      />
+                    </div>
+                  </Link>
                 </div>
 
                 <div
@@ -119,6 +128,14 @@ const Features = ({isDarkMode, productImg}) => {
               </div>
             </div>
           </div>
+
+          {/* close button */}
+          <button
+            className="absolute -top-12 right-1 text-5xl text-[#FEFCEB]  font-bold"
+            onClick={handleClosing}
+          >
+            <FaWindowClose />
+          </button>
         </div>
       </div>
 

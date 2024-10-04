@@ -27,7 +27,7 @@ function CartDetails({layout, cart}) {
   const cartHasItems = !!cart && cart.totalQuantity > 0;
 
   return (
-    <div className="cart-details">
+    <div className="cart-details ">
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -117,11 +117,12 @@ function CartLineItem({layout, line}) {
 /**
  * @param {{checkoutUrl: string}}
  */
+// --------- Need to enable payment method -----------
 function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
+    <div className="bg-green-500 rounded-sm w-[12rem] text-white flex justify-center items-center py-2">
       <a href={checkoutUrl} target="_self">
         <p>Continue to Checkout &rarr;</p>
       </a>
@@ -144,7 +145,7 @@ export function CartSummary({cost, layout, children = null}) {
   return (
     <div
       aria-labelledby="cart-summary"
-      className={className + ``}
+      className={className + ` flex flex-col gap-3 ml-2`}
       style={
         {
           // zIndex: '20000',
@@ -153,10 +154,10 @@ export function CartSummary({cost, layout, children = null}) {
         }
       }
     >
-      <h4>Totals</h4>
-      <dl className="cart-subtotal">
-        <dt>Subtotal</dt>
-        <dd>
+      {/* <h4>Totals</h4> */}
+      <dl className="cart-subtotal flex gap-2 ">
+        <dt>Subtotal: </dt>
+        <dd className="font-semibold">
           {cost?.subtotalAmount?.amount ? (
             <Money data={cost?.subtotalAmount} />
           ) : (
@@ -309,7 +310,13 @@ function CartDiscounts({discountCodes}) {
         <div>
           <input type="text" name="discountCode" placeholder="Discount code" />
           &nbsp;
-          <button type="submit">Apply</button>
+          <button
+            className="ml-3 cursor-not-allowed bg-blue-600 text-white px-8 py-2 rounded-sm"
+            type="submit"
+            disabled
+          >
+            Apply
+          </button>
         </div>
       </UpdateDiscountForm>
     </div>

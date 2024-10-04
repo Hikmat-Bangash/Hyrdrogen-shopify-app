@@ -7,8 +7,13 @@ import {useRootLoaderData} from '~/root';
  */
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
+
+  const handleClick = () => {
+    console.log('handle clicked');
+  };
+
   return (
-    <header className="w-screen h-[70px] fixed bottom-0 right-0 z-20 ">
+    <header className="w-screen h-[70px] fixed bottom-0 right-0 z-50 ">
       {/* <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
@@ -24,6 +29,7 @@ export function Header({header, isLoggedIn, cart}) {
           <div className="w-[13%] h-[80%]  ">
             <NavLink
               to="/"
+              onClick={handleClick}
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/home.png" alt="home" className="w-4 h-4" />
@@ -35,17 +41,17 @@ export function Header({header, isLoggedIn, cart}) {
             <NavLink
               to="/cart"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
+              onClick={(e) => {
+                console.log('Cart clicked');
+              }}
             >
-              <img src="/splash/cart.png" alt="home" className="w-4 h-4 " />
-              <h3 className="text-white">
-                {/* <CartToggle cart={cart} /> */}
-                Cart
-              </h3>
+              <img src="/splash/cart.png" alt="cart" className="w-4 h-4 " />
+              <h3 className="text-white">Cart</h3>
             </NavLink>
           </div>
           <div className="w-[13%] h-[80%]  ">
             <NavLink
-              to=""
+              to="/"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/thirdone.png" alt="home" className="w-4 h-4 " />

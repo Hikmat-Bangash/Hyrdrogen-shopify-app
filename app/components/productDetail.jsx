@@ -1,6 +1,7 @@
 import React from 'react';
 
-const ProductDetail = ({isDarkMode}) => {
+const ProductDetail = ({isDarkMode, product}) => {
+  console.log('product detail: ', product);
   return (
     <div
       className={`contianer w-[250px] h-[269px] absolute z-40 top-[10.5rem] left-[4.1rem]  backdrop-blur-sm   justify-center items-center ${
@@ -23,11 +24,11 @@ const ProductDetail = ({isDarkMode}) => {
               isDarkMode ? 'text-[#D9D9D9]' : 'text-black'
             }`}
           >
-            Digital Fitness Watch
+            {product?.title}
           </p>
 
           <p className="font-bold text-[16px] leading-[24px] text-[#DAAF37]">
-            $150
+            ${product?.priceRange?.amount}
           </p>
         </div>
 
@@ -37,9 +38,7 @@ const ProductDetail = ({isDarkMode}) => {
             isDarkMode ? 'text-white' : 'text-black'
           } `}
         >
-          From built-in GPS tracking to advanced heart rate monitoring, this
-          fitness watch has everything you need to keep yourself motivated and
-          in shape
+          {product?.description}
         </p>
         {/* icons + names */}
         <div className="icons-names w-full flex justify-between">

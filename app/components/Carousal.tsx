@@ -22,7 +22,7 @@ export const CAROUSAL_IMAGES = [
   },
 ];
 
-const Carousal = ({handleCarouselProduct}) => {
+const Carousal = ({handleCarouselProduct, products}) => {
   const handleSelectedProduct = (selectedProduct) => {
     handleCarouselProduct(selectedProduct);
   };
@@ -73,7 +73,7 @@ const Carousal = ({handleCarouselProduct}) => {
           }
         >
           {/* Carousel of products */}
-          {CAROUSAL_IMAGES.map((prdct, index) => (
+          {products.map((prdct, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={index}
@@ -82,14 +82,20 @@ const Carousal = ({handleCarouselProduct}) => {
             >
               <div className="prdct-detail flex justify-around items-center h-[51px] mt-[7px] bg-[#000000] rounded-[6px] shadow-xl">
                 {/* prdct image */}
-                <img src={prdct.IMAGE} alt="watch" className="z-20" />
+                <img
+                  src={prdct.featuredImage}
+                  alt="product-thumbnail"
+                  className="z-20 h-8 w-8 object-cover"
+                />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
-                  <h4 className="text-[#DAAF37] text-[12px] ">
-                    {prdct.QUANTITY} left
+                  <h4 className="text-[#DAAF37] text-xs mb-1 ">
+                    {index + 5} left
                   </h4>
-                  <h2 className="text-[#ECECEC] text-[14px] leading-[18px] font-bold font-avenir">
-                    {prdct.NAME}
+                  <h2 className="text-[#ECECEC] text-xs font-semibold font-avenir">
+                    {prdct.title.length > 15
+                      ? prdct?.title?.substring(0, 10)
+                      : prdct?.title}
                   </h2>
                 </div>
               </div>

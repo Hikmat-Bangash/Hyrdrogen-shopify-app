@@ -137,7 +137,6 @@ const duplicateVerticalPanels = (images) => {
 
 export default function HomepageCopy({ productsList }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
-    const IsFeaturePageOpened = useSelector((state) => state?.themeMode?.IsFeaturePageOpened);
     const dispatch = useDispatch();
 
 
@@ -165,9 +164,9 @@ export default function HomepageCopy({ productsList }) {
 
     // -------- handle features screen ----
     const handleIsFeatures = () => {
-
-        // setIsfeaturesMode((prev) => !prev);
-        // dispatch(hanldeFeaturePage())
+          console.log("is features screen")
+        setIsfeaturesMode((prev) => !prev);
+        dispatch(hanldeFeaturePage())
     }
 
     const handleGalleryScreen = () => {
@@ -331,7 +330,7 @@ export default function HomepageCopy({ productsList }) {
                                     Kelly&apos;s Kapsule
                                 </h1>
                                 {/* ------------- Carousal section ----------- */}
-                                <Carousal handleCarouselProduct={handleCarouselProduct} />
+                                <Carousal products={productsList} handleCarouselProduct={handleCarouselProduct} />
 
                                 {/* ------------- Carousal section END ----------- */}
 
@@ -401,9 +400,7 @@ export default function HomepageCopy({ productsList }) {
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3" onClick={handleGalleryScreen} />
                             <img src="/splash/rect2.png" alt="rect1" onClick={showProductDescription} />
-                            <Link to={`/products/${products[horizontalIndex]?.handle}`}> 
-                                <img src="/splash/rect3.png" alt="rect1"  />
-                            </Link>
+                            <img src="/splash/rect3.png" alt="rect1" onClick={handleIsFeatures} />
                         </div>
 
                         {/* ---------- dark/light mode container -------- */}
@@ -450,7 +447,7 @@ export default function HomepageCopy({ productsList }) {
                                     onTouchEnd={handleTouchEnd}
                                 >
                                     {noProductsFound ? (
-                                        <div className="no-products-message text-[1.8rem] font-semibold bg-gray-400 text-red-600" style={{ textAlign: 'center', padding: '20px' }}>
+                                        <div className="no-products-message text-[1.8rem] font-semibold bg-[#FEFCEB] text-red-600" style={{ textAlign: 'center', padding: '20px' }}>
                                             <h2>Oops! No products found.</h2>
                                         </div>
                                     ) : (
@@ -557,7 +554,7 @@ export default function HomepageCopy({ productsList }) {
                                         </>
                                     )}
                                     {/* ----------- product description ------- */}
-                                    {IsShowProductDesc && <ProductDetail isDarkMode={isDarkMode} />}
+                                    {IsShowProductDesc && <ProductDetail product={productsList[horizontalIndex]} isDarkMode={isDarkMode} />}
                                 </div>
 
 
@@ -576,7 +573,7 @@ export default function HomepageCopy({ productsList }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsFeaturePageOpened && <Features isDarkMode={isDarkMode} productImg={products[horizontalIndex].images[verticalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} setIsfeaturesMode={setIsfeaturesMode} productImg={products[horizontalIndex].images[verticalIndex]} product={productsList[horizontalIndex]} />}
             </div>
 
         </>

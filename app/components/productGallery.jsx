@@ -27,7 +27,7 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
         >
           {/* upper back-btn bg */}
           <div
-            className={`back-btn-bg ml-4 py-2 w-full h-16 flex items-center  font-bold text-[1.1rem] tracking-normal cursor-pointer ${isDarkMode ? "text-[#B3B3B3]" : "text-gray-500"}`}
+            className={`back-btn-bg ml-4 mt-3 py-2 w-full h-8  flex items-center  font-bold text-[1.1rem] tracking-normal cursor-pointer ${isDarkMode ? "text-[#B3B3B3]" : "text-gray-500"}`}
             onClick={handleGalleryBackAction}
           >
             <img
@@ -38,7 +38,7 @@ const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
             Back
           </div>
           {/* product showing section */}
-          <div className="product-showing-section flex justify-center items-center w-full h-[22rem]  p-2">
+          <div className="product-showing-section flex justify-center items-center w-full h-[24rem]  p-2">
             <img src={galleryImages[activeImg]} alt="mainImg" className='object-cover w-full h-full' />
           </div>
         </div>

@@ -66,7 +66,7 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
           <main>{children}</main>
         </div>
 
-        <div className=" w-full  bottom-0 fixed ">
+        <div className=" w-full  bottom-0 fixed z-50">
           {header && (
             <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />
           )}

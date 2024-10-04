@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/no-duplicates */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {NavLink} from '@remix-run/react';
@@ -10,7 +12,6 @@ import {useHistory} from '@shopify/hydrogen';
  */
 export function Footer({menu, shop}) {
   // const history = useHistory();
-
   const goBack = (event) => {
     event.preventDefault(); // Prevents the default form submission behavior
     window.history.back(); // Navigates back one step in the browser's history
