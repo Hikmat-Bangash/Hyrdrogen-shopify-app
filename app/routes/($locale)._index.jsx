@@ -36,6 +36,8 @@ const Index = () => {
       //   url: node.featuredImage?.url || 'placeholder.jpg',
       //   altText: node.featuredImage?.altText || 'No image available',
       // },
+
+      category: node.collections.edges.map((collectionEdge) => collectionEdge.node.title), // Extract collection titles
       images: node.media.edges
         .filter((mediaNode) => mediaNode.node.image) // Filter to only include images
         .map((mediaNode) => mediaNode.node.image.url), // Map to get only the image URL.filter(Boolean), // Filter out any null entries
@@ -53,8 +55,8 @@ const Index = () => {
     setProducts(formattedProducts);
   }, [allproducts])
   
-  console.log("unstructured product.data: ", allproducts);
-  console.log("structured product.data: ", products)
+  // console.log("unstructured product.data: ", allproducts);
+  // console.log("structured product.data: ", products)
   const [IsStartedPage, setIsStartedPage] = useState(false);
   return (
     <>

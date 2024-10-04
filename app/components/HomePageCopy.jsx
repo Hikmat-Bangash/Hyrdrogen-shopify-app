@@ -140,7 +140,7 @@ export default function HomepageCopy({ productsList }) {
     const dispatch = useDispatch();
 
 
-    const categories = ["all", "men", "women", "kids"]
+    const categories = ["All", "Men", "Women", "Kids"]
     const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
     // const [Images, setImages] = useState(images);
     const [products, setproducts] = useState(productsList);
@@ -148,7 +148,7 @@ export default function HomepageCopy({ productsList }) {
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
 
     const [IsGallery, setGallery] = useState(false);
-    const [category, setCategory] = useState("all");
+    const [category, setCategory] = useState("All");
     const [IsShowProductDesc, setShowProductDesc] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -247,12 +247,14 @@ export default function HomepageCopy({ productsList }) {
 
         // Filter products based on the selected category
         let filteredProducts;
-        if (categoryName === 'all') {
-            filteredProducts = productsList; // Reset to all products
+        // if (categoryName === 'All') {
+        //     filteredProducts = productsList; // Reset to all products
 
-        } else {
-            filteredProducts = productsList.filter((product) => product.category === categoryName);
-        }
+        // } else {
+        //     filteredProducts = productsList.filter((product) => product.category.join(",") === categoryName);
+        // }
+        filteredProducts = productsList.filter((product) => product.category.join(",") === categoryName);
+
 
         // Check if the filtered product list is empty
         if (filteredProducts.length === 0) {
@@ -298,14 +300,28 @@ export default function HomepageCopy({ productsList }) {
 
 
     useEffect(() => {
+
         // Handle positive and negative indices for infinite carousel effect
-        if (horizontalIndex >= products.length) {
+        if (horizontalIndex >= products?.length) {
             setHorizontalIndex(0); // Reset to first product
         } else if (horizontalIndex < 0) {
-            setHorizontalIndex(products.length - 1); // Go to last product
+            setHorizontalIndex(products?.length - 1); // Go to last product
         }
     }, [horizontalIndex]);
 
+    // useEffect for categories
+    useEffect(() => {
+        const filteredProducts = productsList?.filter((product) => product?.category.join(",") === category);
+        // Check if the filtered product list is empty
+        if (filteredProducts.length === 0) {
+            setNoProductsFound(true); // Set noProductsFound to true if no products are found
+            setproducts([]); // Clear the product list so no images are shown
+        } else {
+            setNoProductsFound(false); // Reset noProductsFound if products exist
+            setproducts(filteredProducts); // Update the filtered products
+        }
+    }, [])
+    
 
     return (
         <>
@@ -330,7 +346,7 @@ export default function HomepageCopy({ productsList }) {
                                     Kelly&apos;s Kapsule
                                 </h1>
                                 {/* ------------- Carousal section ----------- */}
-                                <Carousal products={productsList} handleCarouselProduct={handleCarouselProduct} />
+                                <Carousal products={products} handleCarouselProduct={handleCarouselProduct} />
 
                                 {/* ------------- Carousal section END ----------- */}
 
@@ -573,7 +589,7 @@ export default function HomepageCopy({ productsList }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} setIsfeaturesMode={setIsfeaturesMode} productImg={products[horizontalIndex].images[verticalIndex]} product={productsList[horizontalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode}  product={products[horizontalIndex]} />}
             </div>
 
         </>

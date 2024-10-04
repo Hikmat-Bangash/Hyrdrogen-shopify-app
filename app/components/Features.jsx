@@ -1,3 +1,4 @@
+/* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {useState} from 'react';
@@ -5,7 +6,14 @@ import SharePlatforms from './SharePlatforms';
 import {FaWindowClose} from 'react-icons/fa';
 import {Link} from '@remix-run/react';
 
-const Features = ({isDarkMode, setIsfeaturesMode, productImg, product}) => {
+const Features = ({
+  isDarkMode,
+  setIsfeaturesMode,
+  category,
+  setCategory,
+  set,
+  product,
+}) => {
   const [isShare, setisShare] = useState(false);
 
   const handleShareProduct = () => {
@@ -14,6 +22,7 @@ const Features = ({isDarkMode, setIsfeaturesMode, productImg, product}) => {
 
   const handleClosing = () => {
     setIsfeaturesMode((prev) => !prev);
+    setCategory(category);
   };
 
   return (
@@ -131,7 +140,7 @@ const Features = ({isDarkMode, setIsfeaturesMode, productImg, product}) => {
 
           {/* close button */}
           <button
-            className="absolute -top-12 right-1 text-5xl text-[#FEFCEB]  font-bold"
+            className="absolute -top-11 right-0 text-5xl text-red-400  font-bold"
             onClick={handleClosing}
           >
             <FaWindowClose />
