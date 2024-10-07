@@ -7,8 +7,6 @@ import {FaWindowClose} from 'react-icons/fa';
 import {Link} from '@remix-run/react';
 import {AiOutlineShoppingCart} from 'react-icons/ai';
 import {IoShareSocialOutline} from 'react-icons/io5';
-import {MdOutlineShoppingBag} from 'react-icons/md';
-import {TiBookmark} from 'react-icons/ti';
 import {GoBookmark} from 'react-icons/go';
 import {HiOutlineShoppingBag} from 'react-icons/hi2';
 

@@ -1,4 +1,4 @@
-import {Await, Link, NavLink} from '@remix-run/react';
+import {Await, NavLink} from '@remix-run/react';
 import {Suspense} from 'react';
 import {useRootLoaderData} from '~/root';
 
@@ -6,7 +6,7 @@ import {useRootLoaderData} from '~/root';
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart}) {
-  const {shop, menu} = header;
+  // const {shop, menu} = header;
 
   const handleClick = () => {
     console.log('handle clicked');

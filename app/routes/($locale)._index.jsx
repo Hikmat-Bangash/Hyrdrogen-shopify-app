@@ -1,4 +1,5 @@
-/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable eslint-comments/disable-enable-pair */
+
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 // import StartedScreen from '~/components/splash-screen/StartedScreen';
