@@ -4,7 +4,7 @@ const ProductDetail = ({isDarkMode, product}) => {
   console.log('product detail: ', product);
   return (
     <div
-      className={`contianer w-[250px] h-[269px] absolute z-40 top-[10.5rem] left-[4.1rem]  backdrop-blur-sm   justify-center items-center ${
+      className={`contianer w-[250px] h-[269px] fixed z-40 top-[10.5rem] left-[4.1rem]  backdrop-blur-sm  justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'
       } rounded-md `}
     >

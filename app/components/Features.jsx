@@ -5,6 +5,12 @@ import React, {useState} from 'react';
 import SharePlatforms from './SharePlatforms';
 import {FaWindowClose} from 'react-icons/fa';
 import {Link} from '@remix-run/react';
+import {AiOutlineShoppingCart} from 'react-icons/ai';
+import {IoShareSocialOutline} from 'react-icons/io5';
+import {MdOutlineShoppingBag} from 'react-icons/md';
+import {TiBookmark} from 'react-icons/ti';
+import {GoBookmark} from 'react-icons/go';
+import {HiOutlineShoppingBag} from 'react-icons/hi2';
 
 const Features = ({
   isDarkMode,
@@ -39,7 +45,7 @@ const Features = ({
               <div className="w-full h-full relative flex flex-col ">
                 <div className="w-full h-[15%] absolute top-0 flex flex-row justify-center ">
                   <div
-                    className="w-full h-full flex flex-row justify-center items-center  "
+                    className="w-full text-white  text-[2.5rem] h-full flex flex-row justify-center items-center  "
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-top-frame.png')"
@@ -48,18 +54,13 @@ const Features = ({
                     }}
                     id="top"
                   >
-                    <img
-                      src="/splash/favouriteIcon.png"
-                      alt="topImg"
-                      className="w-[30px] h-[34px] cursor-pointer"
-                      loading="lazy"
-                    />
+                    <GoBookmark />
                   </div>
                 </div>
 
                 <div className="w-full h-[70%]  flex flex-row">
                   <div
-                    className="w-[15%] h-full absolute top-0 left-0  flex flex-row justify-center items-center"
+                    className="w-[15%] h-full text-white text-[2.5rem] absolute top-0 left-0  flex flex-row justify-center items-center"
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-right-frame.png')"
@@ -69,12 +70,7 @@ const Features = ({
                     }}
                     id="left"
                   >
-                    <img
-                      src="/splash/storeIcon.png"
-                      alt="leftImg"
-                      className="w-[30px] h-[34px] cursor-pointer border-2"
-                      loading="lazy"
-                    />
+                    <HiOutlineShoppingBag />
                   </div>
 
                   <div
@@ -92,7 +88,7 @@ const Features = ({
 
                   <Link to={`/products/${product?.handle}`}>
                     <div
-                      className="w-[15%] h-full absolute top-0  right-0 flex flex-row justify-center items-center"
+                      className="w-[15%] h-full text-white text-[2.5rem] absolute top-0  right-0 flex flex-row justify-center items-center"
                       style={{
                         backgroundImage: isDarkMode
                           ? "url('/splash/left-dark-frame.png')"
@@ -101,12 +97,7 @@ const Features = ({
                       }}
                       id="right"
                     >
-                      <img
-                        src="/splash/cartIcon.png"
-                        alt="rightImg"
-                        className="w-[40px] h-[40px] cursor-pointer"
-                        loading="lazy"
-                      />
+                      <AiOutlineShoppingCart />
                     </div>
                   </Link>
                 </div>
@@ -116,7 +107,7 @@ const Features = ({
                   onClick={handleShareProduct}
                 >
                   <div
-                    className="w-full h-full flex flex-row justify-center items-center "
+                    className="w-full h-full text-white text-[2.5rem] flex flex-row justify-center items-center "
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-bottom-frame.png')"
@@ -126,12 +117,7 @@ const Features = ({
                     }}
                     id="bottom"
                   >
-                    <img
-                      src="/splash/shareIcon.png"
-                      alt="splash1"
-                      className="w-[40px] h-[40px] cursor-pointer"
-                      loading="lazy"
-                    />
+                    <IoShareSocialOutline />
                   </div>
                 </div>
               </div>
@@ -140,7 +126,7 @@ const Features = ({
 
           {/* close button */}
           <button
-            className="absolute -top-11 right-0 text-5xl text-red-400  font-bold"
+            className="absolute -top-11 right-0 text-5xl text-buttonlogin  font-bold"
             onClick={handleClosing}
           >
             <FaWindowClose />

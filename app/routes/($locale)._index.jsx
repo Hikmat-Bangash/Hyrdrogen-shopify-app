@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import Homepage from '~/components';
 // import StartedScreen from '~/components/splash-screen/StartedScreen';
-import HomepageCopy from '~/components/HomePageCopy';
+import Homepage from '~/components/HomePage';
 import { json } from '@remix-run/server-runtime';
 import { useLoaderData } from '@remix-run/react/dist/components';
 
@@ -54,78 +53,15 @@ const Index = () => {
 
     setProducts(formattedProducts);
   }, [allproducts])
-  
+
   // console.log("unstructured product.data: ", allproducts);
   // console.log("structured product.data: ", products)
-  const [IsStartedPage, setIsStartedPage] = useState(false);
+  // const [IsStartedPage, setIsStartedPage] = useState(false);
   return (
     <>
-      {IsStartedPage ? (
-        <> 
-          {/* <StartedScreen setIsStartedPage={setIsStartedPage} /> */}
-          <div className='w-full flex flex-col gap-3 justify-center items-center mt-14'>
-            <h1>Product List</h1>
-            <div className="w-full flex flex-col gap-3 p-4 ">
-              {products?.map(( node ) => (
-                <div key={node.id} className="w-full flex gap-3 border border-red-500">
-                  <img
-                    src={node.featuredImage ? node.featuredImage : 'placeholder.jpg'}
-                    alt={'Product Image'}
-                    className="product-image w-24 h-24 object-cover"
-                  />
-                  <div className="wrapper flex flex-col gap-2">
-                  <h2>{node.title}</h2>
-                  <p dangerouslySetInnerHTML={{ __html: node.descriptionHtml }} />
-                  <p>
-                    Price: {node?.priceRange?.amount} {node.priceRange.currencyCode}
-                    </p>
-                    
 
-                    <h3>Media:</h3>
-                    <div className="media-gallery flex gap-4">
-                      {node.images.map((mediaNode , index) => (
-                        <div key={index}>
-                         
-                            <img
-                              src={mediaNode}
-                              alt={'Media Image'}
-                              className="media-image w-10 h-10"
-                            />
-                
-                          {/* {mediaNode.sources && (
-                            <video controls className="media-video">
-                              <source src={mediaNode.sources[0].url} type={mediaNode.sources[0].mimeType} />
-                              Your browser does not support the video tag.
-                            </video>
-                          )} */}
-                        </div>
-                      ))}
-                    </div>
+      {products.length > 0 && <Homepage productsList={products} />}
 
-                    <h3>Variants:</h3>
-                    {/* {variants.map(({ node: variant }) => (
-                      <div key={variant.id} className="variant-card">
-                        <p>Variant Title: {variant.title}</p>
-                        <p>
-                          Price: {variant.price.amount} {variant.price.currencyCode}
-                        </p>
-                        <p>{variant.availableForSale ? 'Available' : 'Out of Stock'}</p>
-                      </div>
-                    ))} */}
-                    
-
-                    <a href={`/products/${node.handle}`}>View Product</a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          </>
-      ) : (<>
-          {products.length > 0 && <HomepageCopy productsList={products} />}
-      </>
-      )}
     </>
   );
 };

@@ -27,73 +27,6 @@ export const meta = () => {
     return [{ title: 'Hydrogen | Home' }];
 };
 
-/**
- * @param {LoaderFunctionArgs}
- */
-
-export async function loader({ context }) {
-    const { storefront } = context;
-    const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY);
-    const featuredCollection = collections.nodes[0];
-    const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
-
-    return defer({ featuredCollection, recommendedProducts });
-}
-
-// =============== BELOW IS THE SPINSWIPE FUNCTIONALITY ============
-// export const productsList = [
-//     {
-//         name: "Watch",
-//         category: "women",
-//         images: [
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrrvRWDpRts3ffsdJKXCCqzfSaLNGc2Bxc5g&s",
-//             "https://www.carlington.in/cdn/shop/files/Carlington_elite_analog_ladies_watch_CT_2007_roseblack.jpg?v=1696689556&width=2400",
-//             "https://currenwatches.com.pk/cdn/shop/files/S16a1d22aca9244a19944aad7e16f364fh_1445x.jpg?v=1708428048",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXLu03PFPFQhLEfU4QZualjO6dRe72PwhXOFk1lYQQxtCRS5zlxvXStz-zk2WzDCG0-2M&usqp=CAU",
-//         ],
-//     },
-//     {
-//         name: "Bracelet",
-//         category: "women",
-//         images: [
-//             "https://diamondemitations.pk/cdn/shop/files/IMG-20240605-WA0093_1000x1000.jpg?v=1717672714",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8xSgWNrF32EeAqOPtf6BUn9wYZWMi1FOe7cYyPQIh0MnDThKX4J5fy7osgnZQpCqNE_Q&usqp=CAU",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR04UuoqlpCZKubmbVCvIyCtj8ktnHay-RS2Js3jszT-_XldfOJMKGnetrRCzQcClSzTtg&usqp=CAU",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAm1gnL5cNDxWPOZ9YkPDHbyhOvrbseQuXsw&s",
-//         ],
-//     },
-//     {
-//         name: "Digital Watch",
-//         category: "men",
-//         images: [
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
-//         ],
-//     },
-//     {
-//         name: "T-Shirt",
-//         category: "men",
-//         images: [
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3JySzx0pdzRnn6rV0dkwapAJIsSeNFYouLQ&s",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU2XTWD-p2c6QeaaF7tqSxHfpgiOfYtBp4xw&s",
-//             "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/white-transparent-background-t-shirt-design-template-b57a5ce5ec3ad2f32ea38e8c5fd32827_screen.jpg?ts=1698350978",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP10zvEXDk0A7V5eSf1aVm9N9UskGrBrWB1w&s",
-//         ],
-//     },
-//     {
-//         name: "Digital Watch 2",
-//         category: "men",
-//         images: [
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bHc_0BGcC1eugUGxkA_gF9wIG7fra0akPQ&s",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVvAegXrjgE3-rpYQ9szDcoJIja9PjdUElRbgpDG6Fhy9vcFWAIA3vvtbkGW-Z1dm3SnY&usqp=CAU",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLzTqmLasXgW1G_44RF5T3KxWjHKG4SefL_g&s",
-//             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSObsa0JVuB5WJRu-jk_kX-dAucj40tVAqls4EI9rVLT2s_40mCHJd9xiE2SJ1E1eq9M2U&usqp=CAU",
-//         ],
-//     },
-// ];
-
 const PANEL_COUNT = 5; // Fixed number of panels for the prism layout
 
 // Function to create a non-random duplication of products, ensuring no duplicates appear consecutively
@@ -164,7 +97,7 @@ export default function HomepageCopy({ productsList }) {
 
     // -------- handle features screen ----
     const handleIsFeatures = () => {
-          console.log("is features screen")
+        console.log("is features screen")
         setIsfeaturesMode((prev) => !prev);
         dispatch(hanldeFeaturePage())
     }
@@ -236,8 +169,8 @@ export default function HomepageCopy({ productsList }) {
     const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
     const duplicatedProducts = createNonDuplicateOrder(products);
 
-  
-  // ============ end of the spinning tool ---------------
+
+    // ============ end of the spinning tool ---------------
 
     const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
 
@@ -321,7 +254,7 @@ export default function HomepageCopy({ productsList }) {
             setproducts(filteredProducts); // Update the filtered products
         }
     }, [])
-    
+
 
     return (
         <>
@@ -443,14 +376,14 @@ export default function HomepageCopy({ productsList }) {
                     <div className="w-full h-full flex flex-col  relative  ">
                         <div className="w-full h-[88%]   ">
 
-                           
 
-                                    <div
-                                        className=" relative  w-[98%] h-full flex flex-row justify-center items-center overflow-hidden"
-                                        id="center"
-                                    >
-                   {/* =============== Below is the product spinning tools =============== */}
-                                       
+
+                            <div
+                                className=" relative w-[98%] h-full flex flex-row justify-center items-center overflow-hidden"
+                                id="center"
+                            >
+                                {/* =============== Below is the product spinning tools =============== */}
+
                                 <div className="carousel-container relative flex justify-center items-center"
                                     style={{
                                         position: "relative",
@@ -458,9 +391,9 @@ export default function HomepageCopy({ productsList }) {
                                         height: "600px",
                                         perspective: "1000px",
                                     }}
-                                    onTouchStart={handleTouchStart}
-                                    onTouchMove={handleTouchMove}
-                                    onTouchEnd={handleTouchEnd}
+                                    onTouchStart={!IsShowProductDesc ? handleTouchStart : null}
+                                    onTouchMove={!IsShowProductDesc ? handleTouchMove : null}
+                                    onTouchEnd={!IsShowProductDesc ? handleTouchEnd : null}
                                 >
                                     {noProductsFound ? (
                                         <div className="no-products-message text-[1.8rem] font-semibold bg-[#FEFCEB] text-red-600" style={{ textAlign: 'center', padding: '20px' }}>
@@ -561,7 +494,7 @@ export default function HomepageCopy({ productsList }) {
                                                                 }}
                                                             >
                                                                 <img style={{ objectFit: "cover", width: "215px", height: "225px" }} src={product.featuredImage
-} alt={product.name} />
+                                                                } alt={product.name} />
                                                             </div>
                                                         </div>
                                                     );
@@ -574,13 +507,13 @@ export default function HomepageCopy({ productsList }) {
                                 </div>
 
 
-                                        {/* ------- spinning tools section END -------- */}
+                                {/* ------- spinning tools section END -------- */}
 
-                                       
 
-                                    </div>
 
-                           
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -589,135 +522,9 @@ export default function HomepageCopy({ productsList }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode}  product={products[horizontalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]} />}
             </div>
 
         </>
     );
 }
-
-// href = {`/products/${products[horizontalIndex].handle}`}
-
-
-
-
-/**
- * @param {{
- *   collection: FeaturedCollectionFragment;
- * }}
- */
-// function FeaturedCollection({ collection }) {
-//     if (!collection) return null;
-//     const image = collection?.image;
-//     return (
-//         <Link
-//             className="featured-collection"
-//             to={`/collections/${collection.handle}`}
-//         >
-//             {image && (
-//                 <div className="featured-collection-image">
-//                     <Image data={image} sizes="100vw" />
-//                 </div>
-//             )}
-//             <h1>{collection.title}</h1>
-//         </Link>
-//     );
-// }
-
-/**
- * @param {{
- *   products: Promise<RecommendedProductsQuery>;
- * }}
- */
-// function RecommendedProducts({ products }) {
-//     return (
-//         <div className="recommended-products">
-//             <h2>Recommended Products</h2>
-//             <Suspense fallback={<div>Loading...</div>}>
-//                 <Await resolve={products}>
-//                     {({ products }) => (
-//                         <div className="recommended-products-grid">
-//                             {products.nodes.map((product) => (
-//                                 <Link
-//                                     key={product.id}
-//                                     className="recommended-product"
-//                                     to={`/products/${product.handle}`}
-//                                 >
-//                                     <Image
-//                                         data={product.images.nodes[0]}
-//                                         aspectRatio="1/1"
-//                                         sizes="(min-width: 45em) 20vw, 50vw"
-//                                     />
-//                                     <h4>{product.title}</h4>
-//                                     <small>
-//                                         <Money data={product.priceRange.minVariantPrice} />
-//                                     </small>
-//                                 </Link>
-//                             ))}
-//                         </div>
-//                     )}
-//                 </Await>
-//             </Suspense>
-//             <br />
-//         </div>
-//     );
-// }
-
-// const FEATURED_COLLECTION_QUERY = `#graphql
-//   fragment FeaturedCollection on Collection {
-//     id
-//     title
-//     image {
-//       id
-//       url
-//       altText
-//       width
-//       height
-//     }
-//     handle
-//   }
-//   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-//     @inContext(country: $country, language: $language) {
-//     collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-//       nodes {
-//         ...FeaturedCollection
-//       }
-//     }
-//   }
-// `;
-
-// const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-//   fragment RecommendedProduct on Product {
-//     id
-//     title
-//     handle
-//     priceRange {
-//       minVariantPrice {
-//         amount
-//         currencyCode
-//       }
-//     }
-//     images(first: 1) {
-//       nodes {
-//         id
-//         url
-//         altText
-//         width
-//         height
-//       }
-//     }
-//   }
-//   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-//     @inContext(country: $country, language: $language) {
-//     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-//       nodes {
-//         ...RecommendedProduct
-//       }
-//     }
-//   }
-// `;
-/** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
-/** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
-/** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */
-/** @typedef {import('storefrontapi.generated').RecommendedProductsQuery} RecommendedProductsQuery */
-/** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */
