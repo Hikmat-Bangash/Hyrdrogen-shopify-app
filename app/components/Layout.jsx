@@ -3,7 +3,7 @@
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // eslint-disable-next-line no-unused-vars
-import {Await, Link} from '@remix-run/react';
+import {Await, Link, useLocation} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Aside} from '~/components/Aside';
 // eslint-disable-next-line no-unused-vars
@@ -15,15 +15,16 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
-import {useDispatch} from 'react-redux';
-import {hanldeFeaturePage} from '~/redux-toolkit/slices/index.slice';
 
 /**
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
-  // const dispatch = useDispatch();
+  // Get the current location object
+  const location = useLocation();
 
+  // Check if the current path is the root ("/") or not
+  const isHomePage = location.pathname === '/';
   const handleBackButtonClick = () => {
     // dispatch(hanldeFeaturePage());
     window.history.back();
@@ -31,9 +32,6 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
 
   return (
     <>
-      {/* <CartAside cart={cart} />
-    <SearchAside />
-    <MobileMenuAside menu={header?.menu} shop={header?.shop} /> */}
       <div className="w-screen h-screen relative  ">
         <div className="w-full bg-yellow-50 h-[6%]  fixed top-0 z-40   ">
           <div className="w-full h-[6%]   flex flex-row items-start justify-center z-20 ">
@@ -42,14 +40,18 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
                 className="w-[50%] h-full flex flex-row justify-start items-center "
                 onClick={handleBackButtonClick}
               >
-                <img
-                  src="/splash/back.png"
-                  alt="backimage"
-                  className="w-[14px] h-[11px]"
-                />
-                <h3 className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5">
-                  Back
-                </h3>
+                {!isHomePage && (
+                  <>
+                    <img
+                      src="/splash/back.png"
+                      alt="backimage"
+                      className="w-[14px] h-[11px]"
+                    />
+                    <h3 className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5">
+                      Back
+                    </h3>
+                  </>
+                )}
               </div>
 
               <div className="w-[50%] h-full  flex flex-row justify-end items-center ">
@@ -72,12 +74,6 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
           )}
         </div>
       </div>
-      {/* <main>{children}</main> */}
-      {/* <Suspense>
-      <Await resolve={footer}>
-        {(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}
-      </Await>
-    </Suspense> */}
     </>
   );
 }

@@ -31,33 +31,33 @@ export const PRODUCTS = [
   },
 ];
 
-const MainCarousal = ({handleMainProductsCollection}) => {
+const MainCarousal = ({collections, handleMainProductsCollection}) => {
   return (
     <>
       <div className="container flex w-full h-[50px] overflow-x-auto mt-2">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
-          {PRODUCTS.map((prdct, index) => (
+          {collections.map((collection, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={index}
               className="product relative  min-w-[120px] min-h-[50px]  "
-              onClick={() => handleMainProductsCollection(prdct?.NAME)}
+              onClick={() => handleMainProductsCollection(collection?.id)}
             >
               <div className="prdct-detail flex justify-around items-center h-[42px] mt-[5px] bg-[#000000] rounded-[6px] shadow-xl">
                 {/* prdct image */}
                 <img
-                  src={prdct.IMAGE}
+                  src={collection?.image}
                   alt="product-thumbnail"
                   className="z-20 h-9 w-8 object-cover"
                 />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
-                  <h4 className="text-[#DAAF37] text-xs mb-1 ">
+                  {/* <h4 className="text-[#DAAF37] text-xs mb-1 ">
                     {prdct.QUANTITY} left
-                  </h4>
+                  </h4> */}
                   <h2 className="text-[#ECECEC] text-xs font-semibold font-avenir">
-                    {prdct.NAME}
+                    {collection?.title}
                   </h2>
                 </div>
               </div>

@@ -71,15 +71,14 @@ const duplicateVerticalPanels = (images) => {
 
 
 
-export default function HomepageCopy({ productsList }) {
+export default function HomepageCopy({ productsList, collectionsData }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const dispatch = useDispatch();
 
-
-    const categories = ["All", "Men", "Women", "Kids"]
+    const categories = ["All", "Mens", "Women", "Kids"]
     const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
     // const [Images, setImages] = useState(images);
-    const [products, setproducts] = useState(productsList);
+    const [products, setproducts] = useState([]);
 
     const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
 
@@ -95,6 +94,10 @@ export default function HomepageCopy({ productsList }) {
     const [isSearchTrue, setIsSearchTrue] = useState(false);
     const [isSubCategory, setisSubCategory] = useState(true);
 
+    const [filteredCollections, setFilteredCollections] = useState([]);
+    const [filteredAllCollectionsProduct, setfilteredAllCollectionsProduct] = useState([]);
+    const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
+    const [IsDisplaySubCarousel, setIsDisplaySubCarousel] = useState(false); 
 
     // changing light and dark mode func def
     const ThemeMode = () => {
@@ -142,16 +145,16 @@ export default function HomepageCopy({ productsList }) {
         // Handle horizontal swipes (left and right) for horizontal carousel
         if (horizontalSwipe && !verticalSwipe) {
             setActiveCarousel("horizontal"); // Set horizontal carousel as active
-            if (touchStartX - touchEndX > 50) {
+            if (touchStartX - touchEndX < 50) {
                 // Swipe left (next panel)
-                setHorizontalIndex((prevIndex) => (prevIndex + 1));
+                setHorizontalIndex((prevIndex) => (prevIndex - 1));
                 setVerticalIndex(0); // Reset vertical index
                 setTimeout(() => {
                     setVerticalIndex(1); // Reset vertical index
                 }, 1000);
-            } else if (touchEndX - touchStartX > 50) {
+            } else if (touchEndX - touchStartX < 50) {
                 // Swipe right (previous panel)
-                setHorizontalIndex((prevIndex) => (prevIndex - 1));
+                setHorizontalIndex((prevIndex) => (prevIndex + 1));
                 setVerticalIndex(0); // Reset vertical index
                 setTimeout(() => {
                     setVerticalIndex(1); // Reset vertical index
@@ -166,85 +169,23 @@ export default function HomepageCopy({ productsList }) {
             const duplicatedImages = duplicateVerticalPanels(productImages);
             if (touchStartY - touchEndY > 50) {
                 // Swipe up (next panel)
-                setVerticalIndex((prevIndex) => (prevIndex + 1) % duplicatedImages.length);
+                setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
             } else if (touchEndY - touchStartY > 50) {
                 // Swipe down (previous panel)
                 setVerticalIndex((prevIndex) =>
-                    prevIndex === 0 ? duplicatedImages.length - 1 : prevIndex - 1
+                    prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
                 );
             }
         }
     };
 
-    // Get the duplicated panels for both carousels
-    const currentProduct = products[horizontalIndex % products.length] || {};
-    const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
-    const duplicatedProducts = createNonDuplicateOrder(products);
-
-
-    // ============ end of the spinning tool ---------------
-
-    const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
-
-    const handleCategory = (categoryName) => {
-        // Set the selected category
-        setCategory(categoryName);
-
-        // Filter products based on the selected category
-        let filteredProducts;
-        // if (categoryName === 'All') {
-        //     filteredProducts = productsList; // Reset to all products
-
-        // } else {
-        //     filteredProducts = productsList.filter((product) => product.category.join(",") === categoryName);
-        // }
-        filteredProducts = productsList.filter((product) => product.category.join(",") === categoryName);
-
-
-        // Check if the filtered product list is empty
-        if (filteredProducts.length === 0) {
-            setNoProductsFound(true); // Set noProductsFound to true if no products are found
-            setproducts([]); // Clear the product list so no images are shown
-        } else {
-            setNoProductsFound(false); // Reset noProductsFound if products exist
-            setproducts(filteredProducts); // Update the filtered products
-        }
-
-        // Reset carousel index to show the first product and image
-        setHorizontalIndex(0);
-        setVerticalIndex(0);
-    };
-
-// --------- HANDLING MAIN PRODUCTS CAROUSEL COLLECTION TO SHOW SUB-COLLECTIONS -----
-    const handleMainProductsCollection = (categoryName) => {
-       
-        // Filter products based on the selected category
-        let filteredProducts;
-      
-        filteredProducts = productsList.filter((product) => product.category.join(",") === categoryName);
-
-        // Check if the filtered product list is empty
-        if (filteredProducts.length === 0) {
-            setNoProductsFound(true); // Set noProductsFound to true if no products are found
-            setproducts([]); // Clear the product list so no images are shown
-        } else {
-            setNoProductsFound(false); // Reset noProductsFound if products exist
-            setproducts(filteredProducts); // Update the filtered products
-        }
-
-        // Reset carousel index to show the first product and image
-        setHorizontalIndex(0);
-        setVerticalIndex(0);
-    };
-
-    
     
     //-------------- handle search query for product filtering --------
     const handleSearchChange = (event) => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
 
-        const filteredImages = productsList.filter((product) =>
+        const filteredImages = filteredAllCollectionsProduct.filter((product) =>
             product.title.toLowerCase().includes(query)
         );
 
@@ -268,12 +209,79 @@ export default function HomepageCopy({ productsList }) {
     // Function to update the state based on the screen width
     const checkScreenWidth = () => {
         const screenWidth = window.innerWidth;
-        if (screenWidth > 388) {
+        if (screenWidth > 390) {
             setIsMobileWidth(true);
         } else {
             setIsMobileWidth(false);
         }
     };
+
+
+
+
+
+    //================= Function to filter collections and their products ==============
+    const FilteringCollectionsAndProducts = (filteredName) => {
+        setCategory(filteredName);
+        
+        const filterLower = filteredName.toLowerCase();
+
+        const matchedProducts = [];
+
+        // Filter the collections and their products based on the filter
+        const filtered = collectionsData?.map((collection) => {
+            // Filter products in the collection based on the first tag in the array
+            const filteredProductsInCollection = collection?.products.filter((product) => {
+                const firstTag = product?.tags[0]?.toLowerCase(); // Get the first tag and convert it to lowercase
+                return firstTag === filterLower;  // Filter if 'all' or matches the filter name
+            });
+
+            // Add the filtered products to the matchedProducts array
+            matchedProducts.push(...filteredProductsInCollection); // Spread operator to push all filtered products
+
+            // Only include collections that have matching products
+            if (filteredProductsInCollection.length > 0) {
+                return {
+                    ...collection,
+                    products: filteredProductsInCollection,  // Store only the filtered products
+                };
+            }
+
+            return null;
+        }).filter(Boolean);  // Filter out any null values (collections with no matching products)
+       
+        if (filtered?.length > 0) {
+            setFilteredCollections(filtered);
+            setfilteredAllCollectionsProduct(matchedProducts);
+            setNoProductsFound(false); // Reset noProductsFound if products exist
+            setproducts(matchedProducts); // Update the filtered products
+            console.log("yes, products found!")
+        } else{
+            setFilteredCollections([]);
+            setfilteredAllCollectionsProduct([]);
+            setNoProductsFound(true); // Reset noProductsFound if products exist
+            setproducts([]); // Update the filtered products
+         }
+        // Reset carousel index to show the first product and image
+        setHorizontalIndex(0);
+        setVerticalIndex(0);
+        setIsDisplaySubCarousel(false);
+    };
+
+    // Function to handle clicking on a collection and showing its products
+    const handleCollectionClick = (collectionId) => {
+        // Find the clicked collection by its ID
+        const clickedCollection = filteredCollections.find(collection => collection.id === collectionId);
+
+        // If the collection exists, set its products into the currentProducts state
+        if (clickedCollection) {
+            setproducts(clickedCollection.products);
+            setIsDisplaySubCarousel(true);
+        }
+    };
+
+
+
 
     useEffect(() => {
 
@@ -287,32 +295,34 @@ export default function HomepageCopy({ productsList }) {
 
     // useEffect for categories and device screen width tracking
     useEffect(() => {
-        const filteredProducts = productsList?.filter((product) => product?.category.join(",") === category);
-        // Check if the filtered product list is empty
-        if (filteredProducts.length === 0) {
-            setNoProductsFound(true); // Set noProductsFound to true if no products are found
-            setproducts([]); // Clear the product list so no images are shown
-        } else {
-            setNoProductsFound(false); // Reset noProductsFound if products exist
-            setproducts(filteredProducts); // Update the filtered products
-        }
+
+        FilteringCollectionsAndProducts('All');
+        setIsDisplaySubCarousel(false);
+
 
         // Check the screen width when the component mounts
         checkScreenWidth();
 
         // Listen for window resize and update the state accordingly
         window.addEventListener('resize', checkScreenWidth);
-
+   
         // Cleanup listener on component unmount
         return () => window.removeEventListener('resize', checkScreenWidth);
     }, [])
+
+
+    // Get the duplicated panels for both carousels
+    const currentProduct = products[horizontalIndex % products.length] || {};
+    const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
+    const duplicatedProducts = createNonDuplicateOrder(products);
+
 
 
     return (
         <>
 
             <div className="w-full h-full absolute z-20 ">
-                <div className={`w-full h-auto flex flex-col gap-2 pb-4   cursor-pointer ${isMobileWidth ? "mt-[3.3rem]" : "mt-[2.5rem]"}  bg-[#FEFCEB]`}>
+                <div className={`w-full h-auto flex flex-col gap-2 pb-4   cursor-pointer ${isMobileWidth ? "mt-[3rem]" : "mt-[2.4rem]"}  bg-[#FEFCEB]`}>
                     <div className="w-full h-full flex flex-col items-center">
 
                         {/* </Link> */}
@@ -321,7 +331,7 @@ export default function HomepageCopy({ productsList }) {
                                 <h1
                                     className='text-[#DAAF37] font-avenir'
                                     style={{
-                                        fontSize: '28px',
+                                        fontSize: '20px',
                                         fontWeight: '700',
                                         lineHeight: '34px',
                                         letterSpacing: '0em',
@@ -330,15 +340,10 @@ export default function HomepageCopy({ productsList }) {
                                 >
                                     Kelly&apos;s Kapsule
                                 </h1>
-                                {/* ------------- main product collection  ----------- */}
-                                {/* <Carousal products={products} handleCarouselProduct={handleCarouselProduct} /> */}
-                                <Main_Carousel handleMainProductsCollection={handleMainProductsCollection} />
-                                 
+                              
                                 
-                                {/* ------------- Carousal section END ----------- */}
-
                                 {/* below code is for search bar */}
-                                <div className={`w-full  z-50 top-[6.4rem] flex justify-between items-center h-[28%]   ${isSearchTrue ? "absolute" : "hidden"}`}
+                                <div className={`w-full  z-50 top-[5.8rem] flex justify-between items-center h-[32%]   ${isSearchTrue ? "absolute" : "hidden"}`}
                                 
                                     style={{
                                         transformStyle: "preserve-3d",
@@ -384,7 +389,7 @@ export default function HomepageCopy({ productsList }) {
                                                 ? 'bg-black text-white'
                                                 : 'bg-[#ECECEC] text-black'
                                                 }`}
-                                            onClick={() => handleCategory(cate)}
+                                            onClick={() => FilteringCollectionsAndProducts(cate)}
                                         >
                                             {cate.charAt(0).toUpperCase() + cate.slice(1)}
                                         </button>
@@ -396,17 +401,19 @@ export default function HomepageCopy({ productsList }) {
                                     </div>
                                 </div>
 
+                                <Main_Carousel collections={filteredCollections} handleMainProductsCollection={handleCollectionClick} />
+
                             </div>
 
                             {/* -------- selected product sub-category  collection  ----------- */}
-                            {isSubCategory && <SubCollectionCarousal products={products} handleCarouselProduct={handleCarouselProduct} /> } 
+                            {IsDisplaySubCarousel && <SubCollectionCarousal products={products} handleCarouselProduct={handleCarouselProduct} /> } 
 
                         </div>
                     </div>
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full z-10 ${isMobileWidth ? "h-[70%] " : "h-[60%] "}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
+                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]": IsDisplaySubCarousel? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
                     <div className="w-full h-[8%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />
@@ -437,12 +444,12 @@ export default function HomepageCopy({ productsList }) {
 
                     <div className="w-full flex flex-col h-[88%]  relative  ">
                         <div
-                            className=" relative w-[98%] h-full flex ml-1 flex-row justify-center items-center overflow-hidden"
+                            className=" relative w-[98%] h-full flex ml-1 flex-row  overflow-hidden "
                             id="center"
                         >
                             {/* =============== Below is the product spinning tools =============== */}
 
-                            <div className="carousel-container relative flex justify-center items-center w-full"
+                            <div className="carousel-container relative flex w-full "
                                 style={{
                                     position: "relative",
                                     width: "100%",
@@ -454,14 +461,14 @@ export default function HomepageCopy({ productsList }) {
                                 onTouchEnd={!IsShowProductDesc ? handleTouchEnd : null}
                             >
                                 {noProductsFound ? (
-                                    <div className="no-products-message text-[1.8rem] font-semibold bg-[#FEFCEB] text-red-600" style={{ textAlign: 'center', padding: '20px' }}>
-                                        <h2>Oops! No products found.</h2>
+                                    <div className="no-products-message w-full h-[70%] flex justify-center items-center  text-[1.8rem] font-semibold  text-red-600" >
+                                        <h2 className='bg-gray-300 py-8'>Oops! No products found.</h2>
                                     </div>
                                 ) : (
                                     <>
                                         {/* Vertical carousel (rotate around X-axis) */}
                                         <div
-                                            className="carousel w-full h-full"
+                                            className="carousel w-full h-full "
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
@@ -472,7 +479,7 @@ export default function HomepageCopy({ productsList }) {
                                                 transform: `rotateX(${verticalIndex * -rotationPerPanel}deg)`,
                                             }}
                                         >
-                                            {currentProductImages.map((image, index) => {
+                                            {currentProductImages?.map((image, index) => {
                                                 const rotateAngle = index * rotationPerPanel;
 
                                                 return (
@@ -488,10 +495,10 @@ export default function HomepageCopy({ productsList }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '197px' : "164px" })`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "157px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-72 h-72' : " w-60 h-60" } `}
+                                                        <div className={`panel-content ${isMobileWidth ? 'w-[17.2rem] h-[18.3rem]' : " w-56 h-[14.3rem]" } `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -511,7 +518,7 @@ export default function HomepageCopy({ productsList }) {
 
                                         {/* Horizontal carousel (rotate around Y-axis) */}
                                         <div
-                                            className="carousel-horizontal"
+                                            className="carousel-horizontal z-40"
                                             style={{
                                                 position: 'absolute',
                                                 width: '100%',
@@ -523,12 +530,12 @@ export default function HomepageCopy({ productsList }) {
                                                 transform: `rotateY(${(horizontalIndex % duplicatedProducts.length) * -rotationPerPanel}deg)`,
                                             }}
                                         >
-                                            {duplicatedProducts.map((product, index) => {
+                                            {duplicatedProducts?.map((product, index) => {
                                                 const rotateAngle = index * rotationPerPanel;
 
                                                 return (
                                                     <div
-                                                        className="carousel-panel"
+                                                        className="carousel-panel z-40"
                                                         key={index}
                                                         style={{
                                                             position: 'absolute',
@@ -538,10 +545,10 @@ export default function HomepageCopy({ productsList }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '197px' : "164px" })`,
+                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "153px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-72 h-72' : " w-60 h-60"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[17.2rem] h-72' : " w-56 h-56"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -550,9 +557,9 @@ export default function HomepageCopy({ productsList }) {
                                                                 objectFit: "cover",
                                                                 overflow: "hidden"
                                                             }}
-                                                        >
-                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%" }} src={product.featuredImage
-                                                            } alt={product.name} />
+                                                        > 
+                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%" }} src={product?.featuredImage
+                                                            } alt={product?.title} />
                                                         </div>
                                                     </div>
                                                 );
@@ -561,7 +568,7 @@ export default function HomepageCopy({ productsList }) {
                                     </>
                                 )}
                                 {/* ----------- product description ------- */}
-                                {IsShowProductDesc && <ProductDetail product={productsList[horizontalIndex]} isDarkMode={isDarkMode} />}
+                                {IsShowProductDesc && <ProductDetail IsDisplaySubCarousel={IsDisplaySubCarousel} isMobileWidth={isMobileWidth} product={productsList[horizontalIndex]} isDarkMode={isDarkMode} />}
                             </div>
 
 

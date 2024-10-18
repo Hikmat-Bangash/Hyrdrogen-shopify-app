@@ -1,47 +1,43 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
-
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-// import StartedScreen from '~/components/splash-screen/StartedScreen';
 import Homepage from '~/components/HomePage';
 import { json } from '@remix-run/server-runtime';
 import { useLoaderData } from '@remix-run/react/dist/components';
 
 export async function loader({ context }) {
-  const { products } = await context.storefront.query(ALL_PRODUCT_QUERY);
+  const { products, collections } = await context.storefront.query(PRODUCTS_AND_COLLECTIONS_QUERY);
   return json({
-    allproducts: products.edges
+    allProducts: products.edges,
+    allCollections: collections.edges,
   });
 }
 
-// Fetching all products from shopify store
-
+// Fetching all products and collections from the Shopify store
 const Index = () => {
-  const { allproducts } = useLoaderData();
+  const { allProducts, allCollections } = useLoaderData();
   const [products, setProducts] = useState([]);
+  const [collections, setCollections] = useState([]);
 
   useEffect(() => {
-    const formattedProducts = allproducts.map(({ node }) => ({
-      id: node.id,
-      handle: node.handle,
-      title: node.title,
-      description: node.descriptionHtml,
-      productType: node.productType,
+    // Function to structure each product consistently
+    const formatProduct = (productNode) => ({
+      id: productNode.id,
+      handle: productNode.handle,
+      title: productNode.title,
+      description: productNode.descriptionHtml,
+      productType: productNode.productType,
       priceRange: {
-        amount: node.priceRange.minVariantPrice.amount,
-        currencyCode: node.priceRange.minVariantPrice.currencyCode,
+        amount: productNode.priceRange.minVariantPrice.amount,
+        currencyCode: productNode.priceRange.minVariantPrice.currencyCode,
       },
-      featuredImage: node.featuredImage?.url || 'placeholder.jpg',
-      //  {
-      //   url: node.featuredImage?.url || 'placeholder.jpg',
-      //   altText: node.featuredImage?.altText || 'No image available',
-      // },
-
-      category: node.collections.edges.map((collectionEdge) => collectionEdge.node.title), // Extract collection titles
-      images: node.media.edges
-        .filter((mediaNode) => mediaNode.node.image) // Filter to only include images
-        .map((mediaNode) => mediaNode.node.image.url), // Map to get only the image URL.filter(Boolean), // Filter out any null entries
-      variants: node.variants.edges.map((variantNode) => ({
+      featuredImage: productNode.featuredImage?.url || 'placeholder.jpg',
+      tags: productNode.tags, // Include tags
+      category: productNode.collections.edges.map((collectionEdge) => collectionEdge.node.title),
+      images: productNode.media.edges
+        .filter((mediaNode) => mediaNode.node.image)
+        .map((mediaNode) => mediaNode.node.image.url),
+      variants: productNode.variants.edges.map((variantNode) => ({
         id: variantNode.node.id,
         title: variantNode.node.title,
         price: {
@@ -50,28 +46,41 @@ const Index = () => {
         },
         availableForSale: variantNode.node.availableForSale,
       })),
+    });
+
+    // Format the products data (standalone products)
+    const formattedProducts = allProducts.map(({ node }) => formatProduct(node));
+
+    // Format the collections data and include full product details in the same structure as standalone products
+    const formattedCollections = allCollections.map(({ node }) => ({
+      id: node.id,
+      title: node.title,
+      handle: node.handle,
+      description: node.description, // Collection description
+      image: node.image?.url || 'placeholder.jpg', // Collection image
+      products: node.products.edges.map((productEdge) => formatProduct(productEdge.node)), // Apply the same product structure
     }));
 
     setProducts(formattedProducts);
-  }, [allproducts])
+    setCollections(formattedCollections);
+  }, [allProducts, allCollections]);
 
-  // console.log("unstructured product.data: ", allproducts);
-  // console.log("structured product.data: ", products)
-  // const [IsStartedPage, setIsStartedPage] = useState(false);
+  // console.log("unstructured product data: ", allProducts);
+  // console.log("unstructured collections data: ", allCollections);
+  // console.log("structured collections data: ", collections);
+  // console.log("structured product data: ", products);
+
   return (
     <>
-
-      {products.length > 0 && <Homepage productsList={products} />}
-
+      {products.length > 0 && <Homepage productsList={products} collectionsData = {collections} />}
     </>
   );
 };
 
 export default Index;
 
-
-const ALL_PRODUCT_QUERY = `#graphql
- query getProducts {
+const PRODUCTS_AND_COLLECTIONS_QUERY = `#graphql
+ query getProductsAndCollections {
   products(first: 50) {
     edges {
       node {
@@ -129,6 +138,79 @@ const ALL_PRODUCT_QUERY = `#graphql
         featuredImage {
           url
           altText
+        }
+      }
+    }
+  }
+  collections(first: 50) {
+    edges {
+      node {
+        id
+        title
+        handle
+        description
+        image {
+          url
+          altText
+        }
+        products(first: 50) {
+          edges {
+            node {
+              id
+              title
+              handle
+              descriptionHtml
+              productType
+              tags
+              featuredImage {
+                url
+                altText
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+                maxVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              media(first: 50) {
+                edges {
+                  node {
+                    ... on MediaImage {
+                      image {
+                        url
+                        altText
+                      }
+                    }
+                  }
+                }
+              }
+              collections(first: 50) {
+                edges {
+                  node {
+                    id
+                    title
+                  }
+                }
+              }
+              variants(first: 50) {
+                edges {
+                  node {
+                    id
+                    title
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    availableForSale
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

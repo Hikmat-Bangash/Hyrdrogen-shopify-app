@@ -245,11 +245,11 @@ export type SitemapQuery = {
   };
 };
 
-export type GetProductsQueryVariables = StorefrontAPI.Exact<{
+export type GetProductsAndCollectionsQueryVariables = StorefrontAPI.Exact<{
   [key: string]: never;
 }>;
 
-export type GetProductsQuery = {
+export type GetProductsAndCollectionsQuery = {
   products: {
     edges: Array<{
       node: Pick<
@@ -294,6 +294,72 @@ export type GetProductsQuery = {
         featuredImage?: StorefrontAPI.Maybe<
           Pick<StorefrontAPI.Image, 'url' | 'altText'>
         >;
+      };
+    }>;
+  };
+  collections: {
+    edges: Array<{
+      node: Pick<
+        StorefrontAPI.Collection,
+        'id' | 'title' | 'handle' | 'description'
+      > & {
+        image?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText'>
+        >;
+        products: {
+          edges: Array<{
+            node: Pick<
+              StorefrontAPI.Product,
+              | 'id'
+              | 'title'
+              | 'handle'
+              | 'descriptionHtml'
+              | 'productType'
+              | 'tags'
+            > & {
+              featuredImage?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Image, 'url' | 'altText'>
+              >;
+              priceRange: {
+                minVariantPrice: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'amount' | 'currencyCode'
+                >;
+                maxVariantPrice: Pick<
+                  StorefrontAPI.MoneyV2,
+                  'amount' | 'currencyCode'
+                >;
+              };
+              media: {
+                edges: Array<{
+                  node: {
+                    image?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.Image, 'url' | 'altText'>
+                    >;
+                  };
+                }>;
+              };
+              collections: {
+                edges: Array<{
+                  node: Pick<StorefrontAPI.Collection, 'id' | 'title'>;
+                }>;
+              };
+              variants: {
+                edges: Array<{
+                  node: Pick<
+                    StorefrontAPI.ProductVariant,
+                    'id' | 'title' | 'availableForSale'
+                  > & {
+                    price: Pick<
+                      StorefrontAPI.MoneyV2,
+                      'amount' | 'currencyCode'
+                    >;
+                  };
+                }>;
+              };
+            };
+          }>;
+        };
       };
     }>;
   };
@@ -1066,9 +1132,9 @@ interface GeneratedQueryTypes {
     return: SitemapQuery;
     variables: SitemapQueryVariables;
   };
-  '#graphql\n query getProducts {\n  products(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        descriptionHtml\n        media(first: 50) {\n          edges {\n            node {\n              ... on MediaImage {\n                image {\n                  url\n                  altText\n                }\n              }\n            }\n          }\n        }\n        productType\n        collections(first: 50) {\n          edges {\n            node {\n              id\n              title\n            }\n          }\n        }\n        tags\n        variants(first: 50) {\n          edges {\n            node {\n              id\n              title\n              price {\n                amount\n              }\n              compareAtPrice {\n                amount\n              }\n              availableForSale\n            }\n          }\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n          maxVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n  }\n}\n': {
-    return: GetProductsQuery;
-    variables: GetProductsQueryVariables;
+  '#graphql\n query getProductsAndCollections {\n  products(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        descriptionHtml\n        media(first: 50) {\n          edges {\n            node {\n              ... on MediaImage {\n                image {\n                  url\n                  altText\n                }\n              }\n            }\n          }\n        }\n        productType\n        collections(first: 50) {\n          edges {\n            node {\n              id\n              title\n            }\n          }\n        }\n        tags\n        variants(first: 50) {\n          edges {\n            node {\n              id\n              title\n              price {\n                amount\n              }\n              compareAtPrice {\n                amount\n              }\n              availableForSale\n            }\n          }\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n          maxVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n  }\n  collections(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        description\n        image {\n          url\n          altText\n        }\n        products(first: 50) {\n          edges {\n            node {\n              id\n              title\n              handle\n              descriptionHtml\n              productType\n              tags\n              featuredImage {\n                url\n                altText\n              }\n              priceRange {\n                minVariantPrice {\n                  amount\n                  currencyCode\n                }\n                maxVariantPrice {\n                  amount\n                  currencyCode\n                }\n              }\n              media(first: 50) {\n                edges {\n                  node {\n                    ... on MediaImage {\n                      image {\n                        url\n                        altText\n                      }\n                    }\n                  }\n                }\n              }\n              collections(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                  }\n                }\n              }\n              variants(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                    price {\n                      amount\n                      currencyCode\n                    }\n                    availableForSale\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n': {
+    return: GetProductsAndCollectionsQuery;
+    variables: GetProductsAndCollectionsQueryVariables;
   };
   '#graphql\n  fragment PredictiveArticle on Article {\n    __typename\n    id\n    title\n    handle\n    image {\n      url\n      altText\n      width\n      height\n    }\n    trackingParameters\n  }\n  fragment PredictiveCollection on Collection {\n    __typename\n    id\n    title\n    handle\n    image {\n      url\n      altText\n      width\n      height\n    }\n    trackingParameters\n  }\n  fragment PredictivePage on Page {\n    __typename\n    id\n    title\n    handle\n    trackingParameters\n  }\n  fragment PredictiveProduct on Product {\n    __typename\n    id\n    title\n    handle\n    trackingParameters\n    variants(first: 1) {\n      nodes {\n        id\n        image {\n          url\n          altText\n          width\n          height\n        }\n        price {\n          amount\n          currencyCode\n        }\n      }\n    }\n  }\n  fragment PredictiveQuery on SearchQuerySuggestion {\n    __typename\n    text\n    styledText\n    trackingParameters\n  }\n  query predictiveSearch(\n    $country: CountryCode\n    $language: LanguageCode\n    $limit: Int!\n    $limitScope: PredictiveSearchLimitScope!\n    $searchTerm: String!\n    $types: [PredictiveSearchType!]\n  ) @inContext(country: $country, language: $language) {\n    predictiveSearch(\n      limit: $limit,\n      limitScope: $limitScope,\n      query: $searchTerm,\n      types: $types,\n    ) {\n      articles {\n        ...PredictiveArticle\n      }\n      collections {\n        ...PredictiveCollection\n      }\n      pages {\n        ...PredictivePage\n      }\n      products {\n        ...PredictiveProduct\n      }\n      queries {\n        ...PredictiveQuery\n      }\n    }\n  }\n': {
     return: PredictiveSearchQuery;

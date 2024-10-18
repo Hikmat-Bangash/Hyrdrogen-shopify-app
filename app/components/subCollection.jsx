@@ -9,6 +9,7 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
     handleCarouselProduct(selectedProduct);
   };
 
+
   return (
     <>
       <div className="container flex w-full h-[50px] overflow-x-auto mt-3">
@@ -26,12 +27,12 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
                 <img
                   src={prdct.featuredImage}
                   alt="product-thumbnail"
-                  className="z-20 h-7 w-7 object-cover"
+                  className="z-20 h-9 w-8 object-cover"
                 />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
                   <h4 className="text-[#DAAF37] text-xs mb-1 ">
-                    {index + 5} left
+                    {prdct?.images?.length} left
                   </h4>
                   <h2 className="text-[#ECECEC] text-xs font-semibold font-avenir">
                     {prdct.title.length > 15

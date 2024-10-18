@@ -1,10 +1,19 @@
 import React from 'react';
 
-const ProductDetail = ({isDarkMode, product}) => {
+const ProductDetail = ({
+  isDarkMode,
+  product,
+  isMobileWidth,
+  IsDisplaySubCarousel,
+}) => {
   console.log('product detail: ', product);
   return (
     <div
-      className={`contianer w-[250px] h-[269px] fixed z-40 top-[10.5rem] left-[4.1rem]  backdrop-blur-sm  justify-center items-center ${
+      className={`contianer  fixed z-40 ${
+        isMobileWidth
+          ? 'w-[81%] h-[62%] left-[2.3rem]  top-[19%] '
+          : 'w-[76%] h-[66%] left-[2.7rem]  top-[18%] '
+      }  backdrop-blur-sm  justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'
       } rounded-md `}
     >
