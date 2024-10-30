@@ -272,11 +272,23 @@ export type GetProductsAndCollectionsQuery = {
           edges: Array<{
             node: Pick<
               StorefrontAPI.ProductVariant,
-              'id' | 'title' | 'availableForSale'
+              | 'id'
+              | 'title'
+              | 'availableForSale'
+              | 'sku'
+              | 'weight'
+              | 'weightUnit'
+              | 'barcode'
             > & {
-              price: Pick<StorefrontAPI.MoneyV2, 'amount'>;
+              price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
               compareAtPrice?: StorefrontAPI.Maybe<
-                Pick<StorefrontAPI.MoneyV2, 'amount'>
+                Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+              >;
+              image?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Image, 'url' | 'altText'>
+              >;
+              selectedOptions: Array<
+                Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
               >;
             };
           }>;
@@ -348,11 +360,26 @@ export type GetProductsAndCollectionsQuery = {
                 edges: Array<{
                   node: Pick<
                     StorefrontAPI.ProductVariant,
-                    'id' | 'title' | 'availableForSale'
+                    | 'id'
+                    | 'title'
+                    | 'availableForSale'
+                    | 'sku'
+                    | 'weight'
+                    | 'weightUnit'
+                    | 'barcode'
                   > & {
                     price: Pick<
                       StorefrontAPI.MoneyV2,
                       'amount' | 'currencyCode'
+                    >;
+                    compareAtPrice?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                    >;
+                    image?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.Image, 'url' | 'altText'>
+                    >;
+                    selectedOptions: Array<
+                      Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
                     >;
                   };
                 }>;
@@ -1132,7 +1159,7 @@ interface GeneratedQueryTypes {
     return: SitemapQuery;
     variables: SitemapQueryVariables;
   };
-  '#graphql\n query getProductsAndCollections {\n  products(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        descriptionHtml\n        media(first: 50) {\n          edges {\n            node {\n              ... on MediaImage {\n                image {\n                  url\n                  altText\n                }\n              }\n            }\n          }\n        }\n        productType\n        collections(first: 50) {\n          edges {\n            node {\n              id\n              title\n            }\n          }\n        }\n        tags\n        variants(first: 50) {\n          edges {\n            node {\n              id\n              title\n              price {\n                amount\n              }\n              compareAtPrice {\n                amount\n              }\n              availableForSale\n            }\n          }\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n          maxVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n  }\n  collections(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        description\n        image {\n          url\n          altText\n        }\n        products(first: 50) {\n          edges {\n            node {\n              id\n              title\n              handle\n              descriptionHtml\n              productType\n              tags\n              featuredImage {\n                url\n                altText\n              }\n              priceRange {\n                minVariantPrice {\n                  amount\n                  currencyCode\n                }\n                maxVariantPrice {\n                  amount\n                  currencyCode\n                }\n              }\n              media(first: 50) {\n                edges {\n                  node {\n                    ... on MediaImage {\n                      image {\n                        url\n                        altText\n                      }\n                    }\n                  }\n                }\n              }\n              collections(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                  }\n                }\n              }\n              variants(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                    price {\n                      amount\n                      currencyCode\n                    }\n                    availableForSale\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n': {
+  '#graphql\n query getProductsAndCollections {\n  products(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        descriptionHtml\n        media(first: 50) {\n          edges {\n            node {\n              ... on MediaImage {\n                image {\n                  url\n                  altText\n                }\n              }\n            }\n          }\n        }\n        productType\n        collections(first: 50) {\n          edges {\n            node {\n              id\n              title\n            }\n          }\n        }\n        tags\n        variants(first: 50) {\n          edges {\n            node {\n              id\n              title\n              price {\n                amount\n                currencyCode\n              }\n              compareAtPrice {\n                amount\n                currencyCode\n              }\n              availableForSale\n              sku                          # SKU (Stock Keeping Unit)\n              weight                       # Variant weight\n              weightUnit                   # Weight unit for the variant\n              barcode                      # Barcode of the variant\n              image {\n                url                        # URL of the variant image\n                altText                    # Alt text for the variant image\n              }\n              selectedOptions {            # Selected options for the variant (like size, color)\n                name\n                value\n              }\n            }\n          }\n        }\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n          maxVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n      }\n    }\n  }\n  collections(first: 50) {\n    edges {\n      node {\n        id\n        title\n        handle\n        description\n        image {\n          url\n          altText\n        }\n        products(first: 50) {\n          edges {\n            node {\n              id\n              title\n              handle\n              descriptionHtml\n              productType\n              tags\n              featuredImage {\n                url\n                altText\n              }\n              priceRange {\n                minVariantPrice {\n                  amount\n                  currencyCode\n                }\n                maxVariantPrice {\n                  amount\n                  currencyCode\n                }\n              }\n              media(first: 50) {\n                edges {\n                  node {\n                    ... on MediaImage {\n                      image {\n                        url\n                        altText\n                      }\n                    }\n                  }\n                }\n              }\n              collections(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                  }\n                }\n              }\n              variants(first: 50) {\n                edges {\n                  node {\n                    id\n                    title\n                    price {\n                      amount\n                      currencyCode\n                    }\n                    compareAtPrice {\n                      amount\n                      currencyCode\n                    }\n                    availableForSale\n                    sku\n                    weight\n                    weightUnit\n                    barcode\n                    image {\n                      url\n                      altText\n                    }\n                    selectedOptions {\n                      name\n                      value\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n': {
     return: GetProductsAndCollectionsQuery;
     variables: GetProductsAndCollectionsQueryVariables;
   };

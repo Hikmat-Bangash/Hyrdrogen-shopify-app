@@ -71,7 +71,7 @@ const duplicateVerticalPanels = (images) => {
 
 
 
-export default function HomepageCopy({ productsList, collectionsData }) {
+export default function Homepage ({sproducts, collectionsData }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const dispatch = useDispatch();
 
@@ -126,8 +126,14 @@ export default function HomepageCopy({ productsList, collectionsData }) {
     const [touchStartY, setTouchStartY] = useState(0);
     const [touchEndX, setTouchEndX] = useState(0);
     const [touchEndY, setTouchEndY] = useState(0);
+    const [isSpinning, setIsSpinning] = useState(false); // Track if the carousel is spinning
+    const spinningInterval = useRef(null); // Store the interval ID
+    const [hasReachedEnd, setHasReachedEnd] = useState(false); // Additional state to track if we’ve reached the end or start
+    const [shouldRollback, setShouldRollback] = useState(false);
+
 
     // Separate handlers for touch events in horizontal and vertical carousels
+    // Handle touch events
     const handleTouchStart = (e) => {
         setTouchStartX(e.touches[0].clientX);
         setTouchStartY(e.touches[0].clientY);
@@ -142,25 +148,12 @@ export default function HomepageCopy({ productsList, collectionsData }) {
         const horizontalSwipe = Math.abs(touchStartX - touchEndX) > 50;
         const verticalSwipe = Math.abs(touchStartY - touchEndY) > 50;
 
-        // Handle horizontal swipes (left and right) for horizontal carousel
         if (horizontalSwipe && !verticalSwipe) {
-            setActiveCarousel("horizontal"); // Set horizontal carousel as active
-            if (touchStartX - touchEndX < 50) {
-                // Swipe left (next panel)
-                setHorizontalIndex((prevIndex) => (prevIndex - 1));
-                setVerticalIndex(0); // Reset vertical index
-                setTimeout(() => {
-                    setVerticalIndex(1); // Reset vertical index
-                }, 1000);
-            } else if (touchEndX - touchStartX < 50) {
-                // Swipe right (previous panel)
-                setHorizontalIndex((prevIndex) => (prevIndex + 1));
-                setVerticalIndex(0); // Reset vertical index
-                setTimeout(() => {
-                    setVerticalIndex(1); // Reset vertical index
-                }, 1000);
-            }
+            setActiveCarousel("horizontal");
+            startSpinning(touchStartX > touchEndX ? "right" : "left"); // Start spinning based on swipe direction
         }
+
+
 
         // Handle vertical swipes (up and down) for vertical carousel
         if (verticalSwipe && !horizontalSwipe) {
@@ -177,9 +170,86 @@ export default function HomepageCopy({ productsList, collectionsData }) {
                 );
             }
         }
+
+
+
+    };
+
+    // Updated startSpinning function with stop-at-end and rollback functionality
+    const startSpinning = (direction) => {
+        if (spinningInterval.current) return; // Prevent multiple intervals
+        setIsSpinning(true);
+
+        spinningInterval.current = setInterval(() => {
+            setHorizontalIndex((prevIndex) => {
+                let nextIndex;
+
+                if (direction === "right") {
+                    if (prevIndex === products.length - 1) {
+                        if (shouldRollback) {
+                            // Roll back to the first product if already at the end and rollback is triggered
+                            nextIndex = 0;
+                            stopSpinning(); // Stop spinning after rollback
+                            setShouldRollback(false); // Reset rollback state
+                        } else {
+                            // Stop at the last product on the first spin
+                            stopSpinning();
+                            setShouldRollback(true); // Set rollback for the next swipe in this direction
+                            return prevIndex; // Keep the index at the last product
+                        }
+                    } else {
+                        // Continue spinning to the right
+                        nextIndex = prevIndex + 1;
+                        setShouldRollback(false); // Reset rollback if not at the end
+                    }
+                } else {
+                    if (prevIndex === 0) {
+                        if (shouldRollback) {
+                            // Roll back to the last product if already at the start and rollback is triggered
+                            nextIndex = products.length - 1;
+                            stopSpinning(); // Stop spinning after rollback
+                            setShouldRollback(false); // Reset rollback state
+                        } else {
+                            // Stop at the first product on the first spin
+                            stopSpinning();
+                            setShouldRollback(true); // Set rollback for the next swipe in this direction
+                            return prevIndex; // Keep the index at the first product
+                        }
+                    } else {
+                        // Continue spinning to the left
+                        nextIndex = prevIndex - 1;
+                        setShouldRollback(false); // Reset rollback if not at the start
+                    }
+                }
+
+                return nextIndex;
+            });
+        }, 1000); // Adjust interval time for spinning speed
+    };
+
+
+
+    // Stop spinning and update Y-axis variants
+    const stopSpinning = () => {
+        setIsSpinning(false);
+        clearInterval(spinningInterval.current);
+        spinningInterval.current = null;
+
+        // Reset vertical index to sync with horizontalIndex once spinning stops
+        setVerticalIndex(0);
+        setTimeout(() => setVerticalIndex(1), 1000); // Delay for Y-axis variant reset
+    };
+
+    // Handle click event to stop spinning
+    const handleCarouselClick = () => {
+        if (isSpinning) {
+            stopSpinning();
+        }
     };
 
     
+
+
     //-------------- handle search query for product filtering --------
     const handleSearchChange = (event) => {
         const query = event.target.value.toLowerCase();
@@ -305,11 +375,15 @@ export default function HomepageCopy({ productsList, collectionsData }) {
 
         // Listen for window resize and update the state accordingly
         window.addEventListener('resize', checkScreenWidth);
-   
+        
         // Cleanup listener on component unmount
         return () => window.removeEventListener('resize', checkScreenWidth);
     }, [])
 
+    // Clean up interval on unmount
+    useEffect(() => {
+        return () => clearInterval(spinningInterval.current);
+    }, []);
 
     // Get the duplicated panels for both carousels
     const currentProduct = products[horizontalIndex % products.length] || {};
@@ -459,6 +533,7 @@ export default function HomepageCopy({ productsList, collectionsData }) {
                                 onTouchStart={!IsShowProductDesc ? handleTouchStart : null}
                                 onTouchMove={!IsShowProductDesc ? handleTouchMove : null}
                                 onTouchEnd={!IsShowProductDesc ? handleTouchEnd : null}
+                                onClick={handleCarouselClick} // Add click handler to stop spinning
                             >
                                 {noProductsFound ? (
                                     <div className="no-products-message w-full h-[70%] flex justify-center items-center  text-[1.8rem] font-semibold  text-red-600" >
@@ -468,7 +543,7 @@ export default function HomepageCopy({ productsList, collectionsData }) {
                                     <>
                                         {/* Vertical carousel (rotate around X-axis) */}
                                         <div
-                                            className="carousel w-full h-full "
+                                                className={`carousel w-full h-full `}
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
@@ -568,7 +643,7 @@ export default function HomepageCopy({ productsList, collectionsData }) {
                                     </>
                                 )}
                                 {/* ----------- product description ------- */}
-                                {IsShowProductDesc && <ProductDetail IsDisplaySubCarousel={IsDisplaySubCarousel} isMobileWidth={isMobileWidth} product={productsList[horizontalIndex]} isDarkMode={isDarkMode} />}
+                                {IsShowProductDesc && <ProductDetail IsDisplaySubCarousel={IsDisplaySubCarousel} isMobileWidth={isMobileWidth} product={filteredAllCollectionsProduct[horizontalIndex]} isDarkMode={isDarkMode} />}
                             </div>
 
 
@@ -583,7 +658,7 @@ export default function HomepageCopy({ productsList, collectionsData }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]}  />}
             </div>
 
         </>

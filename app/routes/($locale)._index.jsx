@@ -6,10 +6,12 @@ import { json } from '@remix-run/server-runtime';
 import { useLoaderData } from '@remix-run/react/dist/components';
 
 export async function loader({ context }) {
-  const { products, collections } = await context.storefront.query(PRODUCTS_AND_COLLECTIONS_QUERY);
+  const result = await context.storefront.query(PRODUCTS_AND_COLLECTIONS_QUERY);
+  const { products, collections } = result || {};
+
   return json({
-    allProducts: products.edges,
-    allCollections: collections.edges,
+    allProducts: products?.edges || [],
+    allCollections: collections?.edges || [],
   });
 }
 
@@ -25,14 +27,14 @@ const Index = () => {
       id: productNode.id,
       handle: productNode.handle,
       title: productNode.title,
-      description: productNode.descriptionHtml,
+      description: productNode.descriptionHtml.replace(/<\/?[^>]+(>|$)/g, ""),
       productType: productNode.productType,
       priceRange: {
         amount: productNode.priceRange.minVariantPrice.amount,
         currencyCode: productNode.priceRange.minVariantPrice.currencyCode,
       },
       featuredImage: productNode.featuredImage?.url || 'placeholder.jpg',
-      tags: productNode.tags, // Include tags
+      tags: productNode.tags,
       category: productNode.collections.edges.map((collectionEdge) => collectionEdge.node.title),
       images: productNode.media.edges
         .filter((mediaNode) => mediaNode.node.image)
@@ -44,7 +46,27 @@ const Index = () => {
           amount: variantNode.node.price.amount,
           currencyCode: variantNode.node.price.currencyCode,
         },
+        compareAtPrice: variantNode.node.compareAtPrice
+          ? {
+            amount: variantNode.node.compareAtPrice.amount,
+            currencyCode: variantNode.node.compareAtPrice.currencyCode,
+          }
+          : null,
         availableForSale: variantNode.node.availableForSale,
+        sku: variantNode.node.sku,
+        weight: variantNode.node.weight,
+        weightUnit: variantNode.node.weightUnit,
+        barcode: variantNode.node.barcode,
+        image: variantNode.node.image
+          ? {
+            url: variantNode.node.image.url,
+            altText: variantNode.node.image.altText,
+          }
+          : null,
+        selectedOptions: variantNode.node.selectedOptions.map((option) => ({
+          name: option.name,
+          value: option.value,
+        })),
       })),
     });
 
@@ -56,9 +78,9 @@ const Index = () => {
       id: node.id,
       title: node.title,
       handle: node.handle,
-      description: node.description, // Collection description
-      image: node.image?.url || 'placeholder.jpg', // Collection image
-      products: node.products.edges.map((productEdge) => formatProduct(productEdge.node)), // Apply the same product structure
+      description: node.description,
+      image: node.image?.url || 'placeholder.jpg',
+      products: node.products.edges.map((productEdge) => formatProduct(productEdge.node)),
     }));
 
     setProducts(formattedProducts);
@@ -67,12 +89,15 @@ const Index = () => {
 
   // console.log("unstructured product data: ", allProducts);
   // console.log("unstructured collections data: ", allCollections);
-  // console.log("structured collections data: ", collections);
+
+
   // console.log("structured product data: ", products);
+  // console.log("structured collections data: ", collections);  
+  
 
   return (
     <>
-      {products.length > 0 && <Homepage productsList={products} collectionsData = {collections} />}
+      {products.length > 0 && <Homepage productsList={products} collectionsData={collections} />}
     </>
   );
 };
@@ -117,11 +142,25 @@ const PRODUCTS_AND_COLLECTIONS_QUERY = `#graphql
               title
               price {
                 amount
+                currencyCode
               }
               compareAtPrice {
                 amount
+                currencyCode
               }
               availableForSale
+              sku                          # SKU (Stock Keeping Unit)
+              weight                       # Variant weight
+              weightUnit                   # Weight unit for the variant
+              barcode                      # Barcode of the variant
+              image {
+                url                        # URL of the variant image
+                altText                    # Alt text for the variant image
+              }
+              selectedOptions {            # Selected options for the variant (like size, color)
+                name
+                value
+              }
             }
           }
         }
@@ -205,7 +244,23 @@ const PRODUCTS_AND_COLLECTIONS_QUERY = `#graphql
                       amount
                       currencyCode
                     }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
                     availableForSale
+                    sku
+                    weight
+                    weightUnit
+                    barcode
+                    image {
+                      url
+                      altText
+                    }
+                    selectedOptions {
+                      name
+                      value
+                    }
                   }
                 }
               }
