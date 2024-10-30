@@ -570,10 +570,10 @@ export default function Homepage ({sproducts, collectionsData }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "157px" })`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "150px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-[17.2rem] h-[18.3rem]' : " w-56 h-[14.3rem]" } `}
+                                                        <div className={`panel-content ${isMobileWidth ? 'w-[17.2rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]" } `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -620,10 +620,10 @@ export default function Homepage ({sproducts, collectionsData }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "153px" })`,
+                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "145px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[17.2rem] h-72' : " w-56 h-56"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[17.2rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
