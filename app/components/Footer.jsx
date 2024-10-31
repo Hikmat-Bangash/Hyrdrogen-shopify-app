@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/no-duplicates */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {NavLink} from '@remix-run/react';
 import {useRootLoaderData} from '~/root';
 import {Await, useLoaderData, Link} from '@remix-run/react';
@@ -8,14 +12,10 @@ import {useHistory} from '@shopify/hydrogen';
  */
 export function Footer({menu, shop}) {
   // const history = useHistory();
-
-  // const goBack = (event) => {
-  //   event.preventDefault(); // Prevents the default form submission behavior
-
-  //   window.history.back(); // Navigates back one step in the browser's history
-
-  //   // Navigates back one step in the browser's history
-  // };
+  const goBack = (event) => {
+    event.preventDefault(); // Prevents the default form submission behavior
+    window.history.back(); // Navigates back one step in the browser's history
+  };
   return (
     <footer className="w-screen h-[270px] fixed top-0 right-0  bg-yellow-50">
       {/* {menu && shop?.primaryDomain?.url && (
@@ -35,18 +35,13 @@ export function Footer({menu, shop}) {
                 alt="backimage"
                 className="w-[14px] h-[11px]"
               />
-              <Link
-                // key={product.id}
-                // className="recommended-product"
-                to={`/`}
+
+              <h3
+                className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5"
+                onClick={goBack}
               >
-                <h3
-                  className="m-0 p-0 ml-2 font-semibold text-center text-lg leading-5"
-                  // onClick={goBack}
-                >
-                  Back
-                </h3>
-              </Link>
+                Back
+              </h3>
             </div>
 
             <div className="w-[50%] h-full  flex flex-row justify-end items-center ">
@@ -70,7 +65,7 @@ export function Footer({menu, shop}) {
                   textAlign: 'left',
                 }}
               >
-                Kelly's Kapsule
+                Kelly&aposs Kapsule
               </h1>
               <div className="w-full h-[25%]  mt-[25px]  relative ">
                 <div className="relative w-[85%] h-full ">
@@ -123,7 +118,7 @@ export function Footer({menu, shop}) {
                   Women
                 </button>
                 <button className="min-w-[20%] max-w-auto h-full bg-black text-white text-center rounded-lg p-2 flex flex-row justify-center items-center ">
-                  Kid's
+                  Kid&apos
                 </button>
               </div>
             </div>

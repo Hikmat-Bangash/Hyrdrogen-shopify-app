@@ -73,7 +73,6 @@ export async function loader({context}) {
 
   const isLoggedInPromise = customerAccount.isLoggedIn();
   const cartPromise = cart.get();
-
   // defer the footer query (below the fold)
   const footerPromise = storefront.query(FOOTER_QUERY, {
     cache: storefront.CacheLong(),
@@ -92,7 +91,7 @@ export async function loader({context}) {
 
   return defer(
     {
-      cart: cartPromise,
+      cart: await cartPromise,
       footer: footerPromise,
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
@@ -158,17 +157,19 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <Layout {...rootData}>
-          <div className="route-error">
-            <h1>Oops</h1>
-            <h2>{errorStatus}</h2>
-            {errorMessage && (
-              <fieldset>
-                <pre>{errorMessage}</pre>
-              </fieldset>
-            )}
-          </div>
-        </Layout>
+        <Providers>
+          <Layout {...rootData}>
+            <div className="route-error">
+              <h1>Oops</h1>
+              <h2>{errorStatus}</h2>
+              {errorMessage && (
+                <fieldset>
+                  <pre>{errorMessage}</pre>
+                </fieldset>
+              )}
+            </div>
+          </Layout>
+        </Providers>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />

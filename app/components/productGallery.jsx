@@ -5,14 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {useState} from 'react';
 // import {MdOutlineArrowBack} from 'react-icons/md';
-const ProductGallery = ({isDarkMode, setgallery}) => {
-  const images = [
-    // '/splash/watch1.png',
-    '/splash/watch2.png',
-    '/splash/watch3.png',
-    '/splash/watch4.png',
-    '/splash/watch5.png',
-  ];
+const ProductGallery = ({ isDarkMode, setgallery, galleryImages }) => {
 
   const [activeImg, setactiveImg] = useState(0);
 
@@ -25,8 +18,8 @@ const ProductGallery = ({isDarkMode, setgallery}) => {
   };
 
   return (
-    <div className="contianer w-full h-screen absolute z-40 top-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
-      <div className="wrapper overflow-hidden relative w-full h-[32rem] flex flex-col gap-[1rem]  rounded-[0.93rem] px-1">
+    <div className="contianer w-full h-screen fixed z-40 top-0 bg-black/70 backdrop-blur-sm flex justify-center items-center">
+      <div className=" overflow-hidden relative w-full h-[34rem] flex flex-col gap-[1rem]   rounded-[0.93rem] px-1">
         {/* product screen */}
         <div
           className={`screen w-full h-[420px] bg-gradient-to-b ${isDarkMode ? "from-gray-800 to-black-50" : " from-white-100 to-white-50"}  bg-opacity-30 rounded-[0.93rem] flex flex-col gap-2 `}
@@ -34,26 +27,26 @@ const ProductGallery = ({isDarkMode, setgallery}) => {
         >
           {/* upper back-btn bg */}
           <div
-            className={`back-btn-bg ml-4 py-2 w-full h-16 flex items-center  font-bold text-[1.1rem] tracking-normal cursor-pointer ${isDarkMode ? "text-[#B3B3B3]" : "text-gray-500"}`}
+            className={`back-btn-bg ml-4 mt-3 py-2 w-full h-8  flex items-center  font-bold text-[1.1rem] tracking-normal cursor-pointer ${isDarkMode ? "text-[#B3B3B3]" : "text-gray-500"}`}
             onClick={handleGalleryBackAction}
           >
             <img
               src="/splash/gallery-back-btn.png"
               alt="back-btn"
-              className="mr-2"
+              className="mr-2 "
             />
             Back
           </div>
           {/* product showing section */}
-          <div className="product-showing-section flex justify-center items-center w-full h-[20rem]  p-3">
-            <img src={images[activeImg]} alt="mainImg" />
+          <div className="product-showing-section flex justify-center items-center w-full h-[24rem]  p-2">
+            <img src={galleryImages[activeImg]} alt="mainImg" className='object-cover w-full h-full' />
           </div>
         </div>
 
         {/* product images */}
-        <div className="product-imgs w-full flex gap-2 ">
+        <div className="product-imgs w-full overflow-x-auto flex gap-2 ">
           {/* product1 */}
-          {images.map((img, index) => (
+          {galleryImages.map((img, index) => (
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={index}
@@ -62,13 +55,10 @@ const ProductGallery = ({isDarkMode, setgallery}) => {
               }`}
               onClick={() => handleActiveImg(index)}
             >
-              <img src={images[index]} alt="productImg" />
+              <img src={galleryImages[index]} alt="productImg" className='object-cover w-[85px] h-[80px]' />
             </div>
           ))}
-          {/* <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md border-2 border-[#DAAF37]"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div>
-          <div className="product1 w-[85px] h-[85px] bg-gradient-to-b from-black to-black/50 rounded-md"></div> */}
+         
         </div>
       </div>
     </div>

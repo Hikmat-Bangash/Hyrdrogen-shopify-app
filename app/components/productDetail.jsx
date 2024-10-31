@@ -1,10 +1,19 @@
 import React from 'react';
 
-const ProductDetail = ({isDarkMode}) => {
-  console.log('product detail component rendered');
+const ProductDetail = ({
+  isDarkMode,
+  product,
+  isMobileWidth,
+  IsDisplaySubCarousel,
+}) => {
+  console.log('product detail: ', product);
   return (
     <div
-      className={`contianer w-full h-full absolute z-40 top-0  backdrop-blur-sm   justify-center items-center ${
+      className={`contianer  fixed z-40 ${
+        isMobileWidth
+          ? 'w-[77%] h-[59%] left-[3rem]  top-[20%] '
+          : 'w-[70%] h-[60%] left-[3.1rem]  top-[20%] '
+      }  backdrop-blur-sm  justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'
       } rounded-md `}
     >
@@ -20,15 +29,15 @@ const ProductDetail = ({isDarkMode}) => {
           </p>
 
           <p
-            className={`font-bold text-[16px] leading-[24px] tracking-[0.5px] ${
+            className={`font-bold font-avenir text-[16px] leading-[24px] tracking-[0.5px] ${
               isDarkMode ? 'text-[#D9D9D9]' : 'text-black'
             }`}
           >
-            Digital Fitness Watch
+            {product?.title}
           </p>
 
           <p className="font-bold text-[16px] leading-[24px] text-[#DAAF37]">
-            $150
+            ${product?.priceRange?.amount}
           </p>
         </div>
 
@@ -38,9 +47,7 @@ const ProductDetail = ({isDarkMode}) => {
             isDarkMode ? 'text-white' : 'text-black'
           } `}
         >
-          From built-in GPS tracking to advanced heart rate monitoring, this
-          fitness watch has everything you need to keep yourself motivated and
-          in shape
+          {product?.description}
         </p>
         {/* icons + names */}
         <div className="icons-names w-full flex justify-between">
