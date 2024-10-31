@@ -11,7 +11,7 @@ const ProductDetail = ({
     <div
       className={`contianer  fixed z-40 ${
         isMobileWidth
-          ? 'w-[81%] h-[62%] left-[2.3rem]  top-[19%] '
+          ? 'w-[77%] h-[59%] left-[3rem]  top-[20%] '
           : 'w-[70%] h-[60%] left-[3.1rem]  top-[20%] '
       }  backdrop-blur-sm  justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'

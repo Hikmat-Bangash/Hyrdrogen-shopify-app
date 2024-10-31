@@ -523,10 +523,10 @@ const startSpinning = (direction) => {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "148px" })`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "148px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-[17.2rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]" } `}
+                                                        <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]" } `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -573,10 +573,10 @@ const startSpinning = (direction) => {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "145px" })`,
+                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '181px' : "145px" })`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[17.2rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
