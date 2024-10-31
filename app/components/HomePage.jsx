@@ -47,7 +47,7 @@ const createNonDuplicateOrder = (items) => {
     }
 
     // Return a fixed array with at least 5 items
-    return result;
+    return [...result, ...result, ...result];
 };
 
 // Function to duplicate images for vertical carousel if less than 5 images in a product
@@ -119,7 +119,7 @@ export default function Homepage ({sproducts, collectionsData }) {
         setShowProductDesc((prev) => !prev)
     }
 
-    const rotationPerPanel = 360 / PANEL_COUNT; // Rotation angle for each panel
+    const rotationPerPanel = 360 / 5; // Rotation angle for each panel
 
     // Separate touch tracking states for horizontal and vertical carousels
     const [touchStartX, setTouchStartX] = useState(0);
@@ -128,8 +128,6 @@ export default function Homepage ({sproducts, collectionsData }) {
     const [touchEndY, setTouchEndY] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false); // Track if the carousel is spinning
     const spinningInterval = useRef(null); // Store the interval ID
-    const [hasReachedEnd, setHasReachedEnd] = useState(false); // Additional state to track if we’ve reached the end or start
-    const [shouldRollback, setShouldRollback] = useState(false);
 
 
     // Separate handlers for touch events in horizontal and vertical carousels
@@ -175,57 +173,25 @@ export default function Homepage ({sproducts, collectionsData }) {
 
     };
 
-    // Updated startSpinning function with stop-at-end and rollback functionality
-    const startSpinning = (direction) => {
-        if (spinningInterval.current) return; // Prevent multiple intervals
-        setIsSpinning(true);
+ // Updated startSpinning function for endless rotation
+const startSpinning = (direction) => {
+    if (spinningInterval.current) return; // Prevent multiple intervals
+    setIsSpinning(true);
 
-        spinningInterval.current = setInterval(() => {
-            setHorizontalIndex((prevIndex) => {
-                let nextIndex;
+    spinningInterval.current = setInterval(() => {
+        setHorizontalIndex((prevIndex) => {
+            // Endless loop by wrapping index using modulus
+            let nextIndex;
+            if (direction === "right") {
+                nextIndex = ((prevIndex + 1) + products.length) % products.length;
+            } else {
+                nextIndex = (prevIndex - 1 + products.length) % products.length;
+            }
+            return nextIndex;
+        });
+    }, 1000); // Adjust interval time for spinning speed
+};
 
-                if (direction === "right") {
-                    if (prevIndex === products.length - 1) {
-                        if (shouldRollback) {
-                            // Roll back to the first product if already at the end and rollback is triggered
-                            nextIndex = 0;
-                            stopSpinning(); // Stop spinning after rollback
-                            setShouldRollback(false); // Reset rollback state
-                        } else {
-                            // Stop at the last product on the first spin
-                            stopSpinning();
-                            setShouldRollback(true); // Set rollback for the next swipe in this direction
-                            return prevIndex; // Keep the index at the last product
-                        }
-                    } else {
-                        // Continue spinning to the right
-                        nextIndex = prevIndex + 1;
-                        setShouldRollback(false); // Reset rollback if not at the end
-                    }
-                } else {
-                    if (prevIndex === 0) {
-                        if (shouldRollback) {
-                            // Roll back to the last product if already at the start and rollback is triggered
-                            nextIndex = products.length - 1;
-                            stopSpinning(); // Stop spinning after rollback
-                            setShouldRollback(false); // Reset rollback state
-                        } else {
-                            // Stop at the first product on the first spin
-                            stopSpinning();
-                            setShouldRollback(true); // Set rollback for the next swipe in this direction
-                            return prevIndex; // Keep the index at the first product
-                        }
-                    } else {
-                        // Continue spinning to the left
-                        nextIndex = prevIndex - 1;
-                        setShouldRollback(false); // Reset rollback if not at the start
-                    }
-                }
-
-                return nextIndex;
-            });
-        }, 1000); // Adjust interval time for spinning speed
-    };
 
 
 
@@ -349,19 +315,6 @@ export default function Homepage ({sproducts, collectionsData }) {
             setIsDisplaySubCarousel(true);
         }
     };
-
-
-
-
-    useEffect(() => {
-
-        // Handle positive and negative indices for infinite carousel effect
-        if (horizontalIndex >= products?.length) {
-            setHorizontalIndex(0); // Reset to first product
-        } else if (horizontalIndex < 0) {
-            setHorizontalIndex(products?.length - 1); // Go to last product
-        }
-    }, [horizontalIndex]);
 
     // useEffect for categories and device screen width tracking
     useEffect(() => {
@@ -559,7 +512,7 @@ export default function Homepage ({sproducts, collectionsData }) {
 
                                                 return (
                                                     <div
-                                                        className="carousel-panel "
+                                                        className={`carousel-panel ${activeCarousel == "horizontal" && "backdrop-blur-sm"}`}
                                                         key={index}
                                                         style={{
                                                             position: 'absolute',
@@ -570,7 +523,7 @@ export default function Homepage ({sproducts, collectionsData }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "150px" })`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '200px' : "148px" })`,
                                                         }}
                                                     >
                                                         <div className={`panel-content ${isMobileWidth ? 'w-[17.2rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]" } `}

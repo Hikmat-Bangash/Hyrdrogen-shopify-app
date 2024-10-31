@@ -12,7 +12,7 @@ const ProductDetail = ({
       className={`contianer  fixed z-40 ${
         isMobileWidth
           ? 'w-[81%] h-[62%] left-[2.3rem]  top-[19%] '
-          : 'w-[76%] h-[66%] left-[2.7rem]  top-[18%] '
+          : 'w-[70%] h-[60%] left-[3.1rem]  top-[20%] '
       }  backdrop-blur-sm  justify-center items-center ${
         isDarkMode ? 'bg-black/60' : 'bg-[#FFFFFFBF]'
       } rounded-md `}
