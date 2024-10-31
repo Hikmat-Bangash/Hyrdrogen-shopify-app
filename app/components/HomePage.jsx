@@ -1,5 +1,4 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable no-unused-vars */
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
@@ -9,16 +8,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable prettier/prettier */
-import { defer } from '@shopify/remix-oxygen';
-import { Await, Link } from '@remix-run/react';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { Image, Money } from '@shopify/hydrogen';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
 import { useSelector, useDispatch } from 'react-redux';
 import { hanldeFeaturePage, toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
-import Carousal from '~/components/Carousal'
 import Main_Carousel from '~/components/main_carousel'
 import SubCollectionCarousal from '~/components/subCollection'
 import { RiSearchLine } from "react-icons/ri";
@@ -47,7 +42,7 @@ const createNonDuplicateOrder = (items) => {
     }
 
     // Return a fixed array with at least 5 items
-    return [...result, ...result, ...result];
+    return result;
 };
 
 // Function to duplicate images for vertical carousel if less than 5 images in a product
@@ -67,11 +62,8 @@ const duplicateVerticalPanels = (images) => {
     return duplicatedImages;
 };
 
-// =============== SPINSWIPE FUNCTIONALITY END ============
 
-
-
-export default function Homepage ({sproducts, collectionsData }) {
+export default function Homepage({ sproducts, collectionsData }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const dispatch = useDispatch();
 
@@ -80,7 +72,6 @@ export default function Homepage ({sproducts, collectionsData }) {
     // const [Images, setImages] = useState(images);
     const [products, setproducts] = useState([]);
 
-    const [currentProductIdx, setCurrentProductIdx] = useState(0); // Track the current product index
 
     const [IsGallery, setGallery] = useState(false);
     const [category, setCategory] = useState("All");
@@ -92,12 +83,11 @@ export default function Homepage ({sproducts, collectionsData }) {
     const [activeCarousel, setActiveCarousel] = useState("horizontal"); // Track active carousel
     const [isMobileWidth, setIsMobileWidth] = useState(true);
     const [isSearchTrue, setIsSearchTrue] = useState(false);
-    const [isSubCategory, setisSubCategory] = useState(true);
 
     const [filteredCollections, setFilteredCollections] = useState([]);
     const [filteredAllCollectionsProduct, setfilteredAllCollectionsProduct] = useState([]);
     const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
-    const [IsDisplaySubCarousel, setIsDisplaySubCarousel] = useState(false); 
+    const [IsDisplaySubCarousel, setIsDisplaySubCarousel] = useState(false);
 
     // changing light and dark mode func def
     const ThemeMode = () => {
@@ -106,7 +96,6 @@ export default function Homepage ({sproducts, collectionsData }) {
 
     // -------- handle features screen ----
     const handleIsFeatures = () => {
-        console.log("is features screen")
         setIsfeaturesMode((prev) => !prev);
         dispatch(hanldeFeaturePage())
     }
@@ -119,7 +108,7 @@ export default function Homepage ({sproducts, collectionsData }) {
         setShowProductDesc((prev) => !prev)
     }
 
-    const rotationPerPanel = 360 / 5; // Rotation angle for each panel
+    const rotationPerPanel = 360 / PANEL_COUNT; // Rotation angle for each panel
 
     // Separate touch tracking states for horizontal and vertical carousels
     const [touchStartX, setTouchStartX] = useState(0);
@@ -131,7 +120,6 @@ export default function Homepage ({sproducts, collectionsData }) {
 
 
     // Separate handlers for touch events in horizontal and vertical carousels
-    // Handle touch events
     const handleTouchStart = (e) => {
         setTouchStartX(e.touches[0].clientX);
         setTouchStartY(e.touches[0].clientY);
@@ -151,49 +139,45 @@ export default function Homepage ({sproducts, collectionsData }) {
             startSpinning(touchStartX > touchEndX ? "right" : "left"); // Start spinning based on swipe direction
         }
 
-
-
         // Handle vertical swipes (up and down) for vertical carousel
-        if (verticalSwipe && !horizontalSwipe) {
-            setActiveCarousel("vertical"); // Set vertical carousel as active
-            const productImages = products[horizontalIndex % products.length]?.images || [];
-            const duplicatedImages = duplicateVerticalPanels(productImages);
-            if (touchStartY - touchEndY > 50) {
-                // Swipe up (next panel)
-                setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
-            } else if (touchEndY - touchStartY > 50) {
-                // Swipe down (previous panel)
-                setVerticalIndex((prevIndex) =>
-                    prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
-                );
+        if (!isSpinning) {
+            if (verticalSwipe && !horizontalSwipe) {
+                setActiveCarousel("vertical"); // Set vertical carousel as active
+                const productImages = products[horizontalIndex % products.length]?.images || [];
+                const duplicatedImages = duplicateVerticalPanels(productImages);
+                if (touchStartY - touchEndY > 50) {
+                    // Swipe up (next panel)
+                    setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
+                } else if (touchEndY - touchStartY > 50) {
+                    // Swipe down (previous panel)
+                    setVerticalIndex((prevIndex) =>
+                        prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
+                    );
+                }
             }
         }
 
 
-
     };
 
- // Updated startSpinning function for endless rotation
-const startSpinning = (direction) => {
-    if (spinningInterval.current) return; // Prevent multiple intervals
-    setIsSpinning(true);
+    // start Spinning function
+    const startSpinning = (direction) => {
+        if (spinningInterval.current) return; // Prevent multiple intervals
+        setIsSpinning(true);
 
-    spinningInterval.current = setInterval(() => {
-        setHorizontalIndex((prevIndex) => {
-            // Endless loop by wrapping index using modulus
-            let nextIndex;
-            if (direction === "right") {
-                nextIndex = ((prevIndex + 1) + products.length) % products.length;
-            } else {
-                nextIndex = (prevIndex - 1 + products.length) % products.length;
-            }
-            return nextIndex;
-        });
-    }, 1000); // Adjust interval time for spinning speed
-};
-
-
-
+        spinningInterval.current = setInterval(() => {
+            setHorizontalIndex((prevIndex) => {
+                // Endless loop by wrapping index using modulus
+                let nextIndex;
+                if (direction === "right") {
+                    nextIndex = ((prevIndex + 1) + products.length) % products.length;
+                } else {
+                    nextIndex = (prevIndex - 1 + products.length) % products.length;
+                }
+                return nextIndex;
+            });
+        }, 1500); // Adjust interval time for spinning speed
+    };
 
     // Stop spinning and update Y-axis variants
     const stopSpinning = () => {
@@ -213,7 +197,7 @@ const startSpinning = (direction) => {
         }
     };
 
-    
+
 
 
     //-------------- handle search query for product filtering --------
@@ -252,14 +236,10 @@ const startSpinning = (direction) => {
         }
     };
 
-
-
-
-
     //================= Function to filter collections and their products ==============
     const FilteringCollectionsAndProducts = (filteredName) => {
         setCategory(filteredName);
-        
+
         const filterLower = filteredName.toLowerCase();
 
         const matchedProducts = [];
@@ -285,19 +265,19 @@ const startSpinning = (direction) => {
 
             return null;
         }).filter(Boolean);  // Filter out any null values (collections with no matching products)
-       
+
         if (filtered?.length > 0) {
             setFilteredCollections(filtered);
             setfilteredAllCollectionsProduct(matchedProducts);
             setNoProductsFound(false); // Reset noProductsFound if products exist
             setproducts(matchedProducts); // Update the filtered products
             console.log("yes, products found!")
-        } else{
+        } else {
             setFilteredCollections([]);
             setfilteredAllCollectionsProduct([]);
             setNoProductsFound(true); // Reset noProductsFound if products exist
             setproducts([]); // Update the filtered products
-         }
+        }
         // Reset carousel index to show the first product and image
         setHorizontalIndex(0);
         setVerticalIndex(0);
@@ -328,7 +308,7 @@ const startSpinning = (direction) => {
 
         // Listen for window resize and update the state accordingly
         window.addEventListener('resize', checkScreenWidth);
-        
+
         // Cleanup listener on component unmount
         return () => window.removeEventListener('resize', checkScreenWidth);
     }, [])
@@ -338,7 +318,7 @@ const startSpinning = (direction) => {
         return () => clearInterval(spinningInterval.current);
     }, []);
 
-    // Get the duplicated panels for both carousels
+    // Get the random panels for both carousels if the no of products less than 5
     const currentProduct = products[horizontalIndex % products.length] || {};
     const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
     const duplicatedProducts = createNonDuplicateOrder(products);
@@ -367,11 +347,11 @@ const startSpinning = (direction) => {
                                 >
                                     Kelly&apos;s Kapsule
                                 </h1>
-                              
-                                
+
+
                                 {/* below code is for search bar */}
                                 <div className={`w-full  z-50 top-[5.8rem] flex justify-between items-center h-[32%]   ${isSearchTrue ? "absolute" : "hidden"}`}
-                                
+
                                     style={{
                                         transformStyle: "preserve-3d",
                                         transition: "transform 1s ease-in-out",
@@ -402,9 +382,9 @@ const startSpinning = (direction) => {
                                         </svg>
                                     </div>
 
-                                    <div className="w-[15%] bg-slate-100 text-2xl flex justify-center items-center h-full " onClick={()=> setIsSearchTrue((prev)=> !prev)}>
-                                        
-                                            <AiOutlineClose  />
+                                    <div className="w-[15%] bg-slate-100 text-2xl flex justify-center items-center h-full " onClick={() => setIsSearchTrue((prev) => !prev)}>
+
+                                        <AiOutlineClose />
                                     </div>
                                 </div>
 
@@ -422,7 +402,7 @@ const startSpinning = (direction) => {
                                         </button>
                                     ))}
                                     {/* ---- search icon ------- */}
-                                    <div className="p-2 bg-[#ECECEC] text-2xl flex justify-center items-center h-full   " onClick={()=> setIsSearchTrue((prev)=> !prev)}>
+                                    <div className="p-2 bg-[#ECECEC] text-2xl flex justify-center items-center h-full   " onClick={() => setIsSearchTrue((prev) => !prev)}>
 
                                         <RiSearchLine />
                                     </div>
@@ -433,14 +413,14 @@ const startSpinning = (direction) => {
                             </div>
 
                             {/* -------- selected product sub-category  collection  ----------- */}
-                            {IsDisplaySubCarousel && <SubCollectionCarousal products={products} handleCarouselProduct={handleCarouselProduct} /> } 
+                            {IsDisplaySubCarousel && <SubCollectionCarousal products={products} handleCarouselProduct={handleCarouselProduct} />}
 
                         </div>
                     </div>
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]": IsDisplaySubCarousel? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
+                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]" : IsDisplaySubCarousel ? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
                     <div className="w-full h-[8%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />
@@ -496,7 +476,7 @@ const startSpinning = (direction) => {
                                     <>
                                         {/* Vertical carousel (rotate around X-axis) */}
                                         <div
-                                                className={`carousel w-full h-full `}
+                                            className={`carousel w-full h-full `}
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
@@ -516,17 +496,17 @@ const startSpinning = (direction) => {
                                                         key={index}
                                                         style={{
                                                             position: 'absolute',
-                                                            transition: "transform 4s ease-in-out",
+                                                            transition: "transform 1.3s ease-in-out",
                                                             width: '100%',
                                                             height: '100%',
                                                             backfaceVisibility: 'hidden',
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "148px" })`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "148px"})`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]" } `}
+                                                        <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -573,7 +553,7 @@ const startSpinning = (direction) => {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '181px' : "145px" })`,
+                                                            transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '181px' : "145px"})`,
                                                         }}
                                                     >
                                                         <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
@@ -585,7 +565,7 @@ const startSpinning = (direction) => {
                                                                 objectFit: "cover",
                                                                 overflow: "hidden"
                                                             }}
-                                                        > 
+                                                        >
                                                             <img style={{ objectFit: "cover", width: "100%", height: "100%" }} src={product?.featuredImage
                                                             } alt={product?.title} />
                                                         </div>
@@ -600,8 +580,6 @@ const startSpinning = (direction) => {
                             </div>
 
 
-                            {/* ------- spinning tools section END -------- */}
-
 
 
                         </div>
@@ -611,7 +589,7 @@ const startSpinning = (direction) => {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]}  />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]} />}
             </div>
 
         </>
