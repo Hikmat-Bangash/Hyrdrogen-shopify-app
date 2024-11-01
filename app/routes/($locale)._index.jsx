@@ -85,7 +85,7 @@ const Index = () => {
     }));
 
     setProducts(formattedProducts);
-    setCollections(formattedCollections);
+    setCollections(formattedCollections); 
   }, [allProducts, allCollections]);
 
   // console.log("unstructured product data: ", allProducts);

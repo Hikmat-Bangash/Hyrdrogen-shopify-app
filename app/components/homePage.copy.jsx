@@ -28,7 +28,7 @@ export const meta = () => {
 const PANEL_COUNT = 5; // Fixed number of panels for the prism layout
 
 // Function to create a non-random duplication of products, ensuring no duplicates appear consecutively
-const createNonDuplicateOrder = (items) => { 
+const createNonDuplicateOrder = (items) => {
     const result = [...items];
     const totalItems = items.length;
 
@@ -166,7 +166,7 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
 
     };
 
-    const [normalizedIndex, setnormalizedIndex] = useState(Math.abs(horizontalIndex) % products.length)
+    const [normalizedIndex, setnormalizedIndex] = useState(((horizontalIndex % products?.length) + products?.length) % products?.length)
     // start Spinning function
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
@@ -178,7 +178,6 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
                 return direction === "right" ? prevIndex + 1 : prevIndex - 1;
             });
 
-            setnormalizedIndex(Math.abs(horizontalIndex) % products.length)
         }, 1500); // Adjust interval time for spinning speed
     };
 
@@ -274,7 +273,6 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
             setfilteredAllCollectionsProduct(matchedProducts);
             setNoProductsFound(false); // Reset noProductsFound if products exist
             setproducts(matchedProducts); // Update the filtered products
-            console.log("yes, products found!")
         } else {
             setFilteredCollections([]);
             setfilteredAllCollectionsProduct([]);
@@ -322,11 +320,11 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
     }, []);
 
     // Get the random panels for both carousels if the no of products less than 5
-    const currentProduct = products[(((horizontalIndex % products.length) + products.length) % products.length)] || {};
+    const currentProduct = products[normalizedIndex] || {};
     const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
     const duplicatedProducts = createNonDuplicateOrder(products);
 
-    console.log("center product index: ", (((horizontalIndex % products.length) + products.length) % products.length))
+    console.log("center product index: ", (((horizontalIndex % products?.length) + products?.length) % products?.length))
 
     return (
         <>
@@ -422,7 +420,7 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
                     </div>
                 </div>
 
-                {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
+                {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons -----*/}
                 <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]" : IsDisplaySubCarousel ? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
                     <div className="w-full h-[8%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
@@ -590,9 +588,9 @@ export default function HomepageCopy({ sproducts, collectionsData }) {
                 </div>
 
                 {/* showing product gallery */}
-                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
+                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[normalizedIndex].images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[normalizedIndex]} />}
             </div>
 
         </>

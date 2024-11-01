@@ -32,16 +32,22 @@ const createNonDuplicateOrder = (items) => {
     const result = [...items];
     const totalItems = items.length;
 
-    // If there are fewer than 5 products, duplicate them but maintain the same sequence
+    // If there are fewer than 5 products, duplicate them to reach 5
     if (totalItems < PANEL_COUNT) {
         let i = 0;
         while (result.length < PANEL_COUNT) {
-            result.push(items[i % totalItems]);
+            // Append the next item in the original sequence
+            const nextItem = items[i % totalItems];
+
+            // Ensure no consecutive duplicates
+            if (result[result.length - 1] !== nextItem) {
+                result.push(nextItem);
+            }
+
             i++;
         }
     }
 
-    // Return a fixed array with at least 5 items
     return result;
 };
 
@@ -159,6 +165,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
     };
+
 
     // start Spinning function
     const startSpinning = (direction) => {
