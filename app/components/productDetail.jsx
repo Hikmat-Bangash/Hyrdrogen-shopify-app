@@ -6,7 +6,6 @@ const ProductDetail = ({
   isMobileWidth,
   IsDisplaySubCarousel,
 }) => {
-  console.log('product detail: ', product);
   return (
     <div
       className={`contianer  fixed z-40 ${

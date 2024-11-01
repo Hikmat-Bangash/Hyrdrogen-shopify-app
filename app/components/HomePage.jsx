@@ -32,22 +32,16 @@ const createNonDuplicateOrder = (items) => {
     const result = [...items];
     const totalItems = items.length;
 
-    // If there are fewer than 5 products, duplicate them to reach 5
+    // If there are fewer than 5 products, duplicate them but maintain the same sequence
     if (totalItems < PANEL_COUNT) {
         let i = 0;
         while (result.length < PANEL_COUNT) {
-            // Append the next item in the original sequence
-            const nextItem = items[i % totalItems];
-
-            // Ensure no consecutive duplicates
-            if (result[result.length - 1] !== nextItem) {
-                result.push(nextItem);
-            }
-
+            result.push(items[i % totalItems]);
             i++;
         }
     }
 
+    // Return a fixed array with at least 5 items
     return result;
 };
 
@@ -123,7 +117,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [touchEndY, setTouchEndY] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false); // Track if the carousel is spinning
     const spinningInterval = useRef(null); // Store the interval ID
-
+    const [productIndex, setproductIndex] = useState(0);
 
     // Separate handlers for touch events in horizontal and vertical carousels
     const handleTouchStart = (e) => {
@@ -166,7 +160,6 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     };
 
-
     // start Spinning function
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
@@ -174,17 +167,12 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         spinningInterval.current = setInterval(() => {
             setHorizontalIndex((prevIndex) => {
-                // Endless loop by wrapping index using modulus
-                let nextIndex;
-                if (direction === "right") {
-                    nextIndex = ((prevIndex + 1) + products.length) % products.length;
-                } else {
-                    nextIndex = (prevIndex - 1 + products.length) % products.length;
-                }
-                return nextIndex;
+                return direction === "right" ? prevIndex + 1 : prevIndex - 1;
             });
+
         }, 1500); // Adjust interval time for spinning speed
     };
+
 
     // Stop spinning and update Y-axis variants
     const stopSpinning = () => {
@@ -325,13 +313,26 @@ export default function Homepage({ sproducts, collectionsData }) {
         return () => clearInterval(spinningInterval.current);
     }, []);
 
-    // Get the random panels for both carousels if the no of products less than 5
-    const currentProduct = products[horizontalIndex % products.length] || {};
-    const currentProductImages = duplicateVerticalPanels(currentProduct.images || []);
-    const duplicatedProducts = createNonDuplicateOrder(products);
+
+    const getCurrentProduct = (index) => {
+        const normalizedIndex = index % duplicatedProductIndices.length;
+        return duplicatedProductIndices[normalizedIndex];
+    };
 
 
+    const duplicatedProductIndices = createNonDuplicateOrder(products);
+    
+    // Usage in your carousel rendering logic
+    const currentProductIndex = getCurrentProduct(Math.abs(horizontalIndex));
+    // console.log("current product index: ", currentProductIndex)
 
+    const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
+    
+    if (!isSpinning) {
+        var activeProduct = currentProductIndex;
+    }
+    // console.log("activeProduct: ", activeProduct)
+      
     return (
         <>
 
@@ -542,10 +543,10 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                 backfaceVisibility: 'hidden',
                                                 transition: "transform 1.3s ease-in-out",
                                                 zIndex: activeCarousel === "horizontal" ? 2 : 1,
-                                                transform: `rotateY(${(horizontalIndex % duplicatedProducts.length) * -rotationPerPanel}deg)`,
+                                                transform: `rotateY(${horizontalIndex * -rotationPerPanel}deg)`,
                                             }}
                                         >
-                                            {duplicatedProducts?.map((product, index) => {
+                                            {duplicatedProductIndices?.map((product, index) => {
                                                 const rotateAngle = index * rotationPerPanel;
 
                                                 return (
@@ -583,7 +584,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     </>
                                 )}
                                 {/* ----------- product description ------- */}
-                                {IsShowProductDesc && <ProductDetail IsDisplaySubCarousel={IsDisplaySubCarousel} isMobileWidth={isMobileWidth} product={filteredAllCollectionsProduct[horizontalIndex]} isDarkMode={isDarkMode} />}
+                                {IsShowProductDesc && <ProductDetail IsDisplaySubCarousel={IsDisplaySubCarousel} isMobileWidth={isMobileWidth} product={activeProduct} isDarkMode={isDarkMode} />}
                             </div>
 
 
@@ -594,9 +595,9 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* showing product gallery */}
-                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={products[horizontalIndex].images} />}
+                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={ activeProduct?.images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={products[horizontalIndex]} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct} />}
             </div>
 
         </>

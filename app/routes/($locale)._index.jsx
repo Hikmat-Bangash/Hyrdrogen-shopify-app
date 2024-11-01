@@ -92,13 +92,13 @@ const Index = () => {
   // console.log("unstructured collections data: ", allCollections);
 
 
-  console.log("structured product data: ", products);
-  console.log("structured collections data: ", collections);  
+  // console.log("structured product data: ", products);
+  // console.log("structured collections data: ", collections);  
   
 
   return (
     <>
-      {products.length > 0 && <HomepageCopy productsList={products} collectionsData={collections} />}
+      {products.length > 0 && <Homepage productsList={products} collectionsData={collections} />}
     </>
   );
 };
