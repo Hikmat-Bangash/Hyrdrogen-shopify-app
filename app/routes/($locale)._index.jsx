@@ -2,6 +2,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import Homepage from '~/components/HomePage';
+import HomepageCopy from '~/components/homePage.copy';
 import { json } from '@remix-run/server-runtime';
 import { useLoaderData } from '@remix-run/react/dist/components';
 
@@ -91,13 +92,13 @@ const Index = () => {
   // console.log("unstructured collections data: ", allCollections);
 
 
-  // console.log("structured product data: ", products);
-  // console.log("structured collections data: ", collections);  
+  console.log("structured product data: ", products);
+  console.log("structured collections data: ", collections);  
   
 
   return (
     <>
-      {products.length > 0 && <Homepage productsList={products} collectionsData={collections} />}
+      {products.length > 0 && <HomepageCopy productsList={products} collectionsData={collections} />}
     </>
   );
 };
