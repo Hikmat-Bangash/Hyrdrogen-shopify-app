@@ -170,7 +170,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 return direction === "right" ? prevIndex + 1 : prevIndex - 1;
             });
 
-        }, 1500); // Adjust interval time for spinning speed
+        }, 1000); // Adjust interval time for spinning speed
     };
 
 
@@ -500,7 +500,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
                                                 return (
                                                     <div
-                                                        className={`carousel-panel ${activeCarousel == "horizontal" && "backdrop-blur-sm"}`}
+                                                        className={`carousel-panel ${isSpinning  && "backdrop-blur-sm"}`}
                                                         key={index}
                                                         style={{
                                                             position: 'absolute',
