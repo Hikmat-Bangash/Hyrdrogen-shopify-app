@@ -117,53 +117,142 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [touchEndY, setTouchEndY] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false); // Track if the carousel is spinning
     const spinningInterval = useRef(null); // Store the interval ID
-    const [productIndex, setproductIndex] = useState(0);
 
     // Separate handlers for touch events in horizontal and vertical carousels
+    // const handleTouchStart = (e) => {
+    //     setTouchStartX(e.touches[0].clientX);
+    //     setTouchStartY(e.touches[0].clientY);
+    // };
+
+    // const handleTouchMove = (e) => {
+    //     setTouchEndX(e.touches[0].clientX);
+    //     setTouchEndY(e.touches[0].clientY);
+    // };
+
+    // const handleTouchEnd = () => {
+    //     const horizontalSwipe = Math.abs(touchStartX - touchEndX) > 50;
+    //     const verticalSwipe = Math.abs(touchStartY - touchEndY) > 50;
+
+    //     if (horizontalSwipe && !verticalSwipe) {
+    //         setActiveCarousel("horizontal");
+    //         startSpinning(touchStartX > touchEndX ? "right" : "left"); // Start spinning based on swipe direction
+    //     }
+
+    //     // Handle vertical swipes (up and down) for vertical carousel
+    //     if (!isSpinning) {
+    //         if (verticalSwipe && !horizontalSwipe) {
+    //             setActiveCarousel("vertical"); // Set vertical carousel as active
+    //             const productImages = products[horizontalIndex % products.length]?.images || [];
+    //             const duplicatedImages = duplicateVerticalPanels(productImages);
+    //             if (touchStartY - touchEndY > 50) {
+    //                 // Swipe up (next panel)
+    //                 setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
+    //             } else if (touchEndY - touchStartY > 50) {
+    //                 // Swipe down (previous panel)
+    //                 setVerticalIndex((prevIndex) =>
+    //                     prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
+    //                 );
+    //             }
+    //         }
+    //     }
+
+
+    // };
+
+
+
+    const [touchDeltaX, setTouchDeltaX] = useState(0);
+    const [touchDeltaY, setTouchDeltaY] = useState(0);
+    const [touchStartTime, setTouchStartTime] = useState(0); // Track touch start time for swipe speed
+    const quickSwipeThreshold = 250; // Duration threshold for a quick swipe in milliseconds
+    const distanceThreshold = 70; // Pixel threshold for swipe detection
+    // Thresholds
+    const verticalSwipeThreshold = 50; // Minimum distance for vertical swipe detection
+
+    // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
         setTouchStartX(e.touches[0].clientX);
-        setTouchStartY(e.touches[0].clientY);
+        setTouchStartY(e.touches[0].clientY); // Capture initial Y position
+        setTouchStartTime(Date.now()); // Start time for swipe detection
+        
     };
 
+    // Handle touch move: calculate the swipe delta and apply real-time rotation
     const handleTouchMove = (e) => {
-        setTouchEndX(e.touches[0].clientX);
-        setTouchEndY(e.touches[0].clientY);
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const deltaX = currentX - touchStartX;
+        const deltaY = currentY - touchStartY; // Track Y-axis movement for vertical swipe
+
+        setTouchDeltaX(deltaX); // Update deltaX for horizontal swipe detection
+        setTouchDeltaY(deltaY); // Update deltaY for vertical swipe detection
+
+        // Apply rotation based on delta, giving a responsive feel
+        const rotationFactor = 0.5; // Adjust for sensitivity
+        const provisionalRotation = (horizontalIndex * -rotationPerPanel) + deltaX * rotationFactor;
+        document.querySelector(".carousel-horizontal").style.transform = `rotateY(${provisionalRotation}deg)`;
     };
 
+    // Handle touch end: determine if it was a quick swipe or slow drag
     const handleTouchEnd = () => {
-        const horizontalSwipe = Math.abs(touchStartX - touchEndX) > 50;
-        const verticalSwipe = Math.abs(touchStartY - touchEndY) > 50;
+     
+        const swipeDuration = Date.now() - touchStartTime;
+        const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
+        const isVerticalSwipe = Math.abs(touchDeltaY) > verticalSwipeThreshold && Math.abs(touchDeltaY) > Math.abs(touchDeltaX);
 
-        if (horizontalSwipe && !verticalSwipe) {
-            setActiveCarousel("horizontal");
-            startSpinning(touchStartX > touchEndX ? "right" : "left"); // Start spinning based on swipe direction
-        }
 
-        // Handle vertical swipes (up and down) for vertical carousel
-        if (!isSpinning) {
-            if (verticalSwipe && !horizontalSwipe) {
+        if (isVerticalSwipe) {
+            // Handle vertical swipes for single product change in vertical carousel
+            if (!isSpinning) {
                 setActiveCarousel("vertical"); // Set vertical carousel as active
                 const productImages = products[horizontalIndex % products.length]?.images || [];
                 const duplicatedImages = duplicateVerticalPanels(productImages);
-                if (touchStartY - touchEndY > 50) {
+
+                if (touchDeltaY < -verticalSwipeThreshold) {
                     // Swipe up (next panel)
-                    setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
-                } else if (touchEndY - touchStartY > 50) {
+                    setVerticalIndex((prevIndex) => (prevIndex - 1 + duplicatedImages.length) % duplicatedImages.length);
+                } else if (touchDeltaY > verticalSwipeThreshold) {
                     // Swipe down (previous panel)
-                    setVerticalIndex((prevIndex) =>
-                        prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
-                    );
+                    setVerticalIndex((prevIndex) => (prevIndex + 1) % duplicatedImages.length);
                 }
             }
         }
+       
+        else if (Math.abs(touchDeltaX) > 0) {
+            // Handle horizontal swipe
+            setActiveCarousel("horizontal")
+            if (isQuickSwipe) {
+                
+                // Quick swipe: Apply the exact rotation immediately and start continuous spinning
+                document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+                startSpinning(touchDeltaX < 0 ? "right" : "left");
+            } else {
+                // Slow drag: Move one product in either direction
+                const productWidth = window.innerWidth * 0.5; // Set to half screen width or desired threshold
+                if (Math.abs(touchDeltaX) > productWidth * 0.5) {
+                    setHorizontalIndex((prevIndex) => touchDeltaX < 0 ? prevIndex + 1 : prevIndex - 1);
+                }
+
+
+                // Reset delta and apply the final rotation for horizontal movement
+                document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+            }
+
+            // Reset deltas
+            setTouchDeltaX(0);
+            setTouchDeltaY(0);
+        };
 
 
     };
+
 
     // start Spinning function
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
         setIsSpinning(true);
+        // Apply the initial rotation before starting the continuous spin to avoid forward/backward jitter
+        document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
 
         spinningInterval.current = setInterval(() => {
             setHorizontalIndex((prevIndex) => {
@@ -220,6 +309,7 @@ export default function Homepage({ sproducts, collectionsData }) {
         setHorizontalIndex(product);
         // setGallery((prev) => !prev)
     }
+
 
     // Function to update the state based on the screen width
     const checkScreenWidth = () => {
@@ -563,6 +653,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                             alignItems: 'center',
                                                             transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '181px' : "145px"})`,
                                                         }}
+                                                      
                                                     >
                                                         <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
