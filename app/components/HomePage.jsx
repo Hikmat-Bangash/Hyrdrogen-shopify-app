@@ -164,11 +164,11 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [touchDeltaX, setTouchDeltaX] = useState(0);
     const [touchDeltaY, setTouchDeltaY] = useState(0);
     const [touchStartTime, setTouchStartTime] = useState(0); // Track touch start time for swipe speed
-    const quickSwipeThreshold = 250; // Duration threshold for a quick swipe in milliseconds
-    const distanceThreshold = 70; // Pixel threshold for swipe detection
+    const quickSwipeThreshold = 230; // Duration threshold for a quick swipe in milliseconds
+    const distanceThreshold = 60; // Pixel threshold for swipe detection
     // Thresholds
-    const verticalSwipeThreshold = 50; // Minimum distance for vertical swipe detection
-
+    const verticalSwipeThreshold = 70; // Minimum distance for vertical swipe detection
+    const horizontalSwipeThreshold = 80;
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
         setTouchStartX(e.touches[0].clientX);
@@ -186,11 +186,6 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         setTouchDeltaX(deltaX); // Update deltaX for horizontal swipe detection
         setTouchDeltaY(deltaY); // Update deltaY for vertical swipe detection
-
-        // Apply rotation based on delta, giving a responsive feel
-        const rotationFactor = 0.5; // Adjust for sensitivity
-        const provisionalRotation = (horizontalIndex * -rotationPerPanel) + deltaX * rotationFactor;
-        document.querySelector(".carousel-horizontal").style.transform = `rotateY(${provisionalRotation}deg)`;
     };
 
     // Handle touch end: determine if it was a quick swipe or slow drag
@@ -221,21 +216,23 @@ export default function Homepage({ sproducts, collectionsData }) {
         else if (Math.abs(touchDeltaX) > 0) {
             // Handle horizontal swipe
             setActiveCarousel("horizontal")
+            const carousel = document.querySelector(".carousel-horizontal");
             if (isQuickSwipe) {
                 
-                // Quick swipe: Apply the exact rotation immediately and start continuous spinning
-                document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+                // Quick swipe: Start continuous spinning from the current rotation
+                carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
                 startSpinning(touchDeltaX < 0 ? "right" : "left");
             } else {
-                // Slow drag: Move one product in either direction
-                const productWidth = window.innerWidth * 0.5; // Set to half screen width or desired threshold
-                if (Math.abs(touchDeltaX) > productWidth * 0.5) {
-                    setHorizontalIndex((prevIndex) => touchDeltaX < 0 ? prevIndex + 1 : prevIndex - 1);
+                // Slow swipe: Move one product in either direction
+                if (touchDeltaX < -horizontalSwipeThreshold) {
+                    // Swipe left (next product)
+                    setHorizontalIndex((prevIndex) => prevIndex + 1);
+                } else if (touchDeltaX > horizontalSwipeThreshold) {
+                    // Swipe right (previous product)
+                    setHorizontalIndex((prevIndex) => prevIndex - 1);
                 }
 
-
-                // Reset delta and apply the final rotation for horizontal movement
-                document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+                carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
             }
 
             // Reset deltas
@@ -246,32 +243,38 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     };
 
-
-    // start Spinning function
+    // Define a rotation step for smoother continuous spinning
+    const rotationStep = 1; // Adjust this value for smaller, smoother rotation steps
+    const intervalTime = 800;
+    // Update startSpinning function for smooth rotation
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
         setIsSpinning(true);
-        // Apply the initial rotation before starting the continuous spin to avoid forward/backward jitter
-        document.querySelector(".carousel-horizontal").style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+
+        // Set initial rotation and apply CSS transition for smoothness
+        const carousel = document.querySelector(".carousel-horizontal");
+        carousel.style.transition = `transform ${intervalTime}ms linear`;
 
         spinningInterval.current = setInterval(() => {
             setHorizontalIndex((prevIndex) => {
-                return direction === "right" ? prevIndex + 1 : prevIndex - 1;
+                // Apply a small rotation per interval in the specified direction
+                const newRotation = direction === "right" ? prevIndex + rotationStep : prevIndex - rotationStep;
+                carousel.style.transform = `rotateY(${newRotation}deg)`;
+                return newRotation;
             });
-
-        }, 1000); // Adjust interval time for spinning speed
+        }, intervalTime); // Apply smaller rotations at a higher frequency
     };
 
-
-    // Stop spinning and update Y-axis variants
+    // Adjust stopSpinning to remove CSS transition smoothly
     const stopSpinning = () => {
         setIsSpinning(false);
         clearInterval(spinningInterval.current);
         spinningInterval.current = null;
 
-        // Reset vertical index to sync with horizontalIndex once spinning stops
+
+        // Optional: Reset vertical index or other settings as needed
         setVerticalIndex(0);
-        setTimeout(() => setVerticalIndex(1), 1000); // Delay for Y-axis variant reset
+        setTimeout(() => setVerticalIndex(1), 1000);
     };
 
     // Handle click event to stop spinning
@@ -413,14 +416,14 @@ export default function Homepage({ sproducts, collectionsData }) {
     const duplicatedProductIndices = createNonDuplicateOrder(products);
     
     // Usage in your carousel rendering logic
+
     const currentProductIndex = getCurrentProduct(Math.abs(horizontalIndex));
     // console.log("current product index: ", currentProductIndex)
 
     const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
     
-    if (!isSpinning) {
+   
         var activeProduct = currentProductIndex;
-    }
     // console.log("activeProduct: ", activeProduct)
       
     return (
