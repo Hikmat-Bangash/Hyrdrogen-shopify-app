@@ -79,7 +79,6 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [horizontalIndex, setHorizontalIndex] = useState(0); // For X-axis carousel
-    const [verticalIndex, setVerticalIndex] = useState(0); // For Y-axis carousel
     const [activeCarousel, setActiveCarousel] = useState("horizontal"); // Track active carousel
     const [isMobileWidth, setIsMobileWidth] = useState(true);
     const [isSearchTrue, setIsSearchTrue] = useState(false);
@@ -113,68 +112,32 @@ export default function Homepage({ sproducts, collectionsData }) {
     // Separate touch tracking states for horizontal and vertical carousels
     const [touchStartX, setTouchStartX] = useState(0);
     const [touchStartY, setTouchStartY] = useState(0);
-    const [touchEndX, setTouchEndX] = useState(0);
-    const [touchEndY, setTouchEndY] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false); // Track if the carousel is spinning
     const spinningInterval = useRef(null); // Store the interval ID
-
-    // Separate handlers for touch events in horizontal and vertical carousels
-    // const handleTouchStart = (e) => {
-    //     setTouchStartX(e.touches[0].clientX);
-    //     setTouchStartY(e.touches[0].clientY);
-    // };
-
-    // const handleTouchMove = (e) => {
-    //     setTouchEndX(e.touches[0].clientX);
-    //     setTouchEndY(e.touches[0].clientY);
-    // };
-
-    // const handleTouchEnd = () => {
-    //     const horizontalSwipe = Math.abs(touchStartX - touchEndX) > 50;
-    //     const verticalSwipe = Math.abs(touchStartY - touchEndY) > 50;
-
-    //     if (horizontalSwipe && !verticalSwipe) {
-    //         setActiveCarousel("horizontal");
-    //         startSpinning(touchStartX > touchEndX ? "right" : "left"); // Start spinning based on swipe direction
-    //     }
-
-    //     // Handle vertical swipes (up and down) for vertical carousel
-    //     if (!isSpinning) {
-    //         if (verticalSwipe && !horizontalSwipe) {
-    //             setActiveCarousel("vertical"); // Set vertical carousel as active
-    //             const productImages = products[horizontalIndex % products.length]?.images || [];
-    //             const duplicatedImages = duplicateVerticalPanels(productImages);
-    //             if (touchStartY - touchEndY > 50) {
-    //                 // Swipe up (next panel)
-    //                 setVerticalIndex((prevIndex) => (prevIndex - 1) % duplicatedImages.length);
-    //             } else if (touchEndY - touchStartY > 50) {
-    //                 // Swipe down (previous panel)
-    //                 setVerticalIndex((prevIndex) =>
-    //                     prevIndex === 0 ? duplicatedImages.length + 1 : prevIndex + 1
-    //                 );
-    //             }
-    //         }
-    //     }
-
-
-    // };
-
-
-
     const [touchDeltaX, setTouchDeltaX] = useState(0);
     const [touchDeltaY, setTouchDeltaY] = useState(0);
     const [touchStartTime, setTouchStartTime] = useState(0); // Track touch start time for swipe speed
-    const quickSwipeThreshold = 230; // Duration threshold for a quick swipe in milliseconds
-    const distanceThreshold = 60; // Pixel threshold for swipe detection
+    const [isSpinningVertical, setIsSpinningVertical] = useState(false); // Track if the vertical carousel is spinning
+    const spinningIntervalVertical = useRef(null); // Store the vertical interval ID
+    const [verticalIndex, setVerticalIndex] = useState(0); // Vertical carousel index
+
+
+    const quickSwipeThreshold = 200; // Duration threshold for a quick swipe in milliseconds
+    const distanceThreshold = 50; // Pixel threshold for swipe detection
     // Thresholds
-    const verticalSwipeThreshold = 70; // Minimum distance for vertical swipe detection
-    const horizontalSwipeThreshold = 80;
+    const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
+    const horizontalSwipeThreshold = 60;
+
+    const quickSwipeThresholdVertical = 200; // Lower this for faster swipe detection
+    const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
+    const minimumSwipeDelta = 10; // Minimum Y-axis movement to consider it a swipe
+
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
         setTouchStartX(e.touches[0].clientX);
         setTouchStartY(e.touches[0].clientY); // Capture initial Y position
         setTouchStartTime(Date.now()); // Start time for swipe detection
-        
+
     };
 
     // Handle touch move: calculate the swipe delta and apply real-time rotation
@@ -190,35 +153,36 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     // Handle touch end: determine if it was a quick swipe or slow drag
     const handleTouchEnd = () => {
-     
+
         const swipeDuration = Date.now() - touchStartTime;
-        const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
         const isVerticalSwipe = Math.abs(touchDeltaY) > verticalSwipeThreshold && Math.abs(touchDeltaY) > Math.abs(touchDeltaX);
+
+        const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
+        const isVerticalQuickSwipe = swipeDuration < quickSwipeThresholdVertical && Math.abs(touchDeltaY) > distanceThresholdVertical;
 
 
         if (isVerticalSwipe) {
-            // Handle vertical swipes for single product change in vertical carousel
-            if (!isSpinning) {
-                setActiveCarousel("vertical"); // Set vertical carousel as active
-                const productImages = products[horizontalIndex % products.length]?.images || [];
-                const duplicatedImages = duplicateVerticalPanels(productImages);
-
+            setActiveCarousel("vertical");
+            if (isVerticalQuickSwipe) {
+                console.log("verticalQuickSwipe has activated: ")
+                startSpinningVertical(touchDeltaY < 0 ? "up" : "down");
+            } else {
                 if (touchDeltaY < -verticalSwipeThreshold) {
-                    // Swipe up (next panel)
-                    setVerticalIndex((prevIndex) => (prevIndex - 1 + duplicatedImages.length) % duplicatedImages.length);
+                    setVerticalIndex((prevIndex) => prevIndex - 1);
                 } else if (touchDeltaY > verticalSwipeThreshold) {
-                    // Swipe down (previous panel)
-                    setVerticalIndex((prevIndex) => (prevIndex + 1) % duplicatedImages.length);
+                    setVerticalIndex((prevIndex) => prevIndex + 1);
                 }
             }
         }
-       
+
+
         else if (Math.abs(touchDeltaX) > 0) {
+
             // Handle horizontal swipe
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
             if (isQuickSwipe) {
-                
+
                 // Quick swipe: Start continuous spinning from the current rotation
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
                 startSpinning(touchDeltaX < 0 ? "right" : "left");
@@ -233,6 +197,9 @@ export default function Homepage({ sproducts, collectionsData }) {
                 }
 
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
+                // Optional: Reset vertical index
+                setVerticalIndex(0);
+                setTimeout(() => setVerticalIndex(1), 1000);
             }
 
             // Reset deltas
@@ -246,7 +213,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     // Define a rotation step for smoother continuous spinning
     const rotationStep = 1; // Adjust this value for smaller, smoother rotation steps
     const intervalTime = 800;
-    // Update startSpinning function for smooth rotation
+    // Horizantal startSpinning function for smooth rotation
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
         setIsSpinning(true);
@@ -265,24 +232,46 @@ export default function Homepage({ sproducts, collectionsData }) {
         }, intervalTime); // Apply smaller rotations at a higher frequency
     };
 
-    // Adjust stopSpinning to remove CSS transition smoothly
+    // Vertically spinning function
+    const startSpinningVertical = (direction) => {
+        if (spinningIntervalVertical.current) return; // Prevent multiple intervals
+        setIsSpinningVertical(true);
+
+        const carousel = document.querySelector(".carousel-vertical");
+        carousel.style.transition = `transform ${intervalTime}ms linear`;
+
+        spinningIntervalVertical.current = setInterval(() => {
+            setVerticalIndex((prevIndex) => {
+                const newRotation = direction === "up" ? prevIndex - rotationStep : prevIndex + rotationStep;
+                carousel.style.transform = `rotateX(${newRotation * -rotationPerPanel}deg)`;
+                return newRotation;
+            });
+        }, intervalTime);
+    };
+
+    // Horizantally Adjust stopSpinning to remove CSS transition smoothly
     const stopSpinning = () => {
         setIsSpinning(false);
         clearInterval(spinningInterval.current);
         spinningInterval.current = null;
 
-
-        // Optional: Reset vertical index or other settings as needed
-        setVerticalIndex(0);
-        setTimeout(() => setVerticalIndex(1), 1000);
     };
+
+    // vertically stop Spinning function
+    const stopSpinningVertical = () => {
+        console.log("stop vertical spin")
+        setIsSpinningVertical(false);
+        clearInterval(spinningIntervalVertical.current);
+        spinningIntervalVertical.current = null;
+    };
+
 
     // Handle click event to stop spinning
     const handleCarouselClick = () => {
-        if (isSpinning) {
-            stopSpinning();
-        }
+        if (isSpinning) stopSpinning();
+        if (isSpinningVertical) stopSpinningVertical();
     };
+
 
 
 
@@ -414,18 +403,18 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
     const duplicatedProductIndices = createNonDuplicateOrder(products);
-    
+
     // Usage in your carousel rendering logic
 
     const currentProductIndex = getCurrentProduct(Math.abs(horizontalIndex));
     // console.log("current product index: ", currentProductIndex)
 
     const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
-    
-   
-        var activeProduct = currentProductIndex;
+
+
+    var activeProduct = currentProductIndex;
     // console.log("activeProduct: ", activeProduct)
-      
+
     return (
         <>
 
@@ -577,7 +566,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     <>
                                         {/* Vertical carousel (rotate around X-axis) */}
                                         <div
-                                            className={`carousel w-full h-full `}
+                                            className={`carousel-vertical w-full h-full `}
                                             style={{
                                                 width: '100%',
                                                 height: '100%',
@@ -593,7 +582,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
                                                 return (
                                                     <div
-                                                        className={`carousel-panel ${isSpinning  && "backdrop-blur-sm"}`}
+                                                        className={`carousel-panel`}
                                                         key={index}
                                                         style={{
                                                             position: 'absolute',
@@ -618,7 +607,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                                 overflow: "hidden"
                                                             }}
                                                         >
-                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%", transition: "transform 4s ease-in-out", }} src={image} alt="vertical-carousel-img" />
+                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%", transition: "transform 4s ease-in-out", filter: isSpinning ? 'blur(13px)' : 'none', }} src={image} alt="vertical-carousel-img" />
                                                         </div>
                                                     </div>
                                                 );
@@ -656,7 +645,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                             alignItems: 'center',
                                                             transform: `rotateY(${rotateAngle}deg) translateZ(${isMobileWidth ? '181px' : "145px"})`,
                                                         }}
-                                                      
+
                                                     >
                                                         <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
@@ -689,7 +678,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* showing product gallery */}
-                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={ activeProduct?.images} />}
+                {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={activeProduct?.images} />}
                 {/* showing features actions */}
                 {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct} />}
             </div>
