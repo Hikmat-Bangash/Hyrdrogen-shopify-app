@@ -88,6 +88,15 @@ const Index = () => {
     setCollections(formattedCollections); 
   }, [allProducts, allCollections]);
 
+
+  useEffect(() => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    }
+  }, []);
+
   // console.log("unstructured product data: ", allProducts);
   // console.log("unstructured collections data: ", allCollections);
 
