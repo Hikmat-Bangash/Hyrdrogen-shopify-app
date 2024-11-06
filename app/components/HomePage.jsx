@@ -130,7 +130,6 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     const quickSwipeThresholdVertical = 200; // Lower this for faster swipe detection
     const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
-    const minimumSwipeDelta = 10; // Minimum Y-axis movement to consider it a swipe
 
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
@@ -181,6 +180,8 @@ export default function Homepage({ sproducts, collectionsData }) {
             // Handle horizontal swipe
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
+
+
             if (isQuickSwipe) {
 
                 // Quick swipe: Start continuous spinning from the current rotation
@@ -190,16 +191,18 @@ export default function Homepage({ sproducts, collectionsData }) {
                 // Slow swipe: Move one product in either direction
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
-                    setHorizontalIndex((prevIndex) => prevIndex + 1);
+                    setHorizontalIndex((prevIndex)=> prevIndex + 1);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
                     // Swipe right (previous product)
-                    setHorizontalIndex((prevIndex) => prevIndex - 1);
+                    setHorizontalIndex((prevIndex)=> prevIndex - 1);
                 }
 
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
-                // Optional: Reset vertical index
-                setVerticalIndex(0);
-                setTimeout(() => setVerticalIndex(1), 1000);
+
+               
+                //  Reset vertical index
+                // setVerticalIndex(0);
+                // setTimeout(() => setVerticalIndex(1), 1000);
             }
 
             // Reset deltas
@@ -418,7 +421,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     return (
         <>
 
-            <div className="w-full h-full absolute z-20 ">
+            <div className="w-full h-full fixed overflow-hidden z-20 ">
                 <div className={`w-full h-auto flex flex-col gap-2 pb-4   cursor-pointer ${isMobileWidth ? "mt-[3rem]" : "mt-[2.4rem]"}  bg-[#FEFCEB]`}>
                     <div className="w-full h-full flex flex-col items-center">
 
@@ -510,7 +513,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]" : IsDisplaySubCarousel ? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'} `}>
+                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]" : IsDisplaySubCarousel ? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
                     <div className="w-full h-[8%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />
