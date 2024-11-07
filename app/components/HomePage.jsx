@@ -148,6 +148,13 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         setTouchDeltaX(deltaX); // Update deltaX for horizontal swipe detection
         setTouchDeltaY(deltaY); // Update deltaY for vertical swipe detection
+
+
+        // Apply real-time rotation as per finger movement for responsiveness
+        const carousel = document.querySelector(".carousel-horizontal");
+        const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5; // Adjust sensitivity with multiplier
+        carousel.style.transform = `rotateY(${currentRotation}deg)`;
+
     };
 
     // Handle touch end: determine if it was a quick swipe or slow drag
@@ -172,6 +179,10 @@ export default function Homepage({ sproducts, collectionsData }) {
                     setVerticalIndex((prevIndex) => prevIndex + 1);
                 }
             }
+            
+            // Reset deltas
+            setTouchDeltaX(0);
+            setTouchDeltaY(0);
         }
 
 
@@ -196,13 +207,14 @@ export default function Homepage({ sproducts, collectionsData }) {
                     // Swipe right (previous product)
                     setHorizontalIndex((prevIndex)=> prevIndex - 1);
                 }
-
+ 
+                carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
 
                
                 //  Reset vertical index
-                // setVerticalIndex(0);
-                // setTimeout(() => setVerticalIndex(1), 1000);
+                // setVerticalIndex(vert);
+                setTimeout(() => setVerticalIndex(verticalIndex +1), 1000);
             }
 
             // Reset deltas
@@ -274,10 +286,6 @@ export default function Homepage({ sproducts, collectionsData }) {
         if (isSpinning) stopSpinning();
         if (isSpinningVertical) stopSpinningVertical();
     };
-
-
-
-
 
     //-------------- handle search query for product filtering --------
     const handleSearchChange = (event) => {
@@ -359,8 +367,8 @@ export default function Homepage({ sproducts, collectionsData }) {
             setproducts([]); // Update the filtered products
         }
         // Reset carousel index to show the first product and image
-        setHorizontalIndex(0);
-        setVerticalIndex(0);
+        // setHorizontalIndex(0);
+        // setVerticalIndex(0);
         setIsDisplaySubCarousel(false);
     };
 
