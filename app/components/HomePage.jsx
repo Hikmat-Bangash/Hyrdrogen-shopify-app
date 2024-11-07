@@ -79,7 +79,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [horizontalIndex, setHorizontalIndex] = useState(0); // For X-axis carousel
-    const [activeCarousel, setActiveCarousel] = useState("horizontal"); // Track active carousel
+    const [activeCarousel, setActiveCarousel] = useState(null); // Track active carousel
     const [isMobileWidth, setIsMobileWidth] = useState(true);
     const [isSearchTrue, setIsSearchTrue] = useState(false);
 
@@ -87,7 +87,6 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [filteredAllCollectionsProduct, setfilteredAllCollectionsProduct] = useState([]);
     const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
     const [IsDisplaySubCarousel, setIsDisplaySubCarousel] = useState(false);
-
     // changing light and dark mode func def
     const ThemeMode = () => {
         dispatch(toggleThemeMode())
@@ -150,11 +149,37 @@ export default function Homepage({ sproducts, collectionsData }) {
         setTouchDeltaY(deltaY); // Update deltaY for vertical swipe detection
 
 
-        // Apply real-time rotation as per finger movement for responsiveness
-        const carousel = document.querySelector(".carousel-horizontal");
-        const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5; // Adjust sensitivity with multiplier
-        carousel.style.transform = `rotateY(${currentRotation}deg)`;
 
+        // Lock to horizontal or vertical based on initial dominant movement
+        if (!activeCarousel) {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                setActiveCarousel("horizontal");
+            } else {
+                setActiveCarousel("vertical");
+            }
+        }
+
+        // Apply real-time rotation based on the locked carousel
+        if (activeCarousel === "horizontal") {
+            const carousel = document.querySelector(".carousel-horizontal");
+            const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5;
+            carousel.style.transform = `rotateY(${currentRotation}deg)`;
+        } else if (activeCarousel === "vertical") {
+
+            const verticalCarousel = document.querySelector(".carousel-vertical");
+            if (touchDeltaY < verticalSwipeThreshold) {
+                console.log("inside (touchDeltaY < verticalSwipeThreshold )")
+                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+            } else if (touchDeltaY > verticalSwipeThreshold) {
+                console.log("inside touchDeltaY > verticalSwipeThreshold )")
+
+                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+            }
+
+         
+        }
     };
 
     // Handle touch end: determine if it was a quick swipe or slow drag
@@ -169,8 +194,8 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         if (isVerticalSwipe) {
             setActiveCarousel("vertical");
+            const Verticalcarousel = document.querySelector(".carousel-vertical");
             if (isVerticalQuickSwipe) {
-                console.log("verticalQuickSwipe has activated: ")
                 startSpinningVertical(touchDeltaY < 0 ? "up" : "down");
             } else {
                 if (touchDeltaY < -verticalSwipeThreshold) {
@@ -179,15 +204,15 @@ export default function Homepage({ sproducts, collectionsData }) {
                     setVerticalIndex((prevIndex) => prevIndex + 1);
                 }
             }
-            
+
+            Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
+            Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
+
             // Reset deltas
             setTouchDeltaX(0);
             setTouchDeltaY(0);
         }
-
-
         else if (Math.abs(touchDeltaX) > 0) {
-
             // Handle horizontal swipe
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
@@ -204,7 +229,6 @@ export default function Homepage({ sproducts, collectionsData }) {
                     // Swipe left (next product)
                     setHorizontalIndex((prevIndex)=> prevIndex + 1);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
-                    // Swipe right (previous product)
                     setHorizontalIndex((prevIndex)=> prevIndex - 1);
                 }
  
@@ -274,7 +298,6 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     // vertically stop Spinning function
     const stopSpinningVertical = () => {
-        console.log("stop vertical spin")
         setIsSpinningVertical(false);
         clearInterval(spinningIntervalVertical.current);
         spinningIntervalVertical.current = null;
@@ -359,7 +382,6 @@ export default function Homepage({ sproducts, collectionsData }) {
             setfilteredAllCollectionsProduct(matchedProducts);
             setNoProductsFound(false); // Reset noProductsFound if products exist
             setproducts(matchedProducts); // Update the filtered products
-            console.log("yes, products found!")
         } else {
             setFilteredCollections([]);
             setfilteredAllCollectionsProduct([]);
@@ -408,7 +430,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
     const getCurrentProduct = (index) => {
-        const normalizedIndex = index % duplicatedProductIndices.length;
+        const normalizedIndex =  index % duplicatedProductIndices.length;
         return duplicatedProductIndices[normalizedIndex];
     };
 
@@ -417,13 +439,13 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     // Usage in your carousel rendering logic
 
+
     const currentProductIndex = getCurrentProduct(Math.abs(horizontalIndex));
     // console.log("current product index: ", currentProductIndex)
 
     const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
 
-
-    var activeProduct = currentProductIndex;
+        var activeProduct = currentProductIndex;
     // console.log("activeProduct: ", activeProduct)
 
     return (
