@@ -79,7 +79,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [searchQuery, setSearchQuery] = useState('');
 
     const [horizontalIndex, setHorizontalIndex] = useState(0); // For X-axis carousel
-    const [activeCarousel, setActiveCarousel] = useState(null); // Track active carousel
+    const [activeCarousel, setActiveCarousel] = useState("horizontal"); // Track active carousel
     const [isMobileWidth, setIsMobileWidth] = useState(true);
     const [isSearchTrue, setIsSearchTrue] = useState(false);
 
@@ -151,35 +151,34 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
         // Lock to horizontal or vertical based on initial dominant movement
-        if (!activeCarousel) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                setActiveCarousel("horizontal");
-            } else {
-                setActiveCarousel("vertical");
-            }
-        }
+        // if (!activeCarousel) {
+        //     if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        //         setActiveCarousel("horizontal");
+        //     } else {
+        //         setActiveCarousel("vertical");
+        //     }
+        // }
 
         // Apply real-time rotation based on the locked carousel
-        if (activeCarousel === "horizontal") {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
             const carousel = document.querySelector(".carousel-horizontal");
             const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5;
             carousel.style.transform = `rotateY(${currentRotation}deg)`;
-        } else if (activeCarousel === "vertical") {
-
-            const verticalCarousel = document.querySelector(".carousel-vertical");
-            if (touchDeltaY < verticalSwipeThreshold) {
-                console.log("inside (touchDeltaY < verticalSwipeThreshold )")
-                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
-                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-            } else if (touchDeltaY > verticalSwipeThreshold) {
-                console.log("inside touchDeltaY > verticalSwipeThreshold )")
-
-                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
-                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-            }
-
-         
         }
+        //  else if (activeCarousel === "vertical") {
+
+        //     const verticalCarousel = document.querySelector(".carousel-vertical");
+        //     if (touchDeltaY < verticalSwipeThreshold) {
+        //         console.log("inside (touchDeltaY < verticalSwipeThreshold )")
+        //         const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+        //         verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+        //     } else if (touchDeltaY > verticalSwipeThreshold) {
+        //         console.log("inside touchDeltaY > verticalSwipeThreshold )")
+
+        //         const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+        //         verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+        //     }
+        // }
     };
 
     // Handle touch end: determine if it was a quick swipe or slow drag
@@ -205,8 +204,8 @@ export default function Homepage({ sproducts, collectionsData }) {
                 }
             }
 
-            Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
-            Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
+            // Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
+            // Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
 
             // Reset deltas
             setTouchDeltaX(0);
