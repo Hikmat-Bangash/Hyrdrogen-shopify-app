@@ -143,43 +143,34 @@ export default function Homepage({ sproducts, collectionsData }) {
         const currentX = e.touches[0].clientX;
         const currentY = e.touches[0].clientY;
         const deltaX = currentX - touchStartX;
-        const deltaY = currentY - touchStartY; // Track Y-axis movement for vertical swipe
+        const deltaY = currentY - touchStartY;   // Track Y-axis movement for vertical swipe
 
-        setTouchDeltaX(deltaX); // Update deltaX for horizontal swipe detection
-        setTouchDeltaY(deltaY); // Update deltaY for vertical swipe detection
-
-
-
-        // Lock to horizontal or vertical based on initial dominant movement
-        // if (!activeCarousel) {
-        //     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        //         setActiveCarousel("horizontal");
-        //     } else {
-        //         setActiveCarousel("vertical");
-        //     }
-        // }
+        setTouchDeltaX(deltaX);                 // Update deltaX for horizontal swipe detection
+        setTouchDeltaY(deltaY);                 // Update deltaY for vertical swipe detection
 
         // Apply real-time rotation based on the locked carousel
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if ((Math.abs(deltaX) > Math.abs(deltaY) && activeCarousel == "horizontal")) {
             const carousel = document.querySelector(".carousel-horizontal");
             const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5;
             carousel.style.transform = `rotateY(${currentRotation}deg)`;
         }
-        //  else if (activeCarousel === "vertical") {
 
-        //     const verticalCarousel = document.querySelector(".carousel-vertical");
-        //     if (touchDeltaY < verticalSwipeThreshold) {
-        //         console.log("inside (touchDeltaY < verticalSwipeThreshold )")
-        //         const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
-        //         verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-        //     } else if (touchDeltaY > verticalSwipeThreshold) {
-        //         console.log("inside touchDeltaY > verticalSwipeThreshold )")
+        if ((Math.abs(deltaY) > Math.abs(deltaX) && activeCarousel == "vertical")) {
+            const verticalCarousel = document.querySelector(".carousel-vertical");
+            if (touchDeltaY < verticalSwipeThreshold) {
+                console.log("inside (touchDeltaY < verticalSwipeThreshold )")
+                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+            } else if (touchDeltaY > verticalSwipeThreshold) {
+                console.log("inside touchDeltaY > verticalSwipeThreshold )")
 
-        //         const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
-        //         verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-        //     }
-        // }
-    };
+                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+            }
+        }
+
+    }
+
 
     // Handle touch end: determine if it was a quick swipe or slow drag
     const handleTouchEnd = () => {
@@ -202,10 +193,11 @@ export default function Homepage({ sproducts, collectionsData }) {
                 } else if (touchDeltaY > verticalSwipeThreshold) {
                     setVerticalIndex((prevIndex) => prevIndex + 1);
                 }
+                Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
+                Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
             }
 
-            // Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
-            // Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
+
 
             // Reset deltas
             setTouchDeltaX(0);
@@ -226,18 +218,18 @@ export default function Homepage({ sproducts, collectionsData }) {
                 // Slow swipe: Move one product in either direction
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
-                    setHorizontalIndex((prevIndex)=> prevIndex + 1);
+                    setHorizontalIndex((prevIndex) => prevIndex + 1);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
-                    setHorizontalIndex((prevIndex)=> prevIndex - 1);
+                    setHorizontalIndex((prevIndex) => prevIndex - 1);
                 }
- 
+
                 carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
 
-               
+
                 //  Reset vertical index
                 // setVerticalIndex(vert);
-                setTimeout(() => setVerticalIndex(verticalIndex +1), 1000);
+                setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
             }
 
             // Reset deltas
@@ -251,6 +243,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     // Define a rotation step for smoother continuous spinning
     const rotationStep = 1; // Adjust this value for smaller, smoother rotation steps
     const intervalTime = 800;
+    const VerticalIntervalTime = 500;
     // Horizantal startSpinning function for smooth rotation
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
@@ -276,7 +269,7 @@ export default function Homepage({ sproducts, collectionsData }) {
         setIsSpinningVertical(true);
 
         const carousel = document.querySelector(".carousel-vertical");
-        carousel.style.transition = `transform ${intervalTime}ms linear`;
+        carousel.style.transition = `transform ${VerticalIntervalTime}ms linear`;
 
         spinningIntervalVertical.current = setInterval(() => {
             setVerticalIndex((prevIndex) => {
@@ -284,7 +277,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 carousel.style.transform = `rotateX(${newRotation * -rotationPerPanel}deg)`;
                 return newRotation;
             });
-        }, intervalTime);
+        }, VerticalIntervalTime);
     };
 
     // Horizantally Adjust stopSpinning to remove CSS transition smoothly
@@ -429,7 +422,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
     const getCurrentProduct = (index) => {
-        const normalizedIndex =  index % duplicatedProductIndices.length;
+        const normalizedIndex = index % duplicatedProductIndices.length;
         return duplicatedProductIndices[normalizedIndex];
     };
 
@@ -444,7 +437,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
 
-        var activeProduct = currentProductIndex;
+    var activeProduct = currentProductIndex;
     // console.log("activeProduct: ", activeProduct)
 
     return (
