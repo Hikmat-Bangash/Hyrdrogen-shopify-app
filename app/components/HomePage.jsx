@@ -137,13 +137,16 @@ export default function Homepage({ sproducts, collectionsData }) {
         setTouchStartTime(Date.now()); // Start time for swipe detection
 
     };
-
+    
     // Handle touch move: calculate the swipe delta and apply real-time rotation
     const handleTouchMove = (e) => {
+        console.log("inside hanldeMove")
+        if (isSpinning || isSpinningVertical) return null;
+
         const currentX = e.touches[0].clientX;
         const currentY = e.touches[0].clientY;
-        const deltaX = currentX - touchStartX;
-        const deltaY = currentY - touchStartY;   // Track Y-axis movement for vertical swipe
+        const deltaX = (currentX - touchStartX) ;
+        const deltaY = (currentY - touchStartY) ;   // Track Y-axis movement for vertical swipe
 
         setTouchDeltaX(deltaX);                 // Update deltaX for horizontal swipe detection
         setTouchDeltaY(deltaY);                 // Update deltaY for vertical swipe detection
@@ -157,24 +160,14 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         if ((Math.abs(deltaY) > Math.abs(deltaX) && activeCarousel == "vertical")) {
             const verticalCarousel = document.querySelector(".carousel-vertical");
-            if (touchDeltaY < verticalSwipeThreshold) {
-                console.log("inside (touchDeltaY < verticalSwipeThreshold )")
-                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+            const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
                 verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-            } else if (touchDeltaY > verticalSwipeThreshold) {
-                console.log("inside touchDeltaY > verticalSwipeThreshold )")
-
-                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
-                verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
-            }
         }
-
     }
 
 
     // Handle touch end: determine if it was a quick swipe or slow drag
     const handleTouchEnd = () => {
-
         const swipeDuration = Date.now() - touchStartTime;
         const isVerticalSwipe = Math.abs(touchDeltaY) > verticalSwipeThreshold && Math.abs(touchDeltaY) > Math.abs(touchDeltaX);
 
@@ -219,17 +212,14 @@ export default function Homepage({ sproducts, collectionsData }) {
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
                     setHorizontalIndex((prevIndex) => prevIndex + 1);
+                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
                     setHorizontalIndex((prevIndex) => prevIndex - 1);
+                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 }
 
                 carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
-                carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
-
-
-                //  Reset vertical index
-                // setVerticalIndex(vert);
-                setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
+                carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;               
             }
 
             // Reset deltas
@@ -243,7 +233,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     // Define a rotation step for smoother continuous spinning
     const rotationStep = 1; // Adjust this value for smaller, smoother rotation steps
     const intervalTime = 800;
-    const VerticalIntervalTime = 500;
+    const VerticalIntervalTime = 800;
     // Horizantal startSpinning function for smooth rotation
     const startSpinning = (direction) => {
         if (spinningInterval.current) return; // Prevent multiple intervals
