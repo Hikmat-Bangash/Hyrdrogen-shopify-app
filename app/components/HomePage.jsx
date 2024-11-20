@@ -18,6 +18,13 @@ import Main_Carousel from '~/components/main_carousel'
 import SubCollectionCarousal from '~/components/subCollection'
 import { RiSearchLine } from "react-icons/ri";
 import { AiOutlineClose } from "react-icons/ai";
+import { MdFamilyRestroom } from "react-icons/md";
+import { FcBusinesswoman, FcBusinessman } from "react-icons/fc";
+import { LiaChildSolid } from "react-icons/lia";
+
+
+
+
 /**
  * @type {MetaFunction}
  */
@@ -66,8 +73,7 @@ const duplicateVerticalPanels = (images) => {
 export default function Homepage({ sproducts, collectionsData }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const dispatch = useDispatch();
-
-    const categories = ["All", "Mens", "Women", "Kids"]
+    const categories = [{ name: "All", icon: <MdFamilyRestroom /> }, { name: "Mens", icon: <FcBusinessman /> }, { name: "Women", icon: <FcBusinesswoman /> }, { name: "Kids", icon: <LiaChildSolid />}]
     const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
     // const [Images, setImages] = useState(images);
     const [products, setproducts] = useState([]);
@@ -140,7 +146,6 @@ export default function Homepage({ sproducts, collectionsData }) {
     
     // Handle touch move: calculate the swipe delta and apply real-time rotation
     const handleTouchMove = (e) => {
-        console.log("inside hanldeMove")
         if (isSpinning || isSpinningVertical) return null;
 
         const currentX = e.touches[0].clientX;
@@ -155,6 +160,7 @@ export default function Homepage({ sproducts, collectionsData }) {
         if ((Math.abs(deltaX) > Math.abs(deltaY) && activeCarousel == "horizontal")) {
             const carousel = document.querySelector(".carousel-horizontal");
             const currentRotation = horizontalIndex * -rotationPerPanel + deltaX * 0.5;
+           
             carousel.style.transform = `rotateY(${currentRotation}deg)`;
         }
 
@@ -174,17 +180,21 @@ export default function Homepage({ sproducts, collectionsData }) {
         const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
         const isVerticalQuickSwipe = swipeDuration < quickSwipeThresholdVertical && Math.abs(touchDeltaY) > distanceThresholdVertical;
 
-
         if (isVerticalSwipe) {
             setActiveCarousel("vertical");
             const Verticalcarousel = document.querySelector(".carousel-vertical");
             if (isVerticalQuickSwipe) {
                 startSpinningVertical(touchDeltaY < 0 ? "up" : "down");
             } else {
+                let VariantSlides = 0;
+                if ((Math.abs(touchDeltaY) > 60)) VariantSlides = 1;
+                if ((Math.abs(touchDeltaY) > 60 && Math.abs(touchDeltaY) > 250)) VariantSlides = 2;
+                if ((Math.abs(touchDeltaY) > 300 && Math.abs(touchDeltaY) > 450)) VariantSlides = 3;
+
                 if (touchDeltaY < -verticalSwipeThreshold) {
-                    setVerticalIndex((prevIndex) => prevIndex - 1);
+                    setVerticalIndex((prevIndex) => prevIndex - VariantSlides);
                 } else if (touchDeltaY > verticalSwipeThreshold) {
-                    setVerticalIndex((prevIndex) => prevIndex + 1);
+                    setVerticalIndex((prevIndex) => prevIndex + VariantSlides);
                 }
                 Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
@@ -208,13 +218,17 @@ export default function Homepage({ sproducts, collectionsData }) {
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
                 startSpinning(touchDeltaX < 0 ? "right" : "left");
             } else {
+                let slides = 0;
+                if ((Math.abs(touchDeltaX) > 60)) slides = 1;
+                if ((Math.abs(touchDeltaX) > 60 && Math.abs(touchDeltaX) > 250)) slides = 2;
+                if ((Math.abs(touchDeltaX) > 300 && Math.abs(touchDeltaX) > 450)) slides = 3;
                 // Slow swipe: Move one product in either direction
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
-                    setHorizontalIndex((prevIndex) => prevIndex + 1);
+                    setHorizontalIndex((prevIndex) => prevIndex + slides);
                     setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
-                    setHorizontalIndex((prevIndex) => prevIndex - 1);
+                    setHorizontalIndex((prevIndex) => prevIndex - slides);
                     setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 }
 
@@ -440,22 +454,11 @@ export default function Homepage({ sproducts, collectionsData }) {
                         {/* </Link> */}
                         <div className="w-[90%] h-[75%] cursor-pointer ">
                             <div className="w-full h-full relative ">
-                                <h1
-                                    className='text-[#DAAF37] font-avenir'
-                                    style={{
-                                        fontSize: '20px',
-                                        fontWeight: '700',
-                                        lineHeight: '34px',
-                                        letterSpacing: '0em',
-                                        textAlign: 'left',
-                                    }}
-                                >
-                                    Kelly&apos;s Kapsule
-                                </h1>
+                               
 
 
                                 {/* below code is for search bar */}
-                                <div className={`w-full  z-50 top-[5.8rem] flex justify-between items-center h-[32%]   ${isSearchTrue ? "absolute" : "hidden"}`}
+                                <div className={`w-full  z-50 top-[2.5rem] flex justify-between items-center h-[3rem]   ${isSearchTrue ? "absolute" : "hidden"}`}
 
                                     style={{
                                         transformStyle: "preserve-3d",
@@ -494,16 +497,16 @@ export default function Homepage({ sproducts, collectionsData }) {
                                 </div>
 
                                 <div className="w-full h-9  flex flex-row justify-between items-center mt-[12px]">
-                                    {categories.map((cate) => (
+                                    {categories.map((cate,) => (
                                         <button
-                                            key={cate}
-                                            className={` ${isMobileWidth ? "min-w-[19%]" : "min-w-[17%]"}  max-w-auto h-full p-2 flex flex-row justify-center items-center rounded-md ${category === cate
+                                            key={cate.name}
+                                            className={` ${isMobileWidth ? "min-w-[19%]" : "min-w-[17%]"}  max-w-auto h-full p-2 flex flex-row justify-center items-center text-2xl rounded-md ${category === cate.name
                                                 ? 'bg-black text-white'
                                                 : 'bg-[#ECECEC] text-black'
                                                 }`}
-                                            onClick={() => FilteringCollectionsAndProducts(cate)}
+                                            onClick={() => FilteringCollectionsAndProducts(cate.name)}
                                         >
-                                            {cate.charAt(0).toUpperCase() + cate.slice(1)}
+                                            {cate.icon}
                                         </button>
                                     ))}
                                     {/* ---- search icon ------- */}
@@ -525,7 +528,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[65%]" : "h-[71%]" : IsDisplaySubCarousel ? "h-[60%]" : "h-[65%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
+                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
                     <div className="w-full h-[8%] flex flex-row ">
                         <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />

@@ -41,9 +41,6 @@ export function Header({header, isLoggedIn, cart}) {
             <NavLink
               to="/cart"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
-              onClick={(e) => {
-                console.log('Cart clicked');
-              }}
             >
               <img src="/splash/cart.png" alt="cart" className="w-4 h-4 " />
               <h3 className="text-white">Cart</h3>
@@ -51,7 +48,7 @@ export function Header({header, isLoggedIn, cart}) {
           </div>
           <div className="w-[13%] h-[80%]  ">
             <NavLink
-              to="/"
+              to="/account/profile"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <img src="/splash/thirdone.png" alt="home" className="w-4 h-4 " />

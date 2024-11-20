@@ -23,8 +23,12 @@ export async function loader({params, context}) {
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */
 
 const login = () => {
-  return <div>login Cting </div>;
-  // return <AccountLoginForm />;
+  return (
+    <>
+      <div className='mt-10 font-bold text-red-700'>login Cting </div>
+      {/* <AccountLoginForm /> */}
+    </>
+  );
 };
 
 export default login;

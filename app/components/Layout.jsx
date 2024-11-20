@@ -35,9 +35,9 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
       <div className="w-screen h-screen relative  ">
         <div className="w-full bg-yellow-50 h-[6%]  fixed top-0 z-40   ">
           <div className="w-full h-[6%]   flex flex-row items-start justify-center z-20 ">
-            <div className="w-[90%] h-[6%] flex flex-row fixed top-0   ">
+            <div className="w-[98%] h-[6%]  flex flex-row justify-between items-center fixed top-0   ">
               <div
-                className="w-[50%] h-full flex flex-row justify-start items-center "
+                className="w-[25%] h-full flex flex-row justify-start items-center "
                 onClick={handleBackButtonClick}
               >
                 {!isHomePage && (
@@ -54,7 +54,20 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
                 )}
               </div>
 
-              <div className="w-[50%] h-full  flex flex-row justify-end items-center ">
+              <div className="title w-[50%] flex justify-center items-center">
+                <h1
+                  className="text-[#DAAF37] font-avenir"
+                  style={{
+                    fontSize: '18px',
+                    fontWeight: '50',
+                    letterSpacing: '0em',
+                  }}
+                >
+                  Kelly&apos;s Kapsule
+                </h1>
+              </div>
+
+              <div className="w-[25%] h-full  flex flex-row justify-end items-center ">
                 <img
                   src="/splash/notification.png"
                   alt="noti"

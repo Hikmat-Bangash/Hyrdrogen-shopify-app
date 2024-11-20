@@ -97,6 +97,7 @@ export async function action({request, context}) {
 }
 
 export default function AccountProfile() {
+  console.log('my profile section');
   const account = useOutletContext();
   const {state} = useNavigation();
   /** @type {ActionReturnData} */
