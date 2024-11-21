@@ -16,6 +16,8 @@ import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import {Layout} from '~/components/Layout';
+import {ToastContainer} from 'react-toastify';
+import styles from 'react-toastify/dist/ReactToastify.css';
 // import {Provider} from 'react-redux';
 // import {PersistGate} from 'redux-persist/es/integration/react';
 // import store, {persistor} from './store/store';
@@ -52,6 +54,7 @@ export function links() {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'stylesheet', href: styles}, // Include Toast styles
   ];
 }
 
@@ -123,6 +126,7 @@ export default function App() {
         <Providers>
           <Layout {...data}>
             <Outlet />
+            <ToastContainer position="top-center" autoClose={3000} />
           </Layout>
         </Providers>
         {/* </div> */}

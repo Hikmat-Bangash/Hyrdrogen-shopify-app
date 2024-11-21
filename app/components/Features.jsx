@@ -9,6 +9,8 @@ import {AiOutlineShoppingCart} from 'react-icons/ai';
 import {IoShareSocialOutline} from 'react-icons/io5';
 import {GoBookmark} from 'react-icons/go';
 import {HiOutlineShoppingBag} from 'react-icons/hi2';
+import {useDispatch} from 'react-redux';
+import {addToFavorites} from '~/redux-toolkit/slices/favourite_slice';
 
 const Features = ({
   isDarkMode,
@@ -27,6 +29,12 @@ const Features = ({
   const handleClosing = () => {
     setIsfeaturesMode((prev) => !prev);
     setCategory(category);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleAddToFavorites = () => {
+    dispatch(addToFavorites(product));
   };
 
   return (
@@ -51,6 +59,7 @@ const Features = ({
                       backgroundSize: '100% 100%',
                     }}
                     id="top"
+                    onClick={handleAddToFavorites}
                   >
                     <GoBookmark />
                   </div>

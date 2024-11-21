@@ -1,6 +1,10 @@
 import {Await, NavLink} from '@remix-run/react';
 import {Suspense} from 'react';
 import {useRootLoaderData} from '~/root';
+import {GoBookmark} from 'react-icons/go';
+import {CgProfile} from 'react-icons/cg';
+import {IoCartOutline} from 'react-icons/io5';
+import {AiOutlineHome} from 'react-icons/ai';
 
 /**
  * @param {HeaderProps}
@@ -32,7 +36,9 @@ export function Header({header, isLoggedIn, cart}) {
               onClick={handleClick}
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
-              <img src="/splash/home.png" alt="home" className="w-4 h-4" />
+              <div className="icon text-xl text-white">
+                <AiOutlineHome />
+              </div>
               <h3>Home</h3>
             </NavLink>
           </div>
@@ -42,7 +48,9 @@ export function Header({header, isLoggedIn, cart}) {
               to="/cart"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
-              <img src="/splash/cart.png" alt="cart" className="w-4 h-4 " />
+              <div className="icon text-xl text-white">
+                <IoCartOutline />
+              </div>
               <h3 className="text-white">Cart</h3>
             </NavLink>
           </div>
@@ -51,17 +59,21 @@ export function Header({header, isLoggedIn, cart}) {
               to="/account/profile"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
-              <img src="/splash/thirdone.png" alt="home" className="w-4 h-4 " />
+              <div className="icon text-xl text-white">
+                <CgProfile />
+              </div>
               <h3 className="text-white">Profile</h3>
             </NavLink>
           </div>
           <div className="w-[13%] h-[80%]">
             <NavLink
-              to="/"
+              to="/favourite"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
-              <img src="/splash/settings.png" alt="home" className="w-4 h-4 " />
-              <h3 className="text-white">Settings</h3>
+              <div className="icon text-xl text-white">
+                <GoBookmark />
+              </div>
+              <h3 className="text-white">Favorite</h3>
             </NavLink>
           </div>
         </div>

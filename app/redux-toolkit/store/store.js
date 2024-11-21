@@ -40,6 +40,7 @@
 import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import toggleThemeMode from '../slices/index.slice';
+import AddToFavourite from "../slices//favourite_slice";
 
 import {
   persistReducer,
@@ -83,6 +84,7 @@ const persistConfig = {
 // Combine all reducers
 const reducer = combineReducers({
   themeMode: toggleThemeMode,
+  favourites: AddToFavourite,
 });
 
 // Create a persisted reducer
