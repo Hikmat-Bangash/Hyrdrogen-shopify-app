@@ -8,8 +8,6 @@ import {toast} from 'react-toastify';
 import {addToFavoriteProduct} from '~/redux-toolkit/slices/favoriteProduct';
 export default function FavoritesList() {
   const favorites = useSelector((state) => state?.favourites?.items);
-  const favoriteProduct = useSelector((state) => state?.favoriteProduct?.items);
-  console.log('favoriteProduct: ' + favoriteProduct);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleRemoveFromFavorites = (productId) => {

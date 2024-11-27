@@ -8,7 +8,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable prettier/prettier */
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
