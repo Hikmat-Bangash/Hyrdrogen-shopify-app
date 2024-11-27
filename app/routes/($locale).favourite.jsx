@@ -1,17 +1,25 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {useDispatch, useSelector} from 'react-redux';
 import {RiDeleteBin6Line} from 'react-icons/ri';
 import {AiOutlineShoppingCart} from 'react-icons/ai';
 import {removeFromFavorites} from '~/redux-toolkit/slices/favourite_slice';
-import {Link} from '@remix-run/react';
+import {Link, useNavigate} from '@remix-run/react';
 import {toast} from 'react-toastify';
+import {addToFavoriteProduct} from '~/redux-toolkit/slices/favoriteProduct';
 export default function FavoritesList() {
   const favorites = useSelector((state) => state?.favourites?.items);
-
+  const favoriteProduct = useSelector((state) => state?.favoriteProduct?.items);
+  console.log('favoriteProduct: ' + favoriteProduct);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleRemoveFromFavorites = (productId) => {
     dispatch(removeFromFavorites(productId));
     toast.success('Product removed successfully!');
+  };
+
+  const handleSelectedProduct = (product) => {
+    dispatch(addToFavoriteProduct(product));
+    navigate('/');
   };
 
   return (
@@ -24,9 +32,11 @@ export default function FavoritesList() {
           {favorites.length > 0 ? (
             <div className="flex flex-col w-full gap-3">
               {favorites.map((product) => (
+                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                 <div
                   key={product.id}
                   className="py-2 flex w-full items-center justify-between  border-b border-gray-200"
+                  onClick={() => handleSelectedProduct(product)}
                 >
                   <div className="imge-price  flex items-center gap-5">
                     <img
@@ -59,7 +69,9 @@ export default function FavoritesList() {
               ))}
             </div>
           ) : (
-            <p className='text-center mt-32 font-normal text-xl'>No Favorites Products Found!</p>
+            <p className="text-center mt-32 font-normal text-xl">
+              No Favorites Products Found!
+            </p>
           )}
         </div>
       </div>

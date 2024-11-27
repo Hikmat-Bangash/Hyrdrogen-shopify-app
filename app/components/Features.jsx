@@ -1,26 +1,41 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, {useState} from 'react';
+import React, { useState, useRef } from 'react';
 import SharePlatforms from './SharePlatforms';
-import {FaWindowClose} from 'react-icons/fa';
-import {Link} from '@remix-run/react';
-import {AiOutlineShoppingCart} from 'react-icons/ai';
-import {IoShareSocialOutline} from 'react-icons/io5';
-import {GoBookmark} from 'react-icons/go';
-import {HiOutlineShoppingBag} from 'react-icons/hi2';
-import {useDispatch} from 'react-redux';
-import {addToFavorites} from '~/redux-toolkit/slices/favourite_slice';
+import { FaWindowClose } from 'react-icons/fa';
+import { Link, useNavigate} from '@remix-run/react';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { IoShareSocialOutline } from 'react-icons/io5';
+import { GoBookmark } from 'react-icons/go';
+import { HiOutlineShoppingBag } from 'react-icons/hi2';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavorites } from '~/redux-toolkit/slices/favourite_slice';
+import { toast } from 'react-toastify';
 
 const Features = ({
   isDarkMode,
   setIsfeaturesMode,
   category,
   setCategory,
-  set,
   product,
 }) => {
   const [isShare, setisShare] = useState(false);
+  const favoritesList = useSelector((state) => state?.favourites?.items);
+  const [swipeStyle, setSwipeStyle] = useState({ transform: 'translate(0, 0)' });
+  const navigate = useNavigate();
+  const isProductExist = favoritesList?.some((favorite) => favorite.id === product.id);
+
+ 
+  console.log("isProductExist: ", isProductExist)
+
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+
+
+  const dispatch = useDispatch();
 
   const handleShareProduct = () => {
     setisShare((prev) => !prev);
@@ -31,27 +46,75 @@ const Features = ({
     setCategory(category);
   };
 
-  const dispatch = useDispatch();
-
   const handleAddToFavorites = () => {
     dispatch(addToFavorites(product));
+  };
+
+  const handleShoppingCart = () => {
+    toast.error('This feature is in progress');
+  };
+
+  const handleRedirectionToCart = () => {
+    navigate(`/products/${product?.handle}`)
+}
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+
+    const deltaX = currentX - touchStartX.current;
+    const deltaY = currentY - touchStartY.current;
+
+    setSwipeStyle({ transform: `translate(${deltaX}px, ${deltaY}px)` });
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchEndX - touchStartX.current;
+    const deltaY = touchEndY - touchStartY.current;
+
+    // Determine swipe direction and threshold
+    const threshold = 50;
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      // Horizontal Swipe
+      if (deltaX > 0) {
+        handleRedirectionToCart();
+      } else {
+        handleShoppingCart(); // Swiped Right
+      }
+    } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold) {
+      // Vertical Swipe
+      if (deltaY > 0) {
+        handleShareProduct(); // Swiped Down
+      } else {
+        handleAddToFavorites();
+      }
+    }
+
+    // Reset swipe style
+    setSwipeStyle({ transform: 'translate(0, 0)' });
   };
 
   return (
     <>
       <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20">
         <div
-          className={`w-full  h-[68%] relative   ${
-            isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
-          }
-        } `}
+          className={`w-full h-[58%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+            }`}
         >
-          <div className="w-full h-full flex flex-col justify-center items-center relative ">
+          <div className="w-full h-full flex flex-col justify-center items-center relative">
             <div className="w-full h-full">
-              <div className="w-full h-full relative flex flex-col ">
-                <div className="w-full h-[15%] absolute top-0 flex flex-row justify-center ">
+              <div className="w-full h-full relative flex flex-col">
+                <div className="w-full h-[8%] absolute top-1 flex flex-row justify-center">
                   <div
-                    className="w-full text-white  text-[2.5rem] h-full flex flex-row justify-center items-center  "
+                    className={`w-full  text-[2rem] h-full flex flex-row justify-center items-center ${isProductExist ? 'text-red-500 font-bold' : "text-white"}`}
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-top-frame.png')"
@@ -65,26 +128,32 @@ const Features = ({
                   </div>
                 </div>
 
-                <div className="w-full h-[70%]  flex flex-row">
+                <div className="w-full h-[70%] flex flex-row">
                   <div
-                    className="w-[15%] h-full text-white text-[2.5rem] absolute top-0 left-0  flex flex-row justify-center items-center"
+                    className="w-[9%] h-full text-white text-[2rem] absolute top-0 left-0 flex flex-row justify-center items-center"
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-right-frame.png')"
                         : "url('/splash/right1.png')",
-
                       backgroundSize: '100% 100%',
                     }}
                     id="left"
+                    onClick={handleShoppingCart}
                   >
                     <HiOutlineShoppingBag />
                   </div>
 
                   <div
-                    className=" ml-[15%] w-[70%] p-1 object-cover h-full mt-[22%] flex justify-center items-center  "
+                    className="ml-[10%] w-[80%] absolute top-0 p-1 object-cover h-[83%] mt-[10.5%] flex justify-center items-center"
                     id="center"
                   >
-                    <div className=" w-full h-full object-cover flex justify-center items-center">
+                    <div
+                      className="w-full h-full object-cover flex justify-center items-center"
+                      style={swipeStyle}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
+                    >
                       <img
                         src={product?.featuredImage}
                         alt="centerImg"
@@ -95,7 +164,7 @@ const Features = ({
 
                   <Link to={`/products/${product?.handle}`}>
                     <div
-                      className="w-[15%] h-full text-white text-[2.5rem] absolute top-0  right-0 flex flex-row justify-center items-center"
+                      className="w-[9%] h-full text-white text-[2rem] absolute top-0 right-0 flex flex-row justify-center items-center"
                       style={{
                         backgroundImage: isDarkMode
                           ? "url('/splash/left-dark-frame.png')"
@@ -110,16 +179,15 @@ const Features = ({
                 </div>
 
                 <div
-                  className="w-full h-[14%] absolute bottom-0  flex flex-row justify-center"
+                  className="w-full h-[8%] absolute bottom-1 flex flex-row justify-center"
                   onClick={handleShareProduct}
                 >
                   <div
-                    className="w-full h-full text-white text-[2.5rem] flex flex-row justify-center items-center "
+                    className="w-full h-full text-white text-[2rem] flex flex-row justify-center items-center"
                     style={{
                       backgroundImage: isDarkMode
                         ? "url('/splash/dark-bottom-frame.png')"
                         : "url('/splash/top1.png')",
-
                       backgroundSize: '100% 100%',
                     }}
                     id="bottom"
@@ -133,7 +201,7 @@ const Features = ({
 
           {/* close button */}
           <button
-            className="absolute -top-11 right-0 text-5xl text-buttonlogin  font-bold"
+            className="absolute -top-11 right-0 text-5xl text-buttonlogin font-bold"
             onClick={handleClosing}
           >
             <FaWindowClose />

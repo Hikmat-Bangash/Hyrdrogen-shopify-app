@@ -21,6 +21,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { MdFamilyRestroom } from "react-icons/md";
 import { FcBusinesswoman, FcBusinessman } from "react-icons/fc";
 import { LiaChildSolid } from "react-icons/lia";
+import { removeFromFavoriteProduct } from '~/redux-toolkit/slices/favoriteProduct';
 
 
 
@@ -402,10 +403,17 @@ export default function Homepage({ sproducts, collectionsData }) {
         }
     };
 
+    const favoriteProduct = useSelector((state) => state?.favoriteProduct?.items);
+
     // useEffect for categories and device screen width tracking
     useEffect(() => {
-
-        FilteringCollectionsAndProducts('All');
+        if (favoriteProduct.length > 0) {
+            setproducts(favoriteProduct)
+            dispatch(removeFromFavoriteProduct());
+        } else {
+            
+            FilteringCollectionsAndProducts('All');
+        }
         setIsDisplaySubCarousel(false);
 
 
@@ -559,7 +567,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
                     <div className="w-full flex flex-col h-[88%]  relative  ">
                         <div
-                            className=" relative w-[98%] h-full flex ml-1 flex-row  overflow-hidden "
+                            className=" relative w-[98%] h-full flex ml-1 flex-row   overflow-hidden "
                             id="center"
                         >
                             {/* =============== Below is the product spinning tools =============== */}
@@ -568,7 +576,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                 style={{
                                     position: "relative",
                                     width: "100%",
-                                    height: "100%",
+                                    height: "90%",
                                     perspective: "1000px",
                                 }}
                                 onTouchStart={!IsShowProductDesc ? handleTouchStart : null}
