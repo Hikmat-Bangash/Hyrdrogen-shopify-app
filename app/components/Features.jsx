@@ -27,9 +27,6 @@ const Features = ({
   const navigate = useNavigate();
   const isProductExist = favoritesList?.some((favorite) => favorite.id === product.id);
 
- 
-  console.log("isProductExist: ", isProductExist)
-
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 

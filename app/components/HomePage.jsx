@@ -128,14 +128,14 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [verticalIndex, setVerticalIndex] = useState(0); // Vertical carousel index
 
 
-    const quickSwipeThreshold = 200; // Duration threshold for a quick swipe in milliseconds
-    const distanceThreshold = 50; // Pixel threshold for swipe detection
+    const quickSwipeThreshold = 250; // Duration threshold for a quick swipe in milliseconds
+    const distanceThreshold = 70 // Pixel threshold for swipe detection
     // Thresholds
     const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
     const horizontalSwipeThreshold = 60;
 
-    const quickSwipeThresholdVertical = 200; // Lower this for faster swipe detection
-    const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
+    const quickSwipeThresholdVertical = 250; // Lower this for faster swipe detection
+    const distanceThresholdVertical = 70; // Pixel threshold for vertical swipe detection
 
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
@@ -410,6 +410,7 @@ export default function Homepage({ sproducts, collectionsData }) {
         if (favoriteProduct.length > 0) {
             setproducts(favoriteProduct)
             dispatch(removeFromFavoriteProduct());
+            setCategory("");
         } else {
             
             FilteringCollectionsAndProducts('All');
@@ -450,7 +451,6 @@ export default function Homepage({ sproducts, collectionsData }) {
     const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
 
     var activeProduct = currentProductIndex;
-    // console.log("activeProduct: ", activeProduct)
 
     return (
         <>
@@ -706,7 +706,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={activeProduct?.images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct} />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} variantIndex={verticalIndex} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct}  />}
             </div>
 
         </>

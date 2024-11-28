@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {useDispatch, useSelector} from 'react-redux';
 import {RiDeleteBin6Line} from 'react-icons/ri';
@@ -30,13 +31,14 @@ export default function FavoritesList() {
           {favorites.length > 0 ? (
             <div className="flex flex-col w-full gap-3">
               {favorites.map((product) => (
-                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                 <div
                   key={product.id}
                   className="py-2 flex w-full items-center justify-between  border-b border-gray-200"
-                  onClick={() => handleSelectedProduct(product)}
                 >
-                  <div className="imge-price  flex items-center gap-5">
+                  <div
+                    className="imge-price  flex items-center gap-5"
+                    onClick={() => handleSelectedProduct(product)}
+                  >
                     <img
                       src={product?.featuredImage}
                       alt="product-img"

@@ -126,7 +126,11 @@ export default function App() {
         <Providers>
           <Layout {...data}>
             <Outlet />
-            <ToastContainer position="top-center" autoClose={3000} />
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              toastStyle={{width: '300px', marginLeft: '50px'}}
+            />
           </Layout>
         </Providers>
         {/* </div> */}
