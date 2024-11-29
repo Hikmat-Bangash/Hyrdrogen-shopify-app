@@ -134,8 +134,8 @@ export default function Homepage({ sproducts, collectionsData }) {
     const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
     const horizontalSwipeThreshold = 60;
 
-    const quickSwipeThresholdVertical = 250; // Lower this for faster swipe detection
-    const distanceThresholdVertical = 70; // Pixel threshold for vertical swipe detection
+    const quickSwipeThresholdVertical = 220; // Lower this for faster swipe detection
+    const distanceThresholdVertical = 60; // Pixel threshold for vertical swipe detection
 
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
