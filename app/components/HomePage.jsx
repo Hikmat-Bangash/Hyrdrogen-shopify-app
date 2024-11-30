@@ -129,13 +129,13 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
     const quickSwipeThreshold = 250; // Duration threshold for a quick swipe in milliseconds
-    const distanceThreshold = 70 // Pixel threshold for swipe detection
+    const distanceThreshold = 50 // Pixel threshold for swipe detection
     // Thresholds
     const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
     const horizontalSwipeThreshold = 60;
 
     const quickSwipeThresholdVertical = 220; // Lower this for faster swipe detection
-    const distanceThresholdVertical = 60; // Pixel threshold for vertical swipe detection
+    const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
 
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
@@ -227,11 +227,10 @@ export default function Homepage({ sproducts, collectionsData }) {
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
                     setHorizontalIndex((prevIndex) => prevIndex + slides);
-                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
                     setHorizontalIndex((prevIndex) => prevIndex - slides);
-                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 700);
                 }
+                setTimeout(() => setVerticalIndex(verticalIndex + 1), 500);
 
                 carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;               
@@ -408,7 +407,9 @@ export default function Homepage({ sproducts, collectionsData }) {
     // useEffect for categories and device screen width tracking
     useEffect(() => {
         if (favoriteProduct.length > 0) {
-            setproducts(favoriteProduct)
+            setproducts([favoriteProduct[0].product])
+            setActiveCarousel("vertical")
+            setVerticalIndex(favoriteProduct[0]?.variantIndex);
             dispatch(removeFromFavoriteProduct());
             setCategory("");
         } else {
@@ -442,13 +443,11 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     const duplicatedProductIndices = createNonDuplicateOrder(products);
 
-    // Usage in your carousel rendering logic
-
-
     const currentProductIndex = getCurrentProduct(Math.abs(horizontalIndex));
     // console.log("current product index: ", currentProductIndex)
 
-    const currentProductImages = duplicateVerticalPanels(currentProductIndex?.images || []);
+    const currentProductVariants = duplicateVerticalPanels(currentProductIndex?.variants || []);
+    let currentVariant = ((Math.abs(verticalIndex) % currentProductIndex?.variants?.length));
 
     var activeProduct = currentProductIndex;
 
@@ -603,7 +602,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                 transform: `rotateX(${verticalIndex * -rotationPerPanel}deg)`,
                                             }}
                                         >
-                                            {currentProductImages?.map((image, index) => {
+                                                {currentProductVariants?.map((variant, index) => {
                                                 const rotateAngle = index * rotationPerPanel;
 
                                                 return (
@@ -622,7 +621,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                             transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "148px"})`,
                                                         }}
                                                     >
-                                                        <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.3rem]' : " w-[13.2rem] h-[13.7rem]"} `}
+                                                        <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.1rem]' : " w-[13.2rem] h-[13.7rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -633,7 +632,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                                 overflow: "hidden"
                                                             }}
                                                         >
-                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%", transition: "transform 4s ease-in-out", filter: isSpinning ? 'blur(13px)' : 'none', }} src={image} alt="vertical-carousel-img" />
+                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%", transition: "transform 4s ease-in-out", filter: isSpinning ? 'blur(13px)' : 'none', }} src={variant?.image?.url} alt="vertical-carousel-img" />
                                                         </div>
                                                     </div>
                                                 );
@@ -673,7 +672,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                         }}
 
                                                     >
-                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-72' : " w-[13.2rem] h-[13.2rem]"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-[16.8rem]' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
@@ -683,8 +682,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                                 overflow: "hidden"
                                                             }}
                                                         >
-                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%" }} src={product?.featuredImage
-                                                            } alt={product?.title} />
+                                                            <img style={{ objectFit: "cover", width: "100%", height: "100%" }} src= {product?.variants[0]?.image?.url} alt={product?.title} />
                                                         </div>
                                                     </div>
                                                 );
@@ -706,7 +704,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={activeProduct?.images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} variantIndex={verticalIndex} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct}  />}
+                {IsfeaturesMode && <Features isDarkMode={isDarkMode} variantIndex={verticalIndex} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct} variant={currentVariant}  />}
             </div>
 
         </>

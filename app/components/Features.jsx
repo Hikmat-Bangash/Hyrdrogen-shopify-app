@@ -20,17 +20,19 @@ const Features = ({
   category,
   setCategory,
   product,
+  variant
 }) => {
   const [isShare, setisShare] = useState(false);
   const favoritesList = useSelector((state) => state?.favourites?.items);
   const [swipeStyle, setSwipeStyle] = useState({ transform: 'translate(0, 0)' });
   const navigate = useNavigate();
-  const isProductExist = favoritesList?.some((favorite) => favorite.id === product.id);
+  const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === product?.variants[variant]?.id ));
 
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
-
+  console.log("product.variant: ", product?.variants[variant])
+  console.log("product: ", product)
 
   const dispatch = useDispatch();
 
@@ -44,7 +46,20 @@ const Features = ({
   };
 
   const handleAddToFavorites = () => {
-    dispatch(addToFavorites(product));
+    const Variant = product?.variants[variant];
+    const variantInfo = {
+      product,
+      id: Variant?.id,
+      amount: Variant?.price?.amount,
+      variantTitle: Variant?.title,
+      handle: product?.handle,
+      productType: product?.title,
+      image: Variant?.image?.url,
+      variantIndex: variant
+    }
+    
+    console.log("current variant info: ", variantInfo)
+    dispatch(addToFavorites(variantInfo));
   };
 
   const handleShoppingCart = () => {
@@ -152,7 +167,7 @@ const Features = ({
                       onTouchEnd={handleTouchEnd}
                     >
                       <img
-                        src={product?.featuredImage}
+                        src={product?.variants[variant]?.image?.url}
                         alt="centerImg"
                         className="w-full h-full object-cover"
                       />

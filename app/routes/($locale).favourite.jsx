@@ -9,6 +9,7 @@ import {toast} from 'react-toastify';
 import {addToFavoriteProduct} from '~/redux-toolkit/slices/favoriteProduct';
 export default function FavoritesList() {
   const favorites = useSelector((state) => state?.favourites?.items);
+  console.log('favorites.products: ', favorites);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleRemoveFromFavorites = (productId) => {
@@ -40,13 +41,16 @@ export default function FavoritesList() {
                     onClick={() => handleSelectedProduct(product)}
                   >
                     <img
-                      src={product?.featuredImage}
+                      src={product?.image}
                       alt="product-img"
                       className="w-14 h-14"
                     />
                     <div className="name-price flex flex-col gap-1">
-                      <p>{product.title}</p>
-                      <strong>$ {product?.priceRange?.amount}</strong>
+                      <p>
+                        {`${product?.productType} `}
+                        <span className="text-sm">{`(${product?.variantTitle})`}</span>
+                      </p>
+                      <strong>${product?.amount}</strong>
                     </div>
                   </div>
 
