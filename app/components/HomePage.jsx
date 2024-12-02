@@ -227,10 +227,12 @@ export default function Homepage({ sproducts, collectionsData }) {
                 if (touchDeltaX < -horizontalSwipeThreshold) {
                     // Swipe left (next product)
                     setHorizontalIndex((prevIndex) => prevIndex + slides);
+                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 500);
                 } else if (touchDeltaX > horizontalSwipeThreshold) {
                     setHorizontalIndex((prevIndex) => prevIndex - slides);
+                    setTimeout(() => setVerticalIndex(verticalIndex + 1), 500);
                 }
-                setTimeout(() => setVerticalIndex(verticalIndex + 1), 500);
+                
 
                 carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;               
