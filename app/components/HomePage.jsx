@@ -672,7 +672,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                         }}
 
                                                     >
-                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-[16.8rem]' : " w-[13.2rem] h-[13.2rem]"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-[17.3rem]' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",
