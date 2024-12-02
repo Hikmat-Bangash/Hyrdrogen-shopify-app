@@ -13,6 +13,7 @@ import { HiOutlineShoppingBag } from 'react-icons/hi2';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavorites } from '~/redux-toolkit/slices/favourite_slice';
 import { toast } from 'react-toastify';
+import { ImSpinner10 } from "react-icons/im";
 
 const Features = ({
   isDarkMode,
@@ -27,12 +28,11 @@ const Features = ({
   const [swipeStyle, setSwipeStyle] = useState({ transform: 'translate(0, 0)' });
   const navigate = useNavigate();
   const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === product?.variants[variant]?.id ));
-
+  const [Loader, setLoader] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
-  console.log("product.variant: ", product?.variants[variant])
-  console.log("product: ", product)
+
 
   const dispatch = useDispatch();
 
@@ -67,6 +67,8 @@ const Features = ({
   };
 
   const handleRedirectionToCart = () => {
+    setLoader(true);
+    console.log("redirection to cart");
     navigate(`/products/${product?.handle}`)
 }
 
@@ -185,7 +187,14 @@ const Features = ({
                       }}
                       id="right"
                     >
-                      <AiOutlineShoppingCart />
+                      {Loader ? (
+                        <div className="loader animate-spin text-white font-bold text-2xl ">
+                          <ImSpinner10 />
+                      </div>
+                      ) : (
+                        <AiOutlineShoppingCart />
+                      )}
+                     
                     </div>
                   </Link>
                 </div>
