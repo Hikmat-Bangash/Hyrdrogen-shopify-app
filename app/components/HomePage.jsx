@@ -134,7 +134,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
     const horizontalSwipeThreshold = 60;
 
-    const quickSwipeThresholdVertical = 220; // Lower this for faster swipe detection
+    const quickSwipeThresholdVertical = 250; // Lower this for faster swipe detection
     const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
 
     // Handle touch start: save initial touch position and time
@@ -166,6 +166,7 @@ export default function Homepage({ sproducts, collectionsData }) {
         }
 
         if ((Math.abs(deltaY) > Math.abs(deltaX) && activeCarousel == "vertical")) {
+
             const verticalCarousel = document.querySelector(".carousel-vertical");
             const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
                 verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
@@ -182,6 +183,9 @@ export default function Homepage({ sproducts, collectionsData }) {
         const isVerticalQuickSwipe = swipeDuration < quickSwipeThresholdVertical && Math.abs(touchDeltaY) > distanceThresholdVertical;
 
         if (isVerticalSwipe) {
+            console.log("inside vertical swipe")
+            console.log("touch X: ", Math.abs(touchDeltaX));
+            console.log("touch Y: ", Math.abs(touchDeltaY));
             setActiveCarousel("vertical");
             const Verticalcarousel = document.querySelector(".carousel-vertical");
             if (isVerticalQuickSwipe) {
@@ -197,7 +201,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 } else if (touchDeltaY > verticalSwipeThreshold) {
                     setVerticalIndex((prevIndex) => prevIndex + VariantSlides);
                 }
-                Verticalcarousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
+                Verticalcarousel.style.transition = "transform 0.3s ease"; 
                 Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
             }
 
@@ -207,7 +211,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             setTouchDeltaX(0);
             setTouchDeltaY(0);
         }
-        else if (Math.abs(touchDeltaX) > 0) {
+        else if (Math.abs(touchDeltaX) > Math.abs(touchDeltaY)) {
             // Handle horizontal swipe
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
@@ -620,7 +624,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                             display: 'flex',
                                                             justifyContent: 'center',
                                                             alignItems: 'center',
-                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '189px' : "148px"})`,
+                                                            transform: `rotateX(${rotateAngle}deg) translateZ(${isMobileWidth ? '187px' : "148px"})`,
                                                         }}
                                                     >
                                                         <div className={`panel-content ${isMobileWidth ? 'w-[16.5rem] h-[17.1rem]' : " w-[13.2rem] h-[13.7rem]"} `}
