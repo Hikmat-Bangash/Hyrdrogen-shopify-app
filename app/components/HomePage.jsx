@@ -205,8 +205,6 @@ export default function Homepage({ sproducts, collectionsData }) {
                 Verticalcarousel.style.transform = `rotateX(${verticalIndex * -rotationPerPanel}deg)`;
             }
 
-
-
             // Reset deltas
             setTouchDeltaX(0);
             setTouchDeltaY(0);
@@ -216,9 +214,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
 
-
             if (isQuickSwipe) {
-
                 // Quick swipe: Start continuous spinning from the current rotation
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
                 startSpinning(touchDeltaX < 0 ? "right" : "left");
@@ -236,8 +232,6 @@ export default function Homepage({ sproducts, collectionsData }) {
                     setHorizontalIndex((prevIndex) => prevIndex - slides);
                     setTimeout(() => setVerticalIndex(verticalIndex + 1), 500);
                 }
-                
-
                 carousel.style.transition = "transform 0.3s ease"; // Smooth transition to final position
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;               
             }
@@ -246,7 +240,6 @@ export default function Homepage({ sproducts, collectionsData }) {
             setTouchDeltaX(0);
             setTouchDeltaY(0);
         };
-
 
     };
 
@@ -305,11 +298,15 @@ export default function Homepage({ sproducts, collectionsData }) {
         spinningIntervalVertical.current = null;
     };
 
-
     // Handle click event to stop spinning
     const handleCarouselClick = () => {
-        if (isSpinning) stopSpinning();
-        if (isSpinningVertical) stopSpinningVertical();
+        if (isSpinningVertical || isSpinning) {
+            
+            if (isSpinning) stopSpinning();
+            if (isSpinningVertical) stopSpinningVertical();
+        } else {
+            setIsfeaturesMode(true);
+        }
     };
 
     //-------------- handle search query for product filtering --------
@@ -576,7 +573,6 @@ export default function Homepage({ sproducts, collectionsData }) {
                             id="center"
                         >
                             {/* =============== Below is the product spinning tools =============== */}
-
                             <div className="carousel-container relative flex w-full "
                                 style={{
                                     position: "relative",

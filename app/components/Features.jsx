@@ -27,7 +27,9 @@ const Features = ({
   const favoritesList = useSelector((state) => state?.favourites?.items);
   const [swipeStyle, setSwipeStyle] = useState({ transform: 'translate(0, 0)' });
   const navigate = useNavigate();
-  const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === product?.variants[variant]?.id ));
+  const [currentVariant, setcurrentVariant] = useState(product?.variants[variant]);
+  const [variantIndex, setVariantIndex] = useState(variant);
+  const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === currentVariant?.id ));
   const [Loader, setLoader] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
@@ -46,7 +48,7 @@ const Features = ({
   };
 
   const handleAddToFavorites = () => {
-    const Variant = product?.variants[variant];
+    const Variant = currentVariant;
     const variantInfo = {
       product,
       id: Variant?.id,
@@ -55,10 +57,9 @@ const Features = ({
       handle: product?.handle,
       productType: product?.title,
       image: Variant?.image?.url,
-      variantIndex: variant
+      variantIndex
     }
     
-    console.log("current variant info: ", variantInfo)
     dispatch(addToFavorites(variantInfo));
   };
 
@@ -87,10 +88,14 @@ const Features = ({
     setSwipeStyle({ transform: `translate(${deltaX}px, ${deltaY}px)` });
   };
 
+  const handleVariantClick = (variant, index) => {
+    setcurrentVariant(variant);
+    setVariantIndex(index);
+  }
+
   const handleTouchEnd = (e) => {
     const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
-
     const deltaX = touchEndX - touchStartX.current;
     const deltaY = touchEndY - touchStartY.current;
 
@@ -111,14 +116,13 @@ const Features = ({
         handleAddToFavorites();
       }
     }
-
     // Reset swipe style
     setSwipeStyle({ transform: 'translate(0, 0)' });
   };
 
   return (
     <>
-      <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20">
+      <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20 flex-col gap-2">
         <div
           className={`w-full h-[58%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             }`}
@@ -169,7 +173,7 @@ const Features = ({
                       onTouchEnd={handleTouchEnd}
                     >
                       <img
-                        src={product?.variants[variant]?.image?.url}
+                        src={currentVariant?.image?.url}
                         alt="centerImg"
                         className="w-full h-full object-cover"
                       />
@@ -228,7 +232,17 @@ const Features = ({
             <FaWindowClose />
           </button>
         </div>
+
+        {/*--------- other variants images ------- */}
+        <div className="other-variants flex flex-wrap gap-3 mt-5">
+          {product?.variants?.map((variant, index) => (
+            <div className={`w-20 h-20 border-2  rounded-xl overflow-hidden ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
+              <img src={variant?.image?.url} alt="variantImg" className='object-cover' />
+            </div>
+          ))}
+        </div>
       </div>
+
 
       {isShare && <SharePlatforms setisShare={setisShare} />}
     </>
