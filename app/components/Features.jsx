@@ -236,8 +236,8 @@ const Features = ({
         {/*--------- other variants images ------- */}
         <div className="other-variants flex flex-wrap gap-3 mt-3">
           {product?.variants?.map((variant, index) => (
-            <div className={`w-20 h-20 border-2  rounded-xl overflow-hidden ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
-              <img src={variant?.image?.url} alt="variantImg" className='object-cover' />
+            <div className={`w-20 h-20 border-2 object-cover rounded-xl overflow-hidden ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
+              <img src={variant?.image?.url} alt="variantImg" className='object-cover w-20 h-20' />
             </div>
           ))}
         </div>

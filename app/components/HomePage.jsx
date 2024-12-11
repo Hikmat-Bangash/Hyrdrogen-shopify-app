@@ -22,8 +22,8 @@ import { MdFamilyRestroom } from "react-icons/md";
 import { FcBusinesswoman, FcBusinessman } from "react-icons/fc";
 import { LiaChildSolid } from "react-icons/lia";
 import { removeFromFavoriteProduct } from '~/redux-toolkit/slices/favoriteProduct';
-
-
+import { FaSpinner } from "react-icons/fa6";
+import { MdOutlineSwipe } from "react-icons/md";
 
 
 /**
@@ -114,7 +114,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     }
 
     const rotationPerPanel = 360 / PANEL_COUNT; // Rotation angle for each panel
-
+    const [IsContinouseSpinning, setIsContinouseSpinning] = useState(false);
     // Separate touch tracking states for horizontal and vertical carousels
     const [touchStartX, setTouchStartX] = useState(0);
     const [touchStartY, setTouchStartY] = useState(0);
@@ -144,6 +144,10 @@ export default function Homepage({ sproducts, collectionsData }) {
         setTouchStartTime(Date.now()); // Start time for swipe detection
 
     };
+
+    const handlSpinning = () => {
+        setIsContinouseSpinning((prev) => !prev);
+    }
     
     // Handle touch move: calculate the swipe delta and apply real-time rotation
     const handleTouchMove = (e) => {
@@ -188,7 +192,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             console.log("touch Y: ", Math.abs(touchDeltaY));
             setActiveCarousel("vertical");
             const Verticalcarousel = document.querySelector(".carousel-vertical");
-            if (isVerticalQuickSwipe) {
+            if (IsContinouseSpinning) {
                 startSpinningVertical(touchDeltaY < 0 ? "up" : "down");
             } else {
                 let VariantSlides = 0;
@@ -214,7 +218,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             setActiveCarousel("horizontal")
             const carousel = document.querySelector(".carousel-horizontal");
 
-            if (isQuickSwipe) {
+            if (IsContinouseSpinning) {
                 // Quick swipe: Start continuous spinning from the current rotation
                 carousel.style.transform = `rotateY(${horizontalIndex * -rotationPerPanel}deg)`;
                 startSpinning(touchDeltaX < 0 ? "right" : "left");
@@ -538,12 +542,31 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
-                    <div className="w-full h-[8%] flex flex-row ">
-                        <div className="w-[75%] h-full flex flex-row p-2 gap-3 ">
+                <div className={`parent w-full  z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
+                    <div className="w-full h-[8%] flex justify-between flex-row  ">
+                        <div className="w-[25%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />
                             <img src="/splash/rect2.png" alt="rect1" className=" w-[1.5rem] h-[1.5rem]" onClick={showProductDescription} />
                             <img src="/splash/rect3.png" alt="rect1" className=" w-[1.5rem] h-[1.5rem]" onClick={handleIsFeatures} />
+                        </div>
+
+                        {/* ---------- BELOW IS THE CONTINUOSE AND SINGLE SPIN TOGGLE -------- */}
+                        <div className="w-[4rem] mt-2 h-[1.5rem] flex flex-row justify-between rounded-lg items-center border border-gray-300 px-1 py-2 " onClick={handlSpinning}>
+                            
+                            <div className=" w-full flex justify-start items-center">
+                                <div className={`light-mode-btn justify-center items-center w-[1.3rem] h-[1.3rem] rounded-full  ${IsContinouseSpinning ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }}  >
+                                    <p className='text-lg text-white'><MdOutlineSwipe /></p>
+                                </div>
+                            </div>
+
+                           
+                            <div className="wrapper w-full flex justify-end items-center">
+                                <div className={`light-mode-btn   justify-center items-center w-[1.3rem] h-[1.2rem] rounded-full  ${!IsContinouseSpinning ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }}>
+                                    <p className='text-lg text-white animate-spin duration-700'><FaSpinner /></p>
+
+                                </div>
+                            </div>
+
                         </div>
 
                         {/* ---------- dark/light mode container -------- */}

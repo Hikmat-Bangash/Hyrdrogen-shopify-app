@@ -89,8 +89,8 @@ const Index = () => {
   }, [allProducts, allCollections]);
 
 
-  // console.log("unstructured product data: ", allProducts);
-  // console.log("unstructured collections data: ", allCollections);
+  console.log("product data: ", allProducts);
+  console.log("collections data: ", allCollections);
 
 
   // console.log("structured product data: ", products);

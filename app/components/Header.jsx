@@ -56,7 +56,7 @@ export function Header({header, isLoggedIn, cart}) {
           </div>
           <div className="w-[13%] h-[80%]  ">
             <NavLink
-              to="/account/profile"
+              to="/myprofile"
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <div className="icon text-xl text-white">
