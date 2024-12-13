@@ -170,10 +170,11 @@ export default function Homepage({ sproducts, collectionsData }) {
         }
 
         if ((Math.abs(deltaY) > Math.abs(deltaX) && activeCarousel == "vertical")) {
-
-            const verticalCarousel = document.querySelector(".carousel-vertical");
-            const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
+            if (!IsContinouseSpinning) {
+                const verticalCarousel = document.querySelector(".carousel-vertical");
+                const currentRotation = verticalIndex * -rotationPerPanel - deltaY * 0.5;
                 verticalCarousel.style.transform = `rotateX(${currentRotation}deg)`;
+            }
         }
     }
 
@@ -183,13 +184,11 @@ export default function Homepage({ sproducts, collectionsData }) {
         const swipeDuration = Date.now() - touchStartTime;
         const isVerticalSwipe = Math.abs(touchDeltaY) > verticalSwipeThreshold && Math.abs(touchDeltaY) > Math.abs(touchDeltaX);
 
-        const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
-        const isVerticalQuickSwipe = swipeDuration < quickSwipeThresholdVertical && Math.abs(touchDeltaY) > distanceThresholdVertical;
+        // const isQuickSwipe = swipeDuration < quickSwipeThreshold && Math.abs(touchDeltaX) > distanceThreshold;
+        // const isVerticalQuickSwipe = swipeDuration < quickSwipeThresholdVertical && Math.abs(touchDeltaY) > distanceThresholdVertical;
 
         if (isVerticalSwipe) {
-            console.log("inside vertical swipe")
-            console.log("touch X: ", Math.abs(touchDeltaX));
-            console.log("touch Y: ", Math.abs(touchDeltaY));
+
             setActiveCarousel("vertical");
             const Verticalcarousel = document.querySelector(".carousel-vertical");
             if (IsContinouseSpinning) {
@@ -562,7 +561,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                            
                             <div className="wrapper w-full flex justify-end items-center">
                                 <div className={`light-mode-btn   justify-center items-center w-[1.3rem] h-[1.2rem] rounded-full  ${!IsContinouseSpinning ? 'hidden' : "flex"}`} style={{ borderRadius: "100%" }}>
-                                    <p className='text-lg text-white animate-spin duration-700'><FaSpinner /></p>
+                                    <p className='text-lg text-white '><FaSpinner /></p>
 
                                 </div>
                             </div>

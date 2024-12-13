@@ -86,7 +86,29 @@ const Features = ({
     const deltaY = currentY - touchStartY.current;
 
     setSwipeStyle({ transform: `translate(${deltaX}px, ${deltaY}px)` });
+
+    // Threshold for swipe detection
+    const threshold = 120;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > threshold) {
+      // Horizontal Swipe
+      if (deltaX > 0) {
+        handleRedirectionToCart(); // Swiped Right
+      } else {
+        handleShoppingCart(); // Swiped Left
+      }
+      touchStartX.current = currentX; // Reset to prevent repeated triggers
+    } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > threshold) {
+      // Vertical Swipe
+      if (deltaY > 0) {
+        handleShareProduct(); // Swiped Down
+      } else {
+        handleAddToFavorites(); // Swiped Up
+      }
+      touchStartY.current = currentY; // Reset to prevent repeated triggers
+    }
   };
+
 
   const handleVariantClick = (variant, index) => {
     setcurrentVariant(variant);
@@ -124,7 +146,7 @@ const Features = ({
     <>
       <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20 flex-col gap-2">
         <div
-          className={`w-full -mt-12 h-[58%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+          className={`w-full -mt-10 h-[58%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             }`}
         >
           <div className="w-full h-full flex flex-col justify-center items-center relative">
@@ -234,9 +256,9 @@ const Features = ({
         </div>
 
         {/*--------- other variants images ------- */}
-        <div className="other-variants flex flex-wrap gap-3 mt-3">
+        <div className="other-variants w-full h-20 px-2  overflow-x-scroll flex  gap-3 mt-3">
           {product?.variants?.map((variant, index) => (
-            <div className={`w-20 h-20 border-2 object-cover rounded-xl overflow-hidden ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
+            <div className={`min-w-20 min-h-20 border-2 object-cover rounded-xl   ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
               <img src={variant?.image?.url} alt="variantImg" className='object-cover w-20 h-20' />
             </div>
           ))}
