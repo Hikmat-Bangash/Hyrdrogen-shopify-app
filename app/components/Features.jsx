@@ -152,13 +152,13 @@ const Features = ({
       <div className={`featureContainer w-screen h-screen flex justify-center items-center fixed top-0 ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             } z-20 flex-col gap-2`}>
         <div
-          className={`w-full -mt-[20%] h-[65%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+          className={`w-full -mt-[11%] h-[72%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             }`}
         >
           <div className="w-full h-full flex flex-col justify-center items-center relative">
             <div className="w-full h-full">
               <div className="w-full h-full relative flex flex-col">
-                <div className="w-full h-[8%] absolute top-1 flex flex-row justify-center">
+                <div className="w-full z-40 h-[8%] absolute top-1 flex flex-row justify-center">
                   <div
                     className={`w-full  text-[2rem] h-full flex flex-row justify-center items-center ${isProductExist ? 'text-red-500 font-bold' : "text-white"}`}
                     style={{
@@ -190,7 +190,7 @@ const Features = ({
                   </div>
 
                   <div
-                    className="ml-[10%] w-[80%] absolute top-0 p-1 object-cover h-[83%] mt-[10.5%] flex justify-center items-center"
+                    className="ml-[9.5%] w-[81%] absolute top-0 p-1 object-cover h-[83%] mt-[13%] flex justify-center items-center"
                     id="center"
                   >
                     <div
@@ -208,7 +208,7 @@ const Features = ({
                     </div>
                   </div>
 
-                  <Link to={`/products/${product?.handle}`}>
+                  <button onClick={handleRedirectionToCart}>
                     <div
                       className="w-[9%] h-full text-white text-[2rem] absolute top-0 right-0 flex flex-row justify-center items-center"
                       style={{
@@ -228,7 +228,7 @@ const Features = ({
                       )}
                      
                     </div>
-                  </Link>
+                  </button>
                 </div>
 
                 <div

@@ -21,7 +21,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { MdFamilyRestroom, MdOutlineSwipe } from "react-icons/md";
 import { FcBusinesswoman, FcBusinessman } from "react-icons/fc";
 import { LiaChildSolid } from "react-icons/lia";
-import { removeFromFavoriteProduct, hanldeFeaturePage, handleFeaturePage } from '~/redux-toolkit/slices/favoriteProduct';
+import { removeFromFavoriteProduct, handleFeaturePage } from '~/redux-toolkit/slices/favoriteProduct';
 import { FaSpinner } from "react-icons/fa6";
 
 /**
@@ -102,7 +102,6 @@ export default function Homepage({ sproducts, collectionsData }) {
 
     // -------- handle features screen ----
     const handleIsFeatures = () => {
-        setIsfeaturesMode((prev) => !prev);
         dispatch(handleFeaturePage(true))
     }
 

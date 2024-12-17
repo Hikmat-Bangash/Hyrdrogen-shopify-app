@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useEffect} from 'react';
 import {defer, redirect} from '@shopify/remix-oxygen';
 import {Await, Link, useLoaderData} from '@remix-run/react';
 import {
@@ -10,7 +10,8 @@ import {
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/lib/variants';
 import {PiSpinner} from 'react-icons/pi';
-
+import {useDispatch} from 'react-redux';
+import {handleFeaturePage} from '~/redux-toolkit/slices/favoriteProduct';
 /**
  * @type {MetaFunction<typeof loader>}
  */
@@ -85,6 +86,11 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   const {product, variants} = useLoaderData();
   const {selectedVariant} = product;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(handleFeaturePage(false));
+  }, []);
 
   return (
     <div className="w-full flex ml-2 flex-col gap-2 h-auto mt-20">
