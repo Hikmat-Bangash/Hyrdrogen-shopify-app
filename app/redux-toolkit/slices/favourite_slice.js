@@ -15,9 +15,15 @@ const favoritesSlice = createSlice({
       const exists = state.items.find((item) => item.id === product.id);
       if (!exists) {
         state.items.push(product); // Add product if not already in favorites
-        toast.success('Product added to Favorites!');
+        const toastId = 'favorites';
+        if (!toast.isActive(toastId)) {
+          toast.success('Added to favorites!', {toastId});
+        }
       } else {
-        toast.error('Product already added!');
+        const toastId = 'favorites';
+        if (!toast.isActive(toastId)) {
+          toast.error('Product already added!', {toastId});
+        }
       }
     },
     removeFromFavorites: (state, action) => {

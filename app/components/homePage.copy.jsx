@@ -13,7 +13,7 @@ import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
 import { useSelector, useDispatch } from 'react-redux';
-import { hanldeFeaturePage, toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
+import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
 import Main_Carousel from '~/components/main_carousel'
 import SubCollectionCarousal from '~/components/subCollection'
 import { RiSearchLine } from "react-icons/ri";

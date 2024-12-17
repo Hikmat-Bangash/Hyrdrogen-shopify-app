@@ -5,15 +5,18 @@ import {GoBookmark} from 'react-icons/go';
 import {CgProfile} from 'react-icons/cg';
 import {IoCartOutline} from 'react-icons/io5';
 import {AiOutlineHome} from 'react-icons/ai';
+import {useDispatch} from 'react-redux';
+import {handleFeaturePage} from '~/redux-toolkit/slices/favoriteProduct';
 
 /**
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart}) {
   // const {shop, menu} = header;
+  const dispatch = useDispatch();
 
-  const handleClick = () => {
-    console.log('handle clicked');
+  const handleHomebtnClick = () => {
+    dispatch(handleFeaturePage(false));
   };
 
   return (
@@ -33,7 +36,7 @@ export function Header({header, isLoggedIn, cart}) {
           <div className="w-[13%] h-[80%]  ">
             <NavLink
               to="/"
-              onClick={handleClick}
+              onClick={handleHomebtnClick}
               className=" w-full h-full flex flex-col justify-center items-center p-2"
             >
               <div className="icon text-xl text-white">

@@ -3,7 +3,7 @@
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // eslint-disable-next-line no-unused-vars
-import {Await, Link, useLocation} from '@remix-run/react';
+import {Await, Link, useLocation, useNavigate} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Aside} from '~/components/Aside';
 // eslint-disable-next-line no-unused-vars
@@ -14,19 +14,24 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
-
 /**
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   // Get the current location object
   const location = useLocation();
-
+  const navigate = useNavigate();
   // Check if the current path is the root ("/") or not
   const isHomePage = location.pathname === '/';
+  const isCartPage = location.pathname === '/cart';
+
   const handleBackButtonClick = () => {
     // dispatch(hanldeFeaturePage());
-    window.history.back();
+    if (isCartPage) {
+      navigate('/');
+    } else {
+      window.history.back();
+    }
   };
 
   return (

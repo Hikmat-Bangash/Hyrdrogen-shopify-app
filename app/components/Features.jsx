@@ -17,7 +17,6 @@ import { ImSpinner10 } from "react-icons/im";
 
 const Features = ({
   isDarkMode,
-  setIsfeaturesMode,
   category,
   setCategory,
   product,
@@ -29,10 +28,12 @@ const Features = ({
   const navigate = useNavigate();
   const [currentVariant, setcurrentVariant] = useState(product?.variants[variant]);
   const [variantIndex, setVariantIndex] = useState(variant);
-  const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === currentVariant?.id ));
+  const isProductExist = favoritesList?.some((favorite) => (favorite.id === product.id || favorite.id === currentVariant?.id));
   const [Loader, setLoader] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
+
+
 
 
 
@@ -43,7 +44,6 @@ const Features = ({
   };
 
   const handleClosing = () => {
-    setIsfeaturesMode((prev) => !prev);
     setCategory(category);
   };
 
@@ -61,15 +61,20 @@ const Features = ({
     }
     
     dispatch(addToFavorites(variantInfo));
+    // Prevent duplicate toast notifications
+   
   };
 
   const handleShoppingCart = () => {
-    toast.error('This feature is in progress');
+    // Prevent duplicate toast notifications
+    const toastId = 'shoppingCart';
+    if (!toast.isActive(toastId)) {
+      toast.error('This feature is in progress', { toastId, autoClose: 3000 });
+    }
   };
 
   const handleRedirectionToCart = () => {
     setLoader(true);
-    console.log("redirection to cart");
     navigate(`/products/${product?.handle}`)
 }
 
@@ -144,9 +149,10 @@ const Features = ({
 
   return (
     <>
-      <div className="featureContainer w-screen h-screen flex justify-center items-center fixed top-0 backdrop-blur-xl z-20 flex-col gap-2">
+      <div className={`featureContainer w-screen h-screen flex justify-center items-center fixed top-0 ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+            } z-20 flex-col gap-2`}>
         <div
-          className={`w-full -mt-10 h-[58%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+          className={`w-full -mt-[20%] h-[65%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             }`}
         >
           <div className="w-full h-full flex flex-col justify-center items-center relative">
@@ -247,18 +253,18 @@ const Features = ({
           </div>
 
           {/* close button */}
-          <button
+          {/* <button
             className="absolute -top-11 right-0 text-5xl text-buttonlogin font-bold"
             onClick={handleClosing}
           >
             <FaWindowClose />
-          </button>
+          </button> */}
         </div>
 
         {/*--------- other variants images ------- */}
         <div className="other-variants w-full h-20 px-2  overflow-x-scroll flex  gap-3 mt-3">
           {product?.variants?.map((variant, index) => (
-            <div className={`min-w-20 min-h-20 border-2 object-cover rounded-xl   ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
+            <div className={`min-w-20 min-h-20 border-2 overflow-hidden object-cover rounded-xl   ${currentVariant?.id == variant.id ? 'border-yellow-500': "bg-gray-100"}`} key={variant.id} onClick={()=>handleVariantClick(variant, index)}>
               <img src={variant?.image?.url} alt="variantImg" className='object-cover w-20 h-20' />
             </div>
           ))}

@@ -13,18 +13,16 @@ import ProductGallery from '~/components/productGallery';
 import Features from '~/components/Features';
 import ProductDetail from '~/components/productDetail';
 import { useSelector, useDispatch } from 'react-redux';
-import { hanldeFeaturePage, toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
+import { toggleThemeMode } from '~/redux-toolkit/slices/index.slice';
 import Main_Carousel from '~/components/main_carousel'
 import SubCollectionCarousal from '~/components/subCollection'
 import { RiSearchLine } from "react-icons/ri";
 import { AiOutlineClose } from "react-icons/ai";
-import { MdFamilyRestroom } from "react-icons/md";
+import { MdFamilyRestroom, MdOutlineSwipe } from "react-icons/md";
 import { FcBusinesswoman, FcBusinessman } from "react-icons/fc";
 import { LiaChildSolid } from "react-icons/lia";
-import { removeFromFavoriteProduct } from '~/redux-toolkit/slices/favoriteProduct';
+import { removeFromFavoriteProduct, hanldeFeaturePage, handleFeaturePage } from '~/redux-toolkit/slices/favoriteProduct';
 import { FaSpinner } from "react-icons/fa6";
-import { MdOutlineSwipe } from "react-icons/md";
-
 
 /**
  * @type {MetaFunction}
@@ -75,7 +73,6 @@ export default function Homepage({ sproducts, collectionsData }) {
     const isDarkMode = useSelector((state) => state?.themeMode?.isDarkMode);
     const dispatch = useDispatch();
     const categories = [{ name: "All", icon: <MdFamilyRestroom /> }, { name: "Mens", icon: <FcBusinessman /> }, { name: "Women", icon: <FcBusinesswoman /> }, { name: "Kids", icon: <LiaChildSolid />}]
-    const [IsfeaturesMode, setIsfeaturesMode] = useState(false);
     // const [Images, setImages] = useState(images);
     const [products, setproducts] = useState([]);
 
@@ -95,6 +92,10 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [noProductsFound, setNoProductsFound] = useState(false); // State to track if products are found or not
     const [IsDisplaySubCarousel, setIsDisplaySubCarousel] = useState(false);
     // changing light and dark mode func def
+
+  const isFeaturePageOpened = useSelector((state) => state?.favoriteProduct.IsFeaturePageOpened);
+
+
     const ThemeMode = () => {
         dispatch(toggleThemeMode())
     }
@@ -102,7 +103,7 @@ export default function Homepage({ sproducts, collectionsData }) {
     // -------- handle features screen ----
     const handleIsFeatures = () => {
         setIsfeaturesMode((prev) => !prev);
-        dispatch(hanldeFeaturePage())
+        dispatch(handleFeaturePage(true))
     }
 
     const handleGalleryScreen = () => {
@@ -308,7 +309,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             if (isSpinning) stopSpinning();
             if (isSpinningVertical) stopSpinningVertical();
         } else {
-            setIsfeaturesMode(true);
+            dispatch(handleFeaturePage(true))
         }
     };
 
@@ -728,7 +729,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 {/* showing product gallery */}
                 {IsGallery && <ProductGallery isDarkMode={isDarkMode} setgallery={setGallery} galleryImages={activeProduct?.images} />}
                 {/* showing features actions */}
-                {IsfeaturesMode && <Features isDarkMode={isDarkMode} variantIndex={verticalIndex} category={category} setCategory={setCategory} setIsfeaturesMode={setIsfeaturesMode} product={activeProduct} variant={currentVariant}  />}
+                {isFeaturePageOpened && <Features isDarkMode={isDarkMode} variantIndex={verticalIndex} category={category} setCategory={setCategory}  product={activeProduct} variant={currentVariant}  />}
             </div>
 
         </>
