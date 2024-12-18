@@ -416,7 +416,7 @@ export default function Homepage({ sproducts, collectionsData }) {
             setproducts([favoriteProduct[0].product])
             setActiveCarousel("vertical")
             setVerticalIndex(favoriteProduct[0]?.variantIndex);
-            dispatch(removeFromFavoriteProduct());
+            // dispatch(removeFromFavoriteProduct());
             setCategory("");
         } else {
             
@@ -433,7 +433,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
         // Cleanup listener on component unmount
         return () => window.removeEventListener('resize', checkScreenWidth);
-    }, [])
+    }, [favoriteProduct])
 
     // Clean up interval on unmount
     useEffect(() => {

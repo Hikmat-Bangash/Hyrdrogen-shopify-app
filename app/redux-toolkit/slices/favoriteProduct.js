@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   items: [], // List of favorite products
   IsFeaturePageOpened: false,
+  resetProductsCateogry: false,
 };
 
 const favoriteProduct = createSlice({
@@ -14,12 +15,16 @@ const favoriteProduct = createSlice({
       state.items[0] = product; // Add product if not already in favorites
     },
     removeFromFavoriteProduct: (state, action) => {
+      console.log('inside remove specific product from favorites');
       state.items = []; // Add product if not already in favorites
     },
 
     handleFeaturePage: (state, action) => {
-      console.log('action.payload: ', action.payload);
       state.IsFeaturePageOpened = action.payload;
+    },
+
+    resetProductsCateogry: (state) => {
+      state.resetProductsCateogry = !state.resetProductsCateogry;
     },
   },
 });

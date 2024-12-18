@@ -14,11 +14,14 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
+import {handleFeaturePage} from '~/redux-toolkit/slices/favoriteProduct';
+import {useDispatch} from 'react-redux';
 /**
  * @param {LayoutProps}
  */
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   // Get the current location object
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   // Check if the current path is the root ("/") or not
@@ -26,7 +29,7 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   const isCartPage = location.pathname === '/cart';
 
   const handleBackButtonClick = () => {
-    // dispatch(hanldeFeaturePage());
+    dispatch(handleFeaturePage(false));
     if (isCartPage) {
       navigate('/');
     } else {

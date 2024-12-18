@@ -6,7 +6,11 @@ import {AiOutlineShoppingCart} from 'react-icons/ai';
 import {removeFromFavorites} from '~/redux-toolkit/slices/favourite_slice';
 import {Link, useNavigate} from '@remix-run/react';
 import {toast} from 'react-toastify';
-import {addToFavoriteProduct} from '~/redux-toolkit/slices/favoriteProduct';
+import {
+  addToFavoriteProduct,
+  handleFeaturePage,
+} from '~/redux-toolkit/slices/favoriteProduct';
+import {useEffect} from 'react';
 export default function FavoritesList() {
   const favorites = useSelector((state) => state?.favourites?.items);
   console.log('favorites.products: ', favorites);
@@ -21,6 +25,10 @@ export default function FavoritesList() {
     dispatch(addToFavoriteProduct(product));
     navigate('/');
   };
+
+  useEffect(() => {
+    dispatch(handleFeaturePage(false));
+  }, []);
 
   return (
     <div className="parent-favourite w-full fixed top-8  ">

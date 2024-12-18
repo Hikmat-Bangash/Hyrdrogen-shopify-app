@@ -5,18 +5,25 @@ import {GoBookmark} from 'react-icons/go';
 import {CgProfile} from 'react-icons/cg';
 import {IoCartOutline} from 'react-icons/io5';
 import {AiOutlineHome} from 'react-icons/ai';
-import {useDispatch} from 'react-redux';
-import {handleFeaturePage} from '~/redux-toolkit/slices/favoriteProduct';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  handleFeaturePage,
+  removeFromFavoriteProduct,
+} from '~/redux-toolkit/slices/favoriteProduct';
 
 /**
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart}) {
   // const {shop, menu} = header;
+  const favoriteProduct = useSelector((state) => state?.favoriteProduct?.items);
   const dispatch = useDispatch();
 
   const handleHomebtnClick = () => {
     dispatch(handleFeaturePage(false));
+    if (favoriteProduct?.length > 0) {
+      dispatch(removeFromFavoriteProduct());
+    }
   };
 
   return (

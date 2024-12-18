@@ -51,7 +51,7 @@ const Features = ({
     const Variant = currentVariant;
     const variantInfo = {
       product,
-      id: Variant?.id,
+      id: Variant?.id || null,
       amount: Variant?.price?.amount,
       variantTitle: Variant?.title,
       handle: product?.handle,
