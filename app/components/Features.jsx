@@ -152,7 +152,7 @@ const Features = ({
       <div className={`featureContainer w-screen h-screen flex justify-center items-center fixed top-0 ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             } z-20 flex-col gap-2`}>
         <div
-          className={`w-full -mt-[11%] h-[72%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
+          className={`w-full -mt-[7%] h-[72%] relative ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'
             }`}
         >
           <div className="w-full h-full flex flex-col justify-center items-center relative">
