@@ -1,7 +1,10 @@
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 import {Link} from '@remix-run/react';
 import {useVariantUrl} from '~/lib/variants';
-
+import {useState} from 'react';
+import {AiOutlineLoading3Quarters} from 'react-icons/ai';
+import {GoPlus} from 'react-icons/go';
+import {LuMinus} from 'react-icons/lu';
 /**
  * @param {CartMainProps}
  */
@@ -193,9 +196,18 @@ function CartLineQuantity({line}) {
   const {id: lineId, quantity} = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
+  const [isLoading, setisLoading] = useState(false);
+
+  const handleQuantity = () => {
+    setisLoading(true);
+
+    setTimeout(() => {
+      setisLoading(false);
+    }, 1000);
+  };
 
   return (
-    <div className="cart-line-quantity">
+    <div className="cart-line-quantity flex justify-center items-center gap-2">
       <small>Quantity: {quantity} &nbsp;&nbsp;</small>
       <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
@@ -203,8 +215,23 @@ function CartLineQuantity({line}) {
           disabled={quantity <= 1}
           name="decrease-quantity"
           value={prevQuantity}
+          className={`text-2xl ${
+            !isLoading && 'mt-2'
+          } font-semibold text-gray-700`}
+          onClick={handleQuantity}
         >
-          <span>&#8722; </span>
+          <p>
+            {isLoading ? (
+              <span className="text-xs ">
+                {/* <AiOutlineLoading3Quarters /> */}
+                loading...
+              </span>
+            ) : (
+              <span>
+                <LuMinus />
+              </span>
+            )}{' '}
+          </p>
         </button>
       </CartLineUpdateButton>
       &nbsp;
@@ -213,8 +240,14 @@ function CartLineQuantity({line}) {
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
+          className="text-2xl mt-2 font-semibold text-gray-700"
+          onClick={handleQuantity}
         >
-          <span>&#43;</span>
+          {!isLoading && (
+            <span className="text-base">
+              <GoPlus />
+            </span>
+          )}
         </button>
       </CartLineUpdateButton>
       &nbsp;

@@ -33,7 +33,7 @@ const Features = ({
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
-
+console.log("product: ", product)
 
 
 

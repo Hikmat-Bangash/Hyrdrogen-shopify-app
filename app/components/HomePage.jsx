@@ -541,7 +541,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full  z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
+                <div className={`parent w-full   z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
                     <div className="w-full h-[8%] flex justify-between flex-row  ">
                         <div className="w-[25%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />
@@ -722,6 +722,11 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
                         </div>
+                    </div>
+
+                    {/* ----- active product name to be display at the bottom */}
+                    <div className="activeProductName -mt-6 w-full justify-center items-center">
+                         <p className='text-white text-center text-base leading-3'>{activeProduct?.title}</p>
                     </div>
                 </div>
 
