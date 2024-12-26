@@ -192,18 +192,18 @@ function CartLineRemoveButton({lineIds}) {
  * @param {{line: CartLine}}
  */
 function CartLineQuantity({line}) {
+  const [isLoading, setisLoading] = useState(false);
   if (!line || typeof line?.quantity === 'undefined') return null;
   const {id: lineId, quantity} = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
   const nextQuantity = Number((quantity + 1).toFixed(0));
-  const [isLoading, setisLoading] = useState(false);
 
   const handleQuantity = () => {
     setisLoading(true);
 
     setTimeout(() => {
       setisLoading(false);
-    }, 1000);
+    }, 2000);
   };
 
   return (
@@ -222,7 +222,7 @@ function CartLineQuantity({line}) {
         >
           <p>
             {isLoading ? (
-              <span className="text-xs ">
+              <span className="text-xs font-sans text-gray-500 ">
                 {/* <AiOutlineLoading3Quarters /> */}
                 loading...
               </span>
