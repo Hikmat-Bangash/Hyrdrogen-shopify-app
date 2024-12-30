@@ -725,7 +725,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                     </div>
 
                     {/* ----- active product name to be display at the bottom */}
-                    <div className={` ${isMobileWidth ? "-mt-8" : "-mt-6"} w-full justify-center items-center`}>
+                    <div className={` ${isMobileWidth ? "-mt-8" : "-mt-7"} w-full justify-center items-center`}>
                          <p className='text-white text-center text-base leading-3'>{activeProduct?.title}</p>
                     </div>
                 </div>
