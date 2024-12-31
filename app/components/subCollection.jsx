@@ -12,22 +12,22 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
 
   return (
     <>
-      <div className="container flex w-full h-[50px] overflow-x-auto mt-3">
+      <div className="container flex w-full h-[40px] overflow-x-auto mt-3">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
           {products.map((prdct, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={index}
-              className="product relative  min-w-[120px] min-h-[50px]  "
+              className="product relative  min-w-[110px] min-h-[40px]  "
               onClick={() => handleSelectedProduct(index)}
             >
-              <div className="prdct-detail flex justify-around items-center h-[42px] mt-[5px] bg-[#000000] rounded-[6px] shadow-xl">
+              <div className="prdct-detail flex justify-around items-center h-[38px] mt-[4px] bg-[#000000] rounded-[6px] shadow-xl">
                 {/* prdct image */}
                 <img
                   src={prdct.featuredImage}
                   alt="product-thumbnail"
-                  className="z-20 h-9 w-8 object-cover"
+                  className="z-20 h-8 w-7 ml-1 object-cover"
                 />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
@@ -42,7 +42,7 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
                 </div>
               </div>
               {/* left side mask */}
-              <div className="mask absolute left-[-2] top-[-1px]">
+              <div className="mask absolute left-[2] top-[-1px]">
                 <img src="/splash/carousal-mask.png" alt="" />
               </div>
             </div>

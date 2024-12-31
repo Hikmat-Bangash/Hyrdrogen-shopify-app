@@ -1,5 +1,5 @@
 import {Await} from '@remix-run/react';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {CartForm} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
 import {CartMain} from '~/components/Cart';
@@ -65,24 +65,27 @@ export async function action({request, context}) {
 export default function Cart() {
   const rootData = useRootLoaderData(); // Fetching root loader data
   const cartPromise = rootData?.cart; // The cart promise from the loader
+  const [isUpdating, setIsUpdating] = useState(false); // To track if an update is happening
 
   // Log the cart data to ensure it's present
   console.log('Cart page loaded, cart data: ', rootData?.cart);
 
   return (
     <div className="cart mt-[3rem] h-screen">
+      {/* Page Header */}
       <div className="cartpage mt-15 py-5 border-b border-gray-300 flex justify-center items-center bg-gray-100">
         <h1 className="text-2xl font-semibold text-gray-800">
           Your Cart Products
         </h1>
       </div>
+
+      {/* Cart Content */}
       <Suspense fallback={<p>Loading cart...</p>}>
         <Await
           resolve={cartPromise} // Await the cart promise
           errorElement={<div>An error occurred</div>}
         >
           {(cart) => {
-            // If no cart or the cart is empty
             if (!cart || cart.lines.length === 0) {
               return (
                 <div className="flex justify-center items-center h-full">
@@ -91,8 +94,15 @@ export default function Cart() {
               );
             }
 
-            // Render the cart with CartMain
-            return <CartMain layout="page" cart={cart} />;
+            // Optimistic UI Updates: Pass isUpdating state to CartMain
+            return (
+              <CartMain
+                layout="page"
+                cart={cart}
+                isUpdating={isUpdating}
+                setIsUpdating={setIsUpdating} // Callback for tracking updates
+              />
+            );
           }}
         </Await>
       </Suspense>

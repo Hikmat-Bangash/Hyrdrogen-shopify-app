@@ -40,6 +40,8 @@
 import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import toggleThemeMode from '../slices/index.slice';
+import AddToFavourite from '../slices/favourite_slice';
+import FavoriteProduct from '../slices/favoriteProduct';
 
 import {
   persistReducer,
@@ -77,12 +79,14 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['RiskProfile', 'generalSlice'], // Reducers that we don't want to add to the persist store
+  blacklist: ['RiskProfile', 'generalSlice', 'favoriteProduct'], // Reducers that we don't want to add to the persist store
 };
 
 // Combine all reducers
 const reducer = combineReducers({
   themeMode: toggleThemeMode,
+  favourites: AddToFavourite,
+  favoriteProduct: FavoriteProduct,
 });
 
 // Create a persisted reducer

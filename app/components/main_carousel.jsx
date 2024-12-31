@@ -34,22 +34,22 @@ export const PRODUCTS = [
 const MainCarousal = ({collections, handleMainProductsCollection}) => {
   return (
     <>
-      <div className="container flex w-full h-[50px] overflow-x-auto mt-2">
+      <div className="container flex w-full h-[40px] overflow-x-auto mt-2">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
           {collections.map((collection, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={index}
-              className="product relative  min-w-[120px] min-h-[50px]  "
+              className="product relative  min-w-[110px] min-h-[40px]  "
               onClick={() => handleMainProductsCollection(collection?.id)}
             >
-              <div className="prdct-detail flex justify-around items-center h-[42px] mt-[5px] bg-[#000000] rounded-[6px] shadow-xl">
+              <div className="prdct-detail flex justify-around items-center h-[40px] mt-[4px] bg-[#000000] rounded-[6px] shadow-xl">
                 {/* prdct image */}
                 <img
                   src={collection?.image}
                   alt="product-thumbnail"
-                  className="z-20 h-9 w-8 object-cover"
+                  className="z-20 h-8 w-7 object-cover"
                 />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
