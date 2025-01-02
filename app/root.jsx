@@ -22,6 +22,7 @@ import styles from 'react-toastify/dist/ReactToastify.css';
 // import {PersistGate} from 'redux-persist/es/integration/react';
 // import store, {persistor} from './store/store';
 import {Providers} from './redux-toolkit/provider';
+import { useEffect, useState } from 'react';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -113,6 +114,24 @@ export default function App() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
 
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    // Check if the device is mobile or desktop
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth <= 640); // Example: 640px threshold for mobile devices
+    };
+
+    checkDevice(); // Initial check
+
+    // Add resize event listener
+    window.addEventListener('resize', checkDevice);
+
+    return () => {
+      window.removeEventListener('resize', checkDevice);
+    };
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -121,23 +140,35 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="sm:hidden">
-        {/* <div className="sm:hidden"> */}
+      <body>
         <Providers>
-          <Layout {...data}>
-            <Outlet />
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              toastStyle={{width: '300px', marginLeft: '50px'}}
-            />
-          </Layout>
+          {!isMobile ? (
+            // Render message for desktop devices
+            <div className="w-screen h-screen flex flex-col items-center justify-center bg-red-100">
+              <h1 className="text-xl font-bold text-red-700">
+                This app is only available on mobile devices.
+              </h1>
+              <p className="text-center text-gray-600">
+                Please switch to a mobile device to access the application.
+              </p>
+            </div>
+          ) : (
+            // Render the main app for mobile devices
+            <Layout {...data}>
+              <Outlet />
+              <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                toastStyle={{width: '300px', marginLeft: '50px'}}
+              />
+            </Layout>
+          )}
         </Providers>
-        {/* </div> */}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
       </body>
+
     </html>
   );
 }
