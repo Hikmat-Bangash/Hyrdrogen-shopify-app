@@ -4,6 +4,7 @@ const initialState = {
   items: [], // List of favorite products
   IsFeaturePageOpened: false,
   resetProductsCateogry: false,
+  filteredMenuToggle: false,
 };
 
 const favoriteProduct = createSlice({
@@ -26,6 +27,10 @@ const favoriteProduct = createSlice({
     resetProductsCateogry: (state) => {
       state.resetProductsCateogry = !state.resetProductsCateogry;
     },
+
+    filteredMenuToggle: (state) => {
+      state.filteredMenuToggle = !state.filteredMenuToggle;
+    },
   },
 });
 
@@ -33,6 +38,7 @@ export const {
   addToFavoriteProduct,
   removeFromFavoriteProduct,
   handleFeaturePage,
+  filteredMenuToggle,
 } = favoriteProduct.actions;
 
 export default favoriteProduct.reducer;

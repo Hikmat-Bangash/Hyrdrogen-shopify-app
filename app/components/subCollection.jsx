@@ -12,14 +12,14 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
 
   return (
     <>
-      <div className="container flex w-full h-[40px] overflow-x-auto mt-3">
+      <div className="container flex w-full h-[40px] overflow-y-hidden overflow-x-auto mt-3">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
           {products.map((prdct, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <div
               key={index}
-              className="product relative  min-w-[110px] min-h-[40px]  "
+              className="product relative  min-w-[110px] min-h-[35px]  "
               onClick={() => handleSelectedProduct(index)}
             >
               <div className="prdct-detail flex justify-around items-center h-[38px] mt-[4px] bg-[#000000] rounded-[6px] shadow-xl">
@@ -27,14 +27,14 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
                 <img
                   src={prdct.featuredImage}
                   alt="product-thumbnail"
-                  className="z-20 h-8 w-7 ml-1 object-cover"
+                  className="z-20 h-7 w-7 ml-1 object-cover"
                 />
                 {/* prdct detail */}
                 <div className="prdct-detail flex flex-col justify-between">
                   <h4 className="text-[#DAAF37] text-xs mb-1 ">
                     {prdct?.images?.length} left
                   </h4>
-                  <h2 className="text-[#ECECEC] text-xs font-semibold font-avenir">
+                  <h2 className="text-[#ECECEC] text-xs  font-avenir">
                     {prdct.title.length > 15
                       ? prdct?.title?.substring(0, 10)
                       : prdct?.title}

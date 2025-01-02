@@ -94,7 +94,9 @@ export default function Homepage({ sproducts, collectionsData }) {
     // changing light and dark mode func def
 
   const isFeaturePageOpened = useSelector((state) => state?.favoriteProduct.IsFeaturePageOpened);
-
+    const menuToggleBtn = useSelector(
+        (state) => state.favoriteProduct.filteredMenuToggle,
+    );
 
     const ThemeMode = () => {
         dispatch(toggleThemeMode())
@@ -471,7 +473,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
 
                                 {/* below code is for search bar */}
-                                <div className={`w-full  z-50 top-[2.5rem] flex justify-between items-center h-[3rem]   ${isSearchTrue ? "absolute" : "hidden"}`}
+                                <div className={`w-full  z-50 top-0 flex justify-between items-center h-[3rem]   ${isSearchTrue ? "absolute" : "hidden"}`}
 
                                     style={{
                                         transformStyle: "preserve-3d",
@@ -480,7 +482,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     <div className=" w-[85%] h-full border border-gray-500 ">
                                         <input
                                             type="text"
-                                            className="w-full h-full grow pl-10 pr-3 py-2 border rounded-lg outline-0"
+                                            className="w-full h-full grow pl-10 pr-3 py-2 border rounded-sm outline-0"
                                             style={{ border: '0px' }}
                                             placeholder="Search"
                                             value={searchQuery} // Bind the input value to the searchQuery state
@@ -509,6 +511,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     </div>
                                 </div>
 
+                                <div className={`${!menuToggleBtn ? "hidden" : "absolute"} cateogry-container py-0 bg-[#FEFCEB] top-0 w-full z-40`}>
                                 <div className="w-full h-9  flex flex-row justify-between items-center mt-[12px]">
                                     {categories.map((cate,) => (
                                         <button
@@ -527,6 +530,7 @@ export default function Homepage({ sproducts, collectionsData }) {
 
                                         <RiSearchLine />
                                     </div>
+                                    </div>
                                 </div>
 
                                 <Main_Carousel collections={filteredCollections} handleMainProductsCollection={handleCollectionClick} />
@@ -541,7 +545,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                 </div>
 
                 {/* ---- BELOW CODE IS FOR SPINNING TOOL AND other top buttons */}
-                <div className={`parent w-full   z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[71%]" : "h-[76%]" : IsDisplaySubCarousel ? "h-[63%]" : "h-[71%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
+                <div className={`parent w-full   z-10 ${isMobileWidth ? IsDisplaySubCarousel ? "h-[76%]" : "h-[80vh]" : IsDisplaySubCarousel ? "h-[70%]" : "h-[77%]"}     ${isDarkMode ? 'bg-[#000000]' : 'bg-backgroundColortool'}  overflow-hidden`}>
                     <div className="w-full h-[8%] flex justify-between flex-row  ">
                         <div className="w-[25%] h-full flex flex-row p-2 gap-3 ">
                             <img src="/splash/rect1.png" alt="rect1" className="ml-3 w-[1.5rem] h-[1.5rem]" onClick={handleGalleryScreen} />

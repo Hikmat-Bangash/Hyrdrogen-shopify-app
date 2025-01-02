@@ -14,8 +14,14 @@ import {
   PredictiveSearchForm,
   PredictiveSearchResults,
 } from '~/components/Search';
-import {handleFeaturePage} from '~/redux-toolkit/slices/favoriteProduct';
+import {
+  filteredMenuToggle,
+  handleFeaturePage,
+} from '~/redux-toolkit/slices/favoriteProduct';
 import {useDispatch} from 'react-redux';
+import { CiFilter } from 'react-icons/ci';
+// import { FaFilter } from "react-icons/fa";
+
 /**
  * @param {LayoutProps}
  */
@@ -24,6 +30,7 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
   // Check if the current path is the root ("/") or not
   const isHomePage = location.pathname === '/';
   const isCartPage = location.pathname === '/cart';
@@ -35,6 +42,10 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
     } else {
       window.history.back();
     }
+  };
+
+  const filteredToggleButton = () => {
+    dispatch(filteredMenuToggle());
   };
 
   return (
@@ -75,11 +86,13 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
               </div>
 
               <div className="w-[25%] h-full  flex flex-row justify-end items-center ">
-                <img
-                  src="/splash/notification.png"
-                  alt="noti"
-                  className="w-[19px] h-[20px] right-0 "
-                />
+                <button
+                  className="text-xl font-bold"
+                  onClick={filteredToggleButton}
+                  aria-label="Filter"
+                >
+                  <CiFilter />
+                </button>
               </div>
             </div>
           </div>
