@@ -513,13 +513,13 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     {categories.map((cate,) => (
                                         <button
                                             key={cate.name}
-                                            className={` ${isMobileWidth ? "min-w-[19%]" : "min-w-[17%]"}  max-w-auto h-full p-2 flex flex-row justify-center items-center text-2xl rounded-md ${category === cate.name
+                                            className={` ${isMobileWidth ? "min-w-[19%]" : "min-w-[17%]"}  max-w-auto h-full p-2 flex flex-row justify-center items-center text-base rounded-md ${category === cate.name
                                                 ? 'bg-black text-white'
                                                 : 'bg-[#ECECEC] text-black'
                                                 }`}
                                             onClick={() => FilteringCollectionsAndProducts(cate.name)}
                                         >
-                                            {cate.icon}
+                                            {cate.name}
                                         </button>
                                     ))}
                                     {/* ---- search icon ------- */}
@@ -589,7 +589,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                     </div>
 
 
-                    <div className="w-full flex flex-col h-[88%]  relative  ">
+                    <div className="spinturea-container w-full flex flex-col h-[88%]  relative  ">
                         <div
                             className=" relative w-[98%] h-full flex ml-1 flex-row   overflow-hidden "
                             id="center"

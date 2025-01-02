@@ -22,6 +22,7 @@ const Index = () => {
   const [products, setProducts] = useState([]);
   const [collections, setCollections] = useState([]);
 
+
   useEffect(() => {
     // Function to structure each product consistently
     const formatProduct = (productNode) => ({
@@ -85,7 +86,7 @@ const Index = () => {
     }));
 
     setProducts(formattedProducts);
-    setCollections(formattedCollections); 
+    setCollections(formattedCollections);
   }, [allProducts, allCollections]);
 
 
@@ -95,14 +96,16 @@ const Index = () => {
 
   // console.log("structured product data: ", products);
   // console.log("structured collections data: ", collections);  
-  
 
-  return (
-    <>
-      {products.length > 0 && <Homepage productsList={products} collectionsData={collections} />}
-    </>
-  );
-};
+
+ 
+    return (
+      <>
+        {products.length > 0 && <Homepage productsList={products} collectionsData={collections} />}
+      </>
+    );
+  }
+
 
 export default Index;
 
