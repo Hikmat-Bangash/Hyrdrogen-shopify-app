@@ -13,7 +13,6 @@ import {
 import {useEffect} from 'react';
 export default function FavoritesList() {
   const favorites = useSelector((state) => state?.favourites?.items);
-  console.log('favorites.products: ', favorites);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleRemoveFromFavorites = (productId) => {

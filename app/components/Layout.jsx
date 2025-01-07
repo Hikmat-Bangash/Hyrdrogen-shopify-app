@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // eslint-disable-next-line no-unused-vars
 import {Await, Link, useLocation, useNavigate} from '@remix-run/react';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {Aside} from '~/components/Aside';
 // eslint-disable-next-line no-unused-vars
 import {Footer} from '~/components/Footer';
@@ -19,8 +20,8 @@ import {
   handleFeaturePage,
 } from '~/redux-toolkit/slices/favoriteProduct';
 import {useDispatch} from 'react-redux';
-import { CiFilter } from 'react-icons/ci';
-// import { FaFilter } from "react-icons/fa";
+import {CiFilter} from 'react-icons/ci';
+import {BsChevronDown} from 'react-icons/bs';
 
 /**
  * @param {LayoutProps}
@@ -46,6 +47,20 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
 
   const filteredToggleButton = () => {
     dispatch(filteredMenuToggle());
+  };
+
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('All'); // Default selection
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
+    setDropdownVisible(false); // Close the dropdown after selection
+    console.log(`Selected category: ${category}`); // Add any additional logic here
+    dispatch(filteredMenuToggle(category));
   };
 
   return (
@@ -85,14 +100,35 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
                 </h1>
               </div>
 
-              <div className="w-[25%] h-full  flex flex-row justify-end items-center ">
+              <div className="w-[25%] h-full flex flex-row justify-end items-center relative">
+                {/* Dropdown Button */}
                 <button
-                  className="text-xl font-bold"
-                  onClick={filteredToggleButton}
-                  aria-label="Filter"
+                  className="flex items-center justify-between text-gray-700 bg-white px-2 py-1 text-xs border border-gray-300 rounded-md hover:bg-gray-100"
+                  onClick={toggleDropdown}
                 >
-                  <CiFilter />
+                  {selectedCategory} <BsChevronDown className="ml-2 mt-1" />
                 </button>
+
+                {/* Dropdown Menu */}
+                {dropdownVisible && (
+                  <div className="absolute right-0 text-xs mt-40 w-24 bg-white border border-gray-300 rounded-md overflow-hidden shadow-lg z-50">
+                    <ul className="flex flex-col">
+                      {['All', 'Men', 'Women', 'Kids'].map((category) => (
+                        <li
+                          key={category}
+                          className={`px-4 py-1 cursor-pointer ${
+                            selectedCategory === category
+                              ? 'bg-gray-100 font-bold'
+                              : 'hover:bg-gray-100'
+                          }`}
+                          onClick={() => handleSelectCategory(category)}
+                        >
+                          {category}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>

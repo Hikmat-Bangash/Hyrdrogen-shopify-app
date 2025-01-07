@@ -1,7 +1,7 @@
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 import {Link} from '@remix-run/react';
 import {useVariantUrl} from '~/lib/variants';
-import {useState} from 'react';
+import {useState} from 'react'; 
 import {AiOutlineLoading3Quarters} from 'react-icons/ai';
 import {GoPlus} from 'react-icons/go';
 import {LuMinus} from 'react-icons/lu';

@@ -34,7 +34,7 @@ export const PRODUCTS = [
 const MainCarousal = ({collections, handleMainProductsCollection}) => {
   return (
     <>
-      <div className="container flex w-full h-[40px] overflow-y-hidden overflow-x-auto mt-2">
+      <div className="container flex w-full h-[45px]  overflow-x-auto mt-2">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
           {collections.map((collection, index) => (
@@ -63,30 +63,12 @@ const MainCarousal = ({collections, handleMainProductsCollection}) => {
               </div>
               {/* left side mask */}
               <div className="mask absolute left-[-2] top-[-1px]">
-                <img src="/splash/carousal-mask.png" alt="" />
+                <img src="/splash/carousal-mask.png" alt="" className="h-9" />
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Include CSS in JS styles directly within the component */}
-      {/* <style>
-        {`
-          @keyframes slide {
-            from {
-              transform: translateX(100%);
-            }
-            to {
-              transform: translateX(-100%);
-            }
-          }
-
-          .carousal-wrapper {
-            animation: slide 20s linear infinite;
-          }
-        `}
-      </style> */}
     </>
   );
 };

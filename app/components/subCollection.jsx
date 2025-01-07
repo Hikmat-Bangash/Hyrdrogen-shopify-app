@@ -12,7 +12,7 @@ const SubCollectionCarousal = ({handleCarouselProduct, products}) => {
 
   return (
     <>
-      <div className="container flex w-full h-[40px] overflow-y-hidden overflow-x-auto mt-3">
+      <div className="container flex w-full h-[40px] overflow-y-hidden overflow-x-auto mt-1">
         <div className="carousal-wrapper flex gap-3">
           {/* Carousel of products */}
           {products.map((prdct, index) => (

@@ -22,7 +22,7 @@ import styles from 'react-toastify/dist/ReactToastify.css';
 // import {PersistGate} from 'redux-persist/es/integration/react';
 // import store, {persistor} from './store/store';
 import {Providers} from './redux-toolkit/provider';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -168,7 +168,6 @@ export default function App() {
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
       </body>
-
     </html>
   );
 }

@@ -94,9 +94,10 @@ export default function Homepage({ sproducts, collectionsData }) {
     // changing light and dark mode func def
 
   const isFeaturePageOpened = useSelector((state) => state?.favoriteProduct.IsFeaturePageOpened);
-    const menuToggleBtn = useSelector(
+    const filteredCategory = useSelector(
         (state) => state.favoriteProduct.filteredMenuToggle,
     );
+
 
     const ThemeMode = () => {
         dispatch(toggleThemeMode())
@@ -130,14 +131,9 @@ export default function Homepage({ sproducts, collectionsData }) {
     const [verticalIndex, setVerticalIndex] = useState(0); // Vertical carousel index
 
 
-    const quickSwipeThreshold = 250; // Duration threshold for a quick swipe in milliseconds
-    const distanceThreshold = 50 // Pixel threshold for swipe detection
-    // Thresholds
     const verticalSwipeThreshold = 60; // Minimum distance for vertical swipe detection
     const horizontalSwipeThreshold = 60;
 
-    const quickSwipeThresholdVertical = 250; // Lower this for faster swipe detection
-    const distanceThresholdVertical = 50; // Pixel threshold for vertical swipe detection
 
     // Handle touch start: save initial touch position and time
     const handleTouchStart = (e) => {
@@ -334,9 +330,9 @@ export default function Homepage({ sproducts, collectionsData }) {
         setVerticalIndex(0);
     }
 
-    // --- select one of the carousel product -----
+    // --- select one of the carousel product ----- 
     const handleCarouselProduct = (product) => {
-        setHorizontalIndex(product);
+        setHorizontalIndex(product); 
         // setGallery((prev) => !prev)
     }
 
@@ -397,6 +393,11 @@ export default function Homepage({ sproducts, collectionsData }) {
         // setVerticalIndex(0);
         setIsDisplaySubCarousel(false);
     };
+
+
+    useEffect(() => {
+        FilteringCollectionsAndProducts(filteredCategory);
+    }, [filteredCategory])
 
     // Function to handle clicking on a collection and showing its products
     const handleCollectionClick = (collectionId) => {
@@ -511,7 +512,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                     </div>
                                 </div>
 
-                                <div className={`${!menuToggleBtn ? "hidden" : "absolute"} cateogry-container py-0 bg-[#FEFCEB] top-0 w-full z-40`}>
+                                {/* <div className={`${menuToggleBtn ? "hidden" : "absolute"} cateogry-container py-0 bg-[#FEFCEB] top-0 w-full z-40`}>
                                 <div className="w-full h-9  flex flex-row justify-between items-center mt-[12px]">
                                     {categories.map((cate,) => (
                                         <button
@@ -525,13 +526,13 @@ export default function Homepage({ sproducts, collectionsData }) {
                                             {cate.name}
                                         </button>
                                     ))}
-                                    {/* ---- search icon ------- */}
+
                                     <div className="p-2 bg-[#ECECEC] text-2xl flex justify-center items-center h-full   " onClick={() => setIsSearchTrue((prev) => !prev)}>
 
                                         <RiSearchLine />
                                     </div>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <Main_Carousel collections={filteredCollections} handleMainProductsCollection={handleCollectionClick} />
 
@@ -700,7 +701,7 @@ export default function Homepage({ sproducts, collectionsData }) {
                                                         }}
 
                                                     >
-                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.7rem] h-[17.3rem]' : " w-[13.2rem] h-[13.2rem]"} `}
+                                                        <div className={`panel-content z-40 ${isMobileWidth ? 'w-[16.5rem] h-[17.1rem]' : " w-[13.2rem] h-[13.2rem]"} `}
                                                             style={{
                                                                 // width: "215px",
                                                                 // height: "225px",

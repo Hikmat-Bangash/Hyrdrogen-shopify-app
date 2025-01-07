@@ -4,6 +4,8 @@ import {CartForm} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
 import {CartMain} from '~/components/Cart';
 import {useRootLoaderData} from '~/root';
+import {useDispatch} from 'react-redux';
+import {CartProducts} from '~/redux-toolkit/slices/favoriteProduct';
 
 /**
  * @type {MetaFunction}
@@ -66,9 +68,14 @@ export default function Cart() {
   const rootData = useRootLoaderData(); // Fetching root loader data
   const cartPromise = rootData?.cart; // The cart promise from the loader
   const [isUpdating, setIsUpdating] = useState(false); // To track if an update is happening
-
+  const dispatch = useDispatch();
   // Log the cart data to ensure it's present
   console.log('Cart page loaded, cart data: ', rootData?.cart);
+
+  // Custom function to handle cart length
+  const handleCartLength = (length) => {
+    dispatch(CartProducts(length)); // Dispatch the cart length to the store
+  };
 
   return (
     <div className="cart mt-[3rem] h-screen">
@@ -87,12 +94,16 @@ export default function Cart() {
         >
           {(cart) => {
             if (!cart || cart.lines.length === 0) {
+              handleCartLength(0);
               return (
                 <div className="flex justify-center items-center h-full">
                   <p>Your cart is empty</p>
                 </div>
               );
             }
+
+            // Pass cart length to the custom function
+            handleCartLength(cart?.lines?.nodes?.length);
 
             // Optimistic UI Updates: Pass isUpdating state to CartMain
             return (

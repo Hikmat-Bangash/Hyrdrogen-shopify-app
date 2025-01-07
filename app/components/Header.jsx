@@ -17,6 +17,11 @@ import {
 export function Header({header, isLoggedIn, cart}) {
   // const {shop, menu} = header;
   const favoriteProduct = useSelector((state) => state?.favoriteProduct?.items);
+  const favorites = useSelector((state) => state?.favourites?.items);
+  const totalCartProducts = useSelector(
+    (state) => state?.favoriteProduct?.totalCartProducts,
+  );
+
   const dispatch = useDispatch();
 
   const handleHomebtnClick = () => {
@@ -56,12 +61,19 @@ export function Header({header, isLoggedIn, cart}) {
           <div className="w-[13%] h-[80%] ">
             <NavLink
               to="/cart"
-              className=" w-full h-full flex flex-col justify-center items-center p-2"
+              className="relative w-full h-full flex flex-col justify-center items-center p-2"
             >
               <div className="icon text-xl text-white">
                 <IoCartOutline />
               </div>
               <h3 className="text-white">Cart</h3>
+
+              {/* badge */}
+              {totalCartProducts > 0 && (
+                <div className="badge absolute top-0 right-0 w-4 h-4 font-semibold rounded-full bg-red-500 flex justify-center items-center text-[10px] text-white">
+                  {totalCartProducts}
+                </div>
+              )}
             </NavLink>
           </div>
           <div className="w-[13%] h-[80%]  ">
@@ -78,12 +90,18 @@ export function Header({header, isLoggedIn, cart}) {
           <div className="w-[13%] h-[80%]">
             <NavLink
               to="/favourite"
-              className=" w-full h-full flex flex-col justify-center items-center p-2"
+              className="relative w-full h-full flex flex-col justify-center items-center p-2"
             >
-              <div className="icon text-xl text-white">
+              <div className="  icon text-xl text-white">
                 <GoBookmark />
               </div>
               <h3 className="text-white">Favorite</h3>
+              {/* badge */}
+              {favorites?.length > 0 && (
+                <div className="badge absolute top-0 right-0 w-4 h-4 font-semibold rounded-full bg-red-500 flex justify-center items-center text-[10px] text-white">
+                  {favorites?.length}
+                </div>
+              )}
             </NavLink>
           </div>
         </div>
